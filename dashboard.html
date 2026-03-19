@@ -152,9 +152,9 @@
       document.getElementById('avatar-status').textContent = 'Yükleniyor...';
       const ext = file.name.split('.').pop();
       const path = `${currentUser.id}/avatar.${ext}`;
-      const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+      const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert: true });
       if (error) { document.getElementById('avatar-status').textContent = 'Hata!'; return; }
-      const { data } = sb.storage.from('avatars').getPublicUrl(path);
+      const { data } = sb.storage.from('Avatars').getPublicUrl(path);
       const url = data.publicUrl + '?t=' + Date.now();
       await sb.from('profiles').update({ avatar_url: url }).eq('user_id', currentUser.id);
       document.getElementById('avatar-preview').innerHTML = `<img src="${url}" alt="Profil">`;
@@ -168,9 +168,9 @@
       document.getElementById('banner-status').textContent = 'Yükleniyor...';
       const ext = file.name.split('.').pop();
       const path = `${currentUser.id}/banner.${ext}`;
-      const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+      const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert: true });
       if (error) { document.getElementById('banner-status').textContent = 'Hata!'; return; }
-      const { data } = sb.storage.from('avatars').getPublicUrl(path);
+      const { data } = sb.storage.from('Avatars').getPublicUrl(path);
       const url = data.publicUrl + '?t=' + Date.now();
       await sb.from('profiles').update({ banner_url: url }).eq('user_id', currentUser.id);
       document.getElementById('banner-preview').innerHTML = `<img src="${url}" alt="Banner">`;
