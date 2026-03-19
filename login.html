@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giriş Yap | Kartvizit</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #181a1e;
+      border: 1px solid #2a2d35;
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .back { color: #8b9bb4; text-decoration: none; font-size: 0.85rem; display: inline-block; margin-bottom: 25px; }
+    .back:hover { color: #fff; }
+    h2 { font-size: 1.4rem; margin-bottom: 6px; }
+    .subtitle { color: #8b9bb4; font-size: 0.85rem; margin-bottom: 30px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
+    input {
+      width: 100%;
+      background: #1e2125;
+      border: 1px solid #2a2d35;
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    input:focus { border-color: #0e8c6f; }
+    input::placeholder { color: #555; }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: #0e8c6f;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+    .btn:hover { background: #0b7058; }
+    .btn:disabled { background: #333; cursor: not-allowed; }
+    .error {
+      background: #2d1515;
+      border: 1px solid #5a1f1f;
+      color: #ff6b6b;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .register-link { text-align: center; margin-top: 20px; font-size: 0.83rem; color: #8b9bb4; }
+    .register-link a { color: #0e8c6f; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <a href="index.html" class="back">← Geri</a>
+    <h2>Giriş Yap</h2>
+    <p class="subtitle">Hesabına giriş yap ve kartvizitini yönet.</p>
+
+    <div class="error" id="error-msg"></div>
+
+    <div class="form-group">
+      <label>E-posta</label>
+      <input type="email" id="email" placeholder="email@ornek.com">
+    </div>
+    <div class="form-group">
+      <label>Şifre</label>
+      <input type="password" id="password" placeholder="Şifreniz">
+    </div>
+
+    <button class="btn" id="login-btn" onclick="login()">Giriş Yap</button>
+
+    <div class="register-link">
+      Hesabın yok mu? <a href="register.html">Kayıt ol</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    // Zaten giriş yaptıysa direkt dashboard'a gönder
+    sb.auth.getSession().then(({ data }) => {
+      if (data.session) window.location.href = 'dashboard.html';
+    });
+
+    async function login() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('login-btn');
+      const errorEl = document.getElementById('error-msg');
+
+      errorEl.style.display = 'none';
+
+      if (!email || !password) {
+        errorEl.textContent = 'E-posta ve şifreyi girin.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Giriş yapılıyor...';
+
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        errorEl.textContent = 'E-posta veya şifre hatalı.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Giriş Yap';
+        return;
+      }
+
+      window.location.href = 'dashboard.html';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') login();
+    });
+  </script>
+</body>
+</html>

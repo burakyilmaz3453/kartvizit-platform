@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel | Kartvizit</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .topbar {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { font-size: 1.2rem; font-weight: 800; color: #0e8c6f; }
+    .logout-btn {
+      background: #23262b;
+      border: 1px solid #2a2d35;
+      color: #8b9bb4;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: 0.2s;
+    }
+    .logout-btn:hover { color: #fff; background: #2c3036; }
+    .container { max-width: 600px; margin: 0 auto; }
+    .section {
+      background: #181a1e;
+      border: 1px solid #2a2d35;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .section h3 {
+      font-size: 0.85rem;
+      color: #8b9bb4;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #2a2d35;
+    }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
+    input, textarea {
+      width: 100%;
+      background: #1e2125;
+      border: 1px solid #2a2d35;
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus { border-color: #0e8c6f; }
+    input::placeholder, textarea::placeholder { color: #555; }
+    .save-btn {
+      width: 100%;
+      padding: 13px;
+      background: #0e8c6f;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+    .save-btn:hover { background: #0b7058; }
+    .save-btn:disabled { background: #333; cursor: not-allowed; }
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #0e8c6f;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .card-link-box {
+      background: #1e2125;
+      border: 1px solid #2a2d35;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card-link-box a {
+      color: #0e8c6f;
+      font-size: 0.85rem;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .card-link-box a:hover { text-decoration: underline; }
+    .copy-link {
+      background: #2a2d35;
+      border: none;
+      color: #8b9bb4;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      white-space: nowrap;
+      transition: 0.2s;
+    }
+    .copy-link:hover { background: #444; color: #fff; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo">🪪 Kartvizit</div>
+    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+  </div>
+
+  <div class="container">
+
+    <!-- Kartvizit Linki -->
+    <div class="section">
+      <h3>Kartvizit Linkin</h3>
+      <div class="card-link-box">
+        <a id="card-link" href="#" target="_blank">Yükleniyor...</a>
+        <button class="copy-link" onclick="copyLink()">Kopyala</button>
+      </div>
+    </div>
+
+    <!-- Kişisel Bilgiler -->
+    <div class="section">
+      <h3>Kişisel Bilgiler</h3>
+      <div class="form-group">
+        <label>Ad Soyad</label>
+        <input type="text" id="full_name" placeholder="Burak Yılmaz">
+      </div>
+      <div class="two-col">
+        <div class="form-group">
+          <label>Şirket</label>
+          <input type="text" id="company" placeholder="Şirket Adı">
+        </div>
+        <div class="form-group">
+          <label>Unvan</label>
+          <input type="text" id="title" placeholder="Sistem Yöneticisi">
+        </div>
+      </div>
+    </div>
+
+    <!-- İletişim -->
+    <div class="section">
+      <h3>İletişim</h3>
+      <div class="two-col">
+        <div class="form-group">
+          <label>Cep Telefonu</label>
+          <input type="text" id="mobile" placeholder="+90 555 000 00 00">
+        </div>
+        <div class="form-group">
+          <label>İş Telefonu</label>
+          <input type="text" id="work_phone" placeholder="+90 212 000 00 00">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="email" placeholder="email@sirket.com">
+      </div>
+      <div class="form-group">
+        <label>Web Sitesi</label>
+        <input type="text" id="website" placeholder="www.sirket.com">
+      </div>
+    </div>
+
+    <!-- Adres & Sosyal -->
+    <div class="section">
+      <h3>Adres & Sosyal Medya</h3>
+      <div class="form-group">
+        <label>Adres</label>
+        <input type="text" id="address" placeholder="Maslak Mah. Büyükdere Cad. İstanbul">
+      </div>
+      <div class="form-group">
+        <label>LinkedIn URL</label>
+        <input type="text" id="linkedin" placeholder="https://linkedin.com/in/kullanici">
+      </div>
+    </div>
+
+    <!-- Şirket Bilgileri -->
+    <div class="section">
+      <h3>Şirket Bilgileri</h3>
+      <div class="two-col">
+        <div class="form-group">
+          <label>Vergi Dairesi</label>
+          <input type="text" id="tax_office" placeholder="Boğaziçi Kurumlar">
+        </div>
+        <div class="form-group">
+          <label>Vergi No</label>
+          <input type="text" id="tax_no" placeholder="1234567890">
+        </div>
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Değişiklikleri Kaydet</button>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    let currentUser = null;
+    let currentUsername = null;
+
+    // Giriş kontrolü
+    sb.auth.getSession().then(async ({ data }) => {
+      if (!data.session) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUser = data.session.user;
+      loadProfile();
+    });
+
+    async function loadProfile() {
+      const { data } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .single();
+
+      if (!data) return;
+
+      currentUsername = data.username;
+
+      // Kartvizit linkini güncelle
+      const link = `${window.location.origin}/card.html?username=${data.username}`;
+      const linkEl = document.getElementById('card-link');
+      linkEl.href = link;
+      linkEl.textContent = link;
+
+      // Alanları doldur
+      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','tax_office','tax_no'];
+      fields.forEach(f => {
+        if (data[f]) document.getElementById(f).value = data[f];
+      });
+    }
+
+    async function saveProfile() {
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true;
+      btn.textContent = 'Kaydediliyor...';
+
+      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','tax_office','tax_no'];
+      const updates = {};
+      fields.forEach(f => { updates[f] = document.getElementById(f).value.trim(); });
+
+      const { error } = await sb
+        .from('profiles')
+        .update(updates)
+        .eq('user_id', currentUser.id);
+
+      btn.disabled = false;
+      btn.textContent = '💾 Değişiklikleri Kaydet';
+
+      if (error) {
+        showToast('Hata: ' + error.message, true);
+      } else {
+        showToast('✓ Kaydedildi!');
+      }
+    }
+
+    async function logout() {
+      await sb.auth.signOut();
+      window.location.href = 'index.html';
+    }
+
+    function copyLink() {
+      const link = document.getElementById('card-link').textContent;
+      navigator.clipboard.writeText(link).then(() => showToast('✓ Link kopyalandı!'));
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.background = isError ? '#c0392b' : '#0e8c6f';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+  </script>
+</body>
+</html>
