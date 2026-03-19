@@ -280,8 +280,11 @@
 
       const { error } = await sb
         .from('profiles')
-        .update(updates)
-        .eq('user_id', currentUser.id);
+        .upsert({
+          user_id: currentUser.id,
+          username: currentUsername || currentUser.email.split('@')[0],
+          ...updates
+        }, { onConflict: 'user_id' });
 
       btn.disabled = false;
       btn.textContent = '💾 Değişiklikleri Kaydet';
@@ -290,6 +293,7 @@
         showToast('Hata: ' + error.message, true);
       } else {
         showToast('✓ Kaydedildi!');
+        loadProfile();
       }
     }
 
