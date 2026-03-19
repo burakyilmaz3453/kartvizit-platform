@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dijital Kartvizit</title>
+  <link rel="icon" id="favicon" type="image/x-icon" href="https://burakyilmaz3453.github.io/kartvizit-platform/favicon.ico">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <style>
     :root { --bg-dark:#000; --card-bg:#181a1e; --text-white:#fff; --text-grey:#8b9bb4; --accent-color:#0e8c6f; --border-color:#2a2d35; --site-width:450px; }
@@ -251,7 +252,10 @@
         const initials = name.split(' ').map(function(w){ return w[0]; }).join('').substring(0,2).toUpperCase();
         document.getElementById('initials').textContent = initials;
       }
-
+      if (data.avatar_url) {
+      document.getElementById('profile-container').innerHTML = '<img src="' + data.avatar_url + '" alt="' + name + '">';
+      document.getElementById('favicon').href = data.avatar_url;  // ← buraya ekle
+    } else {
       if (data.banner_url) {
         document.getElementById('banner-container').innerHTML = '<img src="' + data.banner_url + '" alt="Banner">';
       }
