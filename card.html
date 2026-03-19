@@ -198,7 +198,7 @@
     <div id="qrModal" class="modal" onclick="this.style.display='none'">
       <div class="modal-content" onclick="event.stopPropagation()">
         <h3>QR Kod</h3>
-        <canvas id="qr-canvas" class="modal-qr"></canvas>
+        <div id="qr-container" class="modal-qr" style="width:200px;height:200px;margin:0 auto 15px;"></div>
         <p style="font-size:0.8rem;color:#8b9bb4;margin-bottom:15px;">Taratarak bu kartvizite ulaşın</p>
         <button class="close-modal" onclick="document.getElementById('qrModal').style.display='none'">Kapat</button>
       </div>
@@ -216,7 +216,7 @@
   <div id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="supabase.js"></script>
   <script>
     document.getElementById('footer-year').textContent = new Date().getFullYear();
@@ -315,19 +315,17 @@
     }
 
     function openQR() {
-      document.getElementById('qrModal').style.display = 'flex';
-      var canvas = document.getElementById('qr-canvas');
-      canvas.width = 200;
-      canvas.height = 200;
-      setTimeout(function() {
-        QRCode.toCanvas(canvas, window.location.href, {
-          width: 200, margin: 2,
-          color: { dark: '#000000', light: '#ffffff' }
-        }, function(err) {
-          if (err) console.error(err);
-        });
-      }, 150);
-    }
+  document.getElementById('qrModal').style.display = 'flex';
+  var container = document.getElementById('qr-container');
+  container.innerHTML = '';
+  new QRCode(container, {
+    text: window.location.href,
+    width: 200,
+    height: 200,
+    colorDark: '#000000',
+    colorLight: '#ffffff'
+  });
+}
 
     function copyText(id) {
       var el = document.getElementById(id);
