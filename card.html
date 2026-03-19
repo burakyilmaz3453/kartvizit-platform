@@ -146,6 +146,10 @@
       opacity: 0; transition: 0.3s; z-index: 9999; pointer-events: none;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @keyframes zoomIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -163,7 +167,7 @@
     <div class="fixed-header">
       <div class="banner-container" id="banner-container">
       </div>
-      <div class="profile-container" id="profile-container">
+      <div class="profile-container" id="profile-container" onclick="openProfile()" style="cursor:pointer;">
         <div class="profile-initials" id="initials">?</div>
       </div>
       <div class="fixed-card-part">
@@ -289,6 +293,12 @@
         <p style="font-size:0.8rem;color:#8b9bb4;margin-bottom:15px;">Taratarak bu kartvizite ulaşın</p>
         <button class="close-modal" onclick="document.getElementById('qrModal').style.display='none'">Kapat</button>
       </div>
+      </div>
+      <div id="profileModal" class="modal" onclick="this.style.display='none'">
+  <div class="modal-content" style="background:transparent;border:none;box-shadow:none;" onclick="event.stopPropagation()">
+    <img id="profile-modal-img" src="" style="width:250px;height:250px;border-radius:50%;object-fit:cover;border:4px solid #181a1e;box-shadow:0 0 30px rgba(255,255,255,0.1);animation:zoomIn 0.3s ease;">
+  </div>
+    </div>
     </div>
 
   </div>
@@ -405,7 +415,12 @@
       if (!text) return;
       navigator.clipboard.writeText(text.trim()).then(() => showToast('✓ Kopyalandı!'));
     }
-
+    function openProfile() {
+  const img = document.getElementById('profile-container').querySelector('img');
+  if (!img) return;
+  document.getElementById('profile-modal-img').src = img.src;
+  document.getElementById('profileModal').style.display = 'flex';
+}
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
