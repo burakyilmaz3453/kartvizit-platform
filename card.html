@@ -398,7 +398,7 @@
       generateVCF(data);
 
       // QR
-      QRCode.toCanvas(document.getElementById('qr-canvas'), window.location.href, { width: 200, margin: 1 });
+      //QRCode.toCanvas(document.getElementById('qr-canvas'), window.location.href, { width: 200, margin: 1 });
     }
 
     function generateVCF(d) {
@@ -423,9 +423,15 @@
 }
     function openQR() {
   document.getElementById('qrModal').style.display = 'flex';
-  QRCode.toCanvas(document.getElementById('qr-canvas'), window.location.href, { 
-    width: 200, margin: 1, color: { dark: '#000000', light: '#ffffff' }
-  });
+  const canvas = document.getElementById('qr-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  setTimeout(() => {
+    QRCode.toCanvas(canvas, window.location.href, { 
+      width: 200, margin: 2, color: { dark: '#000000', light: '#ffffff' }
+    });
+  }, 100);
+}
 }
     function showToast(msg) {
       const t = document.getElementById('toast');
