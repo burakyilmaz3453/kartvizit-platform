@@ -6,150 +6,61 @@
   <title>Dijital Kartvizit</title>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <style>
-    :root {
-      --bg-dark: #000000;
-      --card-bg: #181a1e;
-      --text-white: #ffffff;
-      --text-grey: #8b9bb4;
-      --accent-color: #0e8c6f;
-      --border-color: #2a2d35;
-      --site-width: 450px;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    body { background-color: var(--bg-dark); color: var(--text-white); overflow-x: hidden; }
-
-    .fixed-header {
-      position: fixed; top: 0; left: 50%; transform: translateX(-50%);
-      width: 100%; max-width: var(--site-width); height: 425px;
-      z-index: 1; background-color: #000;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .banner-container {
-      width: 100%; height: 160px; flex-shrink: 0;
-      overflow: hidden; border-radius: 0 0 20px 20px; z-index: 1;
-      background: linear-gradient(135deg, #0e2a22, #0e8c6f44);
-    }
-    .banner-container img { width: 100%; height: 100%; object-fit: cover; }
-    .fixed-card-part {
-      width: 100%; background-color: #181a1e;
-      margin-top: -40px; padding-top: 105px; padding-bottom: 25px;
-      border-radius: 25px; border: 1px solid #2a2d35;
-      display: flex; flex-direction: column; align-items: center;
-      flex-grow: 1; z-index: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .profile-container {
-      width: 110px; height: 110px;
-      border-radius: 50%; border: 4px solid #181a1e;
-      overflow: hidden; background: #222; z-index: 2;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-      position: absolute; top: 105px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .profile-container img { width: 100%; height: 100%; object-fit: cover; }
-    .profile-initials { font-size: 2.5rem; font-weight: 700; color: #0e8c6f; }
-    .header-info { margin-bottom: 5px; text-align: center; z-index: 5; position: relative; }
-    .name { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
-    .company { color: var(--text-grey); font-size: 0.8rem; letter-spacing: 0.5px; }
-    .job-title { font-size: 0.85rem; font-weight: 500; margin-top: 2px; color: var(--accent-color); }
-    .action-buttons { display: flex; justify-content: space-between; gap: 8px; width: 90%; margin-top: 25px; }
-    .action-btn {
-      background: #23262b; border: 1px solid var(--border-color);
-      border-radius: 10px; padding: 10px 2px; flex: 1;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-decoration: none; cursor: pointer; transition: 0.2s; min-width: 0;
-    }
-    .action-btn:hover { background: #2c3036; }
-    .action-btn span { font-size: 0.65rem; margin-top: 6px; color: var(--text-grey); font-weight: 500; white-space: nowrap; }
-    .highlight-btn { background: var(--accent-color); border-color: var(--accent-color); }
-    .highlight-btn:hover { background: #0b7058; }
-    .highlight-btn span { color: #fff; }
-    .btn-icon { width: 20px; height: 20px; }
-
-    .scroll-content {
-      margin-top: 445px; width: 100%; max-width: var(--site-width);
-      margin-left: auto; margin-right: auto;
-      position: relative; z-index: 100; padding-bottom: 40px;
-    }
-    .card-body {
-      background-color: #181a1e; border-radius: 25px; padding: 20px;
-      min-height: 60vh; border: 1px solid #2a2d35; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-    }
-    .card-body::before {
-      content: ''; display: block; width: 40px; height: 4px;
-      background-color: #333; margin: 0 auto 15px auto; border-radius: 2px;
-    }
-    .info-list, .company-list { display: flex; flex-direction: column; gap: 12px; }
-    .info-item {
-      display: flex; align-items: center; justify-content: space-between;
-      background: #1e2125; padding: 12px 15px;
-      border-radius: 10px; border: 1px solid var(--border-color); gap: 10px;
-    }
-    .list-icon { width: 20px; height: 20px; fill: var(--text-grey); flex-shrink: 0; }
-    .list-text { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .label { font-size: 0.7rem; color: var(--text-grey); margin-bottom: 2px; }
-    .value { font-size: 0.9rem; color: #fff; word-wrap: break-word; }
-    .value-link { text-decoration: none; color: #fff; }
-    .value-link:hover { color: var(--accent-color); }
-    .copy-btn-box {
-      background: #2a2d35; border: 1px solid #333; color: var(--text-grey);
-      width: 36px; height: 36px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: 0.2s; flex-shrink: 0;
-    }
-    .copy-btn-box:hover { background: #444; color: #fff; }
-    .icon-sm { width: 16px; height: 16px; fill: currentColor; }
-
-    .map-section { margin-top: 20px; padding: 15px; background: #1e2125; border-radius: 12px; border: 1px solid var(--border-color); }
-    .section-title { font-size: 0.9rem; margin-bottom: 12px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 8px; }
-    .directions-btn {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--accent-color); color: white; padding: 10px;
-      border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; width: 100%;
-    }
-
-    /* Sosyal medya */
-    .social-section { margin-top: 20px; }
-    .social-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-    .social-btn {
-      width: 44px; height: 44px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      text-decoration: none; transition: 0.2s;
-    }
-    .social-btn:hover { opacity: 0.8; transform: scale(0.95); }
-    .social-btn svg { width: 30px; height: 30px; }
-
-    .company-section { margin-top: 20px; }
-
-    /* Modal */
-    .modal {
-      display: none; position: fixed; z-index: 100; left: 0; top: 0;
-      width: 100%; height: 100%; background-color: rgba(0,0,0,0.9);
-      align-items: center; justify-content: center; backdrop-filter: blur(5px);
-    }
-    .modal-content {
-      background-color: #1e2126; padding: 30px; border-radius: 20px;
-      text-align: center; width: 90%; max-width: 320px;
-      position: relative; border: 1px solid var(--border-color);
-    }
-    .modal-content h3 { margin-bottom: 15px; }
-    .modal-qr { width: 100%; max-width: 220px; margin: 0 auto 15px; background: #fff; padding: 10px; border-radius: 10px; display: block; }
-    .close-modal { background: #2a2d35; border: none; color: #fff; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
-
-    footer { text-align: center; padding: 30px 0 10px; color: #444; font-size: 11px; }
-    .hidden { display: none !important; }
-
-    #toast {
-      position: fixed; bottom: 30px; left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #0e8c6f; color: #fff; padding: 10px 22px;
-      border-radius: 25px; font-size: 0.85rem; font-weight: 600;
-      opacity: 0; transition: 0.3s; z-index: 9999; pointer-events: none;
-    }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    @keyframes zoomIn {
-      from { transform: scale(0.5); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+    :root { --bg-dark:#000; --card-bg:#181a1e; --text-white:#fff; --text-grey:#8b9bb4; --accent-color:#0e8c6f; --border-color:#2a2d35; --site-width:450px; }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+    body { background-color:var(--bg-dark); color:var(--text-white); overflow-x:hidden; }
+    .fixed-header { position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:var(--site-width); height:425px; z-index:1; background-color:#000; display:flex; flex-direction:column; align-items:center; }
+    .banner-container { width:100%; height:160px; flex-shrink:0; overflow:hidden; border-radius:0 0 20px 20px; z-index:1; background:linear-gradient(135deg,#0e2a22,#0e8c6f44); }
+    .banner-container img { width:100%; height:100%; object-fit:cover; }
+    .fixed-card-part { width:100%; background-color:#181a1e; margin-top:-40px; padding-top:105px; padding-bottom:25px; border-radius:25px; border:1px solid #2a2d35; display:flex; flex-direction:column; align-items:center; flex-grow:1; z-index:0; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+    .profile-container { width:110px; height:110px; border-radius:50%; border:4px solid #181a1e; overflow:hidden; background:#222; z-index:2; box-shadow:0 5px 15px rgba(0,0,0,0.5); position:absolute; top:105px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+    .profile-container img { width:100%; height:100%; object-fit:cover; }
+    .profile-initials { font-size:2.5rem; font-weight:700; color:#0e8c6f; }
+    .header-info { margin-bottom:5px; text-align:center; z-index:5; position:relative; }
+    .name { font-size:1.5rem; font-weight:700; margin-bottom:4px; color:#fff; }
+    .company { color:var(--text-grey); font-size:0.8rem; letter-spacing:0.5px; }
+    .job-title { font-size:0.85rem; font-weight:500; margin-top:2px; color:var(--accent-color); }
+    .action-buttons { display:flex; justify-content:space-between; gap:8px; width:90%; margin-top:25px; }
+    .action-btn { background:#23262b; border:1px solid var(--border-color); border-radius:10px; padding:10px 2px; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; cursor:pointer; transition:0.2s; min-width:0; }
+    .action-btn:hover { background:#2c3036; }
+    .action-btn span { font-size:0.65rem; margin-top:6px; color:var(--text-grey); font-weight:500; white-space:nowrap; }
+    .highlight-btn { background:var(--accent-color); border-color:var(--accent-color); }
+    .highlight-btn:hover { background:#0b7058; }
+    .highlight-btn span { color:#fff; }
+    .btn-icon { width:20px; height:20px; }
+    .scroll-content { margin-top:445px; width:100%; max-width:var(--site-width); margin-left:auto; margin-right:auto; position:relative; z-index:100; padding-bottom:40px; }
+    .card-body { background-color:#181a1e; border-radius:25px; padding:20px; min-height:60vh; border:1px solid #2a2d35; box-shadow:0 -5px 20px rgba(0,0,0,0.5); }
+    .card-body::before { content:''; display:block; width:40px; height:4px; background-color:#333; margin:0 auto 15px auto; border-radius:2px; }
+    .info-list,.company-list { display:flex; flex-direction:column; gap:12px; }
+    .info-item { display:flex; align-items:center; justify-content:space-between; background:#1e2125; padding:12px 15px; border-radius:10px; border:1px solid var(--border-color); gap:10px; }
+    .list-icon { width:20px; height:20px; fill:var(--text-grey); flex-shrink:0; }
+    .list-text { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .label { font-size:0.7rem; color:var(--text-grey); margin-bottom:2px; }
+    .value { font-size:0.9rem; color:#fff; word-wrap:break-word; }
+    .value-link { text-decoration:none; color:#fff; }
+    .value-link:hover { color:var(--accent-color); }
+    .copy-btn-box { background:#2a2d35; border:1px solid #333; color:var(--text-grey); width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.2s; flex-shrink:0; }
+    .copy-btn-box:hover { background:#444; color:#fff; }
+    .icon-sm { width:16px; height:16px; fill:currentColor; }
+    .map-section { margin-top:20px; padding:15px; background:#1e2125; border-radius:12px; border:1px solid var(--border-color); }
+    .section-title { font-size:0.9rem; margin-bottom:12px; color:#fff; border-bottom:1px solid #333; padding-bottom:8px; }
+    .directions-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:var(--accent-color); color:white; padding:10px; border-radius:8px; text-decoration:none; font-weight:600; font-size:0.85rem; width:100%; }
+    .social-section { margin-top:20px; }
+    .social-buttons { display:flex; gap:10px; flex-wrap:wrap; }
+    .social-btn { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:0.2s; }
+    .social-btn:hover { opacity:0.8; transform:scale(0.95); }
+    .social-btn svg { width:30px; height:30px; }
+    .company-section { margin-top:20px; }
+    .modal { display:none; position:fixed; z-index:100; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.9); align-items:center; justify-content:center; backdrop-filter:blur(5px); }
+    .modal-content { background-color:#1e2126; padding:30px; border-radius:20px; text-align:center; width:90%; max-width:320px; position:relative; border:1px solid var(--border-color); }
+    .modal-content h3 { margin-bottom:15px; }
+    .modal-qr { width:200px; height:200px; margin:0 auto 15px; display:block; background:#fff; border-radius:10px; }
+    .close-modal { background:#2a2d35; border:none; color:#fff; padding:8px 20px; border-radius:8px; cursor:pointer; font-size:0.85rem; }
+    footer { text-align:center; padding:30px 0 10px; color:#444; font-size:11px; }
+    .hidden { display:none !important; }
+    #toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:#0e8c6f; color:#fff; padding:10px 22px; border-radius:25px; font-size:0.85rem; font-weight:600; opacity:0; transition:0.3s; z-index:9999; pointer-events:none; }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    @keyframes zoomIn { from { transform:scale(0.5); opacity:0; } to { transform:scale(1); opacity:1; } }
   </style>
 </head>
 <body>
@@ -163,11 +74,9 @@
   </div>
 
   <div id="card-content" class="hidden">
-
     <div class="fixed-header">
-      <div class="banner-container" id="banner-container">
-      </div>
-      <div class="profile-container" id="profile-container" onclick="openProfile()" style="cursor:pointer;">
+      <div class="banner-container" id="banner-container"></div>
+      <div class="profile-container" id="profile-container" onclick="openProfile()">
         <div class="profile-initials" id="initials">?</div>
       </div>
       <div class="fixed-card-part">
@@ -242,7 +151,6 @@
           </a>
         </div>
 
-        <!-- Sosyal Medya -->
         <div class="social-section" id="row-social">
           <p class="section-title">Sosyal Medya</p>
           <div class="social-buttons">
@@ -286,6 +194,7 @@
       </div>
     </div>
 
+    <!-- QR Modal -->
     <div id="qrModal" class="modal" onclick="this.style.display='none'">
       <div class="modal-content" onclick="event.stopPropagation()">
         <h3>QR Kod</h3>
@@ -293,12 +202,13 @@
         <p style="font-size:0.8rem;color:#8b9bb4;margin-bottom:15px;">Taratarak bu kartvizite ulaşın</p>
         <button class="close-modal" onclick="document.getElementById('qrModal').style.display='none'">Kapat</button>
       </div>
-      </div>
-      <div id="profileModal" class="modal" onclick="this.style.display='none'">
-  <div class="modal-content" style="background:transparent;border:none;box-shadow:none;" onclick="event.stopPropagation()">
-    <img id="profile-modal-img" src="" style="width:250px;height:250px;border-radius:50%;object-fit:cover;border:4px solid #181a1e;box-shadow:0 0 30px rgba(255,255,255,0.1);animation:zoomIn 0.3s ease;">
-  </div>
     </div>
+
+    <!-- Profil Modal -->
+    <div id="profileModal" class="modal" onclick="this.style.display='none'">
+      <div class="modal-content" style="background:transparent;border:none;box-shadow:none;" onclick="event.stopPropagation()">
+        <img id="profile-modal-img" src="" style="width:250px;height:250px;border-radius:50%;object-fit:cover;border:4px solid #181a1e;box-shadow:0 0 30px rgba(255,255,255,0.1);animation:zoomIn 0.3s ease;">
+      </div>
     </div>
 
   </div>
@@ -324,9 +234,7 @@
     async function loadCard(username) {
       const { data } = await sb.from('profiles').select('*').eq('username', username).single();
       document.getElementById('loading').classList.add('hidden');
-
       if (!data) { document.getElementById('not-found').classList.remove('hidden'); return; }
-
       document.getElementById('card-content').classList.remove('hidden');
 
       const name = data.full_name || data.username;
@@ -337,20 +245,17 @@
       if (data.company) document.getElementById('p-company').textContent = data.company;
       if (data.title) document.getElementById('p-title').textContent = data.title;
 
-      // Profil fotoğrafı
       if (data.avatar_url) {
-        document.getElementById('profile-container').innerHTML = `<img src="${data.avatar_url}" alt="${name}">`;
+        document.getElementById('profile-container').innerHTML = '<img src="' + data.avatar_url + '" alt="' + name + '">';
       } else {
-        const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+        const initials = name.split(' ').map(function(w){ return w[0]; }).join('').substring(0,2).toUpperCase();
         document.getElementById('initials').textContent = initials;
       }
 
-      // Banner
       if (data.banner_url) {
-        document.getElementById('banner-container').innerHTML = `<img src="${data.banner_url}" alt="Banner">`;
+        document.getElementById('banner-container').innerHTML = '<img src="' + data.banner_url + '" alt="Banner">';
       }
 
-      // Butonlar
       if (data.mobile) {
         document.getElementById('btn-call').href = 'tel:' + data.mobile;
         document.getElementById('btn-whatsapp').href = 'https://wa.me/' + data.mobile.replace(/[^0-9]/g, '');
@@ -366,8 +271,8 @@
       } else { document.getElementById('row-email').classList.add('hidden'); }
 
       if (data.website) {
-        const cleanWeb = data.website.replace(/^https?:\/\//, '');
-        const webEl = document.getElementById('p-web');
+        var cleanWeb = data.website.replace(/^https?:\/\//, '');
+        var webEl = document.getElementById('p-web');
         webEl.textContent = cleanWeb;
         webEl.href = data.website.startsWith('http') ? data.website : 'https://' + data.website;
       } else { document.getElementById('row-web').classList.add('hidden'); }
@@ -377,15 +282,13 @@
         document.getElementById('btn-direction').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.address);
       } else { document.getElementById('row-address').classList.add('hidden'); }
 
-      // Sosyal medya
-      let hasSocial = false;
-      if (data.linkedin) { const el = document.getElementById('btn-linkedin'); el.href = data.linkedin.startsWith('http') ? data.linkedin : 'https://' + data.linkedin; el.classList.remove('hidden'); hasSocial = true; }
-      if (data.instagram) { const el = document.getElementById('btn-instagram'); el.href = data.instagram.startsWith('http') ? data.instagram : 'https://' + data.instagram; el.classList.remove('hidden'); hasSocial = true; }
-      if (data.twitter) { const el = document.getElementById('btn-twitter'); el.href = data.twitter.startsWith('http') ? data.twitter : 'https://' + data.twitter; el.classList.remove('hidden'); hasSocial = true; }
-      if (data.facebook) { const el = document.getElementById('btn-facebook'); el.href = data.facebook.startsWith('http') ? data.facebook : 'https://' + data.facebook; el.classList.remove('hidden'); hasSocial = true; }
+      var hasSocial = false;
+      if (data.linkedin) { var el = document.getElementById('btn-linkedin'); el.href = data.linkedin.startsWith('http') ? data.linkedin : 'https://' + data.linkedin; el.classList.remove('hidden'); hasSocial = true; }
+      if (data.instagram) { var el2 = document.getElementById('btn-instagram'); el2.href = data.instagram.startsWith('http') ? data.instagram : 'https://' + data.instagram; el2.classList.remove('hidden'); hasSocial = true; }
+      if (data.twitter) { var el3 = document.getElementById('btn-twitter'); el3.href = data.twitter.startsWith('http') ? data.twitter : 'https://' + data.twitter; el3.classList.remove('hidden'); hasSocial = true; }
+      if (data.facebook) { var el4 = document.getElementById('btn-facebook'); el4.href = data.facebook.startsWith('http') ? data.facebook : 'https://' + data.facebook; el4.classList.remove('hidden'); hasSocial = true; }
       if (!hasSocial) document.getElementById('row-social').classList.add('hidden');
 
-      // Şirket bilgileri
       if (data.company) document.getElementById('p-comp-name').textContent = data.company;
       else document.getElementById('row-comp-name').classList.add('hidden');
       if (data.tax_office) document.getElementById('p-tax-office').textContent = data.tax_office;
@@ -394,52 +297,50 @@
       else document.getElementById('row-tax-no').classList.add('hidden');
       if (!data.company && !data.tax_office && !data.tax_no) document.getElementById('row-company-info').classList.add('hidden');
 
-      // VCF
       generateVCF(data);
-
-      // QR
-      //QRCode.toCanvas(document.getElementById('qr-canvas'), window.location.href, { width: 200, margin: 1 });
     }
 
     function generateVCF(d) {
-      const vcf = `BEGIN:VCARD\nVERSION:3.0\nFN:${d.full_name||d.username}\nORG:${d.company||''}\nTITLE:${d.title||''}\nTEL;TYPE=CELL:${d.mobile||''}\nTEL;TYPE=WORK:${d.work_phone||''}\nEMAIL:${d.email||''}\nURL:${d.website||''}\nADR;TYPE=WORK:;;${d.address||''};;;;\nX-TAX-OFFICE:${d.tax_office||''}\nX-TAX-NUMBER:${d.tax_no||''}\nEND:VCARD`;
-      const blob = new Blob([vcf], { type: 'text/vcard' });
-      const url = URL.createObjectURL(blob);
-      document.getElementById('btn-vcf').href = url;
+      var vcf = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + (d.full_name||d.username) + '\nORG:' + (d.company||'') + '\nTITLE:' + (d.title||'') + '\nTEL;TYPE=CELL:' + (d.mobile||'') + '\nTEL;TYPE=WORK:' + (d.work_phone||'') + '\nEMAIL:' + (d.email||'') + '\nURL:' + (d.website||'') + '\nADR;TYPE=WORK:;;' + (d.address||'') + ';;;;\nX-TAX-OFFICE:' + (d.tax_office||'') + '\nX-TAX-NUMBER:' + (d.tax_no||'') + '\nEND:VCARD';
+      var blob = new Blob([vcf], { type: 'text/vcard' });
+      document.getElementById('btn-vcf').href = URL.createObjectURL(blob);
       document.getElementById('btn-vcf').download = (d.full_name || d.username) + '.vcf';
     }
 
-    function copyText(id) {
-      const el = document.getElementById(id);
-      const text = el.textContent || el.innerText;
-      if (!text) return;
-      navigator.clipboard.writeText(text.trim()).then(() => showToast('✓ Kopyalandı!'));
-    }
     function openProfile() {
-  const img = document.getElementById('profile-container').querySelector('img');
-  if (!img) return;
-  document.getElementById('profile-modal-img').src = img.src;
-  document.getElementById('profileModal').style.display = 'flex';
-}
+      var img = document.getElementById('profile-container').querySelector('img');
+      if (!img) return;
+      document.getElementById('profile-modal-img').src = img.src;
+      document.getElementById('profileModal').style.display = 'flex';
+    }
+
     function openQR() {
-  document.getElementById('qrModal').style.display = 'flex';
-  setTimeout(() => {
-    const canvas = document.getElementById('qr-canvas');
-    canvas.width = 200;
-    canvas.height = 200;
-    QRCode.toCanvas(canvas, window.location.href, { 
-      width: 200, 
-      margin: 2
-    }, function(error) {
-      if (error) console.error(error);
-    });
-  }, 150);
-}
+      document.getElementById('qrModal').style.display = 'flex';
+      var canvas = document.getElementById('qr-canvas');
+      canvas.width = 200;
+      canvas.height = 200;
+      setTimeout(function() {
+        QRCode.toCanvas(canvas, window.location.href, {
+          width: 200, margin: 2,
+          color: { dark: '#000000', light: '#ffffff' }
+        }, function(err) {
+          if (err) console.error(err);
+        });
+      }, 150);
+    }
+
+    function copyText(id) {
+      var el = document.getElementById(id);
+      var text = el.textContent || el.innerText;
+      if (!text) return;
+      navigator.clipboard.writeText(text.trim()).then(function() { showToast('Kopyalandı!'); });
+    }
+
     function showToast(msg) {
-      const t = document.getElementById('toast');
+      var t = document.getElementById('toast');
       t.textContent = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2000);
+      setTimeout(function() { t.classList.remove('show'); }, 2000);
     }
   </script>
 </body>
