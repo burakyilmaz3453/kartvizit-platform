@@ -151,7 +151,7 @@
       if (!file) return;
       document.getElementById('avatar-status').textContent = 'Yükleniyor...';
       const ext = file.name.split('.').pop();
-      const path = `${currentUser.id}/avatar.${ext}`;
+      const path = `${currentUser.id}/avatar_${Date.now()}.${ext}`;
       const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert: true });
       if (error) { document.getElementById('avatar-status').textContent = 'Hata!'; return; }
       const { data } = sb.storage.from('Avatars').getPublicUrl(path);
@@ -167,7 +167,7 @@
       if (!file) return;
       document.getElementById('banner-status').textContent = 'Yükleniyor...';
       const ext = file.name.split('.').pop();
-      const path = `${currentUser.id}/banner.${ext}`;
+      const path = `${currentUser.id}/banner_${Date.now()}.${ext}`;
       const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert: true });
       if (error) { document.getElementById('banner-status').textContent = 'Hata!'; return; }
       const { data } = sb.storage.from('Avatars').getPublicUrl(path);
