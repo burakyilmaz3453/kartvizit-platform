@@ -185,7 +185,7 @@
             <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             <span>E-mail</span>
           </a>
-          <button onclick="document.getElementById('qrModal').style.display='flex'" class="action-btn">
+          <button onclick="openQR()" class="action-btn">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M3 3h7v7H3V3zm2 2v3h3V5H5zm8-2h7v7h-7V3zm2 2v3h3V5h-3zM3 14h7v7H3v-7zm2 2v3h3v-3H5zm11 1h2v2h-2v-2zm-3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm3-3h2v2h-2v-2zm0 6h2v2h-2v-2zm3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm-3-6h2v2h-2v-2z"/></svg>
             <span>QR</span>
           </button>
@@ -420,6 +420,12 @@
   if (!img) return;
   document.getElementById('profile-modal-img').src = img.src;
   document.getElementById('profileModal').style.display = 'flex';
+}
+    function openQR() {
+  document.getElementById('qrModal').style.display = 'flex';
+  QRCode.toCanvas(document.getElementById('qr-canvas'), window.location.href, { 
+    width: 200, margin: 1, color: { dark: '#000000', light: '#ffffff' }
+  });
 }
     function showToast(msg) {
       const t = document.getElementById('toast');
