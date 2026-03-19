@@ -2,317 +2,415 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel | Kartvizit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dijital Kartvizit</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #000;
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      padding: 20px;
+    :root {
+      --bg-dark: #000000;
+      --card-bg: #181a1e;
+      --text-white: #ffffff;
+      --text-grey: #8b9bb4;
+      --accent-color: #0e8c6f;
+      --border-color: #2a2d35;
+      --site-width: 450px;
     }
-    .topbar {
-      max-width: 600px;
-      margin: 0 auto 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-white); overflow-x: hidden; }
+
+    .fixed-header {
+      position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: var(--site-width); height: 425px;
+      z-index: 1; background-color: #000;
+      display: flex; flex-direction: column; align-items: center;
     }
-    .logo { font-size: 1.2rem; font-weight: 800; color: #0e8c6f; }
-    .logout-btn {
-      background: #23262b;
-      border: 1px solid #2a2d35;
-      color: #8b9bb4;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.82rem;
-      transition: 0.2s;
+    .banner-container {
+      width: 100%; height: 160px; flex-shrink: 0;
+      overflow: hidden; border-radius: 0 0 20px 20px; z-index: 1;
+      background: linear-gradient(135deg, #0e2a22, #0e8c6f44);
     }
-    .logout-btn:hover { color: #fff; background: #2c3036; }
-    .container { max-width: 600px; margin: 0 auto; }
-    .section {
-      background: #181a1e;
-      border: 1px solid #2a2d35;
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 16px;
+    .banner-container img { width: 100%; height: 100%; object-fit: cover; }
+    .fixed-card-part {
+      width: 100%; background-color: #181a1e;
+      margin-top: -40px; padding-top: 105px; padding-bottom: 25px;
+      border-radius: 25px; border: 1px solid #2a2d35;
+      display: flex; flex-direction: column; align-items: center;
+      flex-grow: 1; z-index: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .section h3 {
-      font-size: 0.85rem;
-      color: #8b9bb4;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 18px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #2a2d35;
+    .profile-container {
+      width: 110px; height: 110px;
+      border-radius: 50%; border: 4px solid #181a1e;
+      overflow: hidden; background: #222; z-index: 2;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      position: absolute; top: 160px;
+      display: flex; align-items: center; justify-content: center;
     }
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
-    input, textarea {
-      width: 100%;
-      background: #1e2125;
-      border: 1px solid #2a2d35;
-      border-radius: 10px;
-      padding: 11px 14px;
-      color: #fff;
-      font-size: 0.88rem;
-      outline: none;
-      transition: 0.2s;
-      font-family: inherit;
+    .profile-container img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-initials { font-size: 2.5rem; font-weight: 700; color: #0e8c6f; }
+    .header-info { margin-bottom: 5px; text-align: center; z-index: 5; position: relative; }
+    .name { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
+    .company { color: var(--text-grey); font-size: 0.8rem; letter-spacing: 0.5px; }
+    .job-title { font-size: 0.85rem; font-weight: 500; margin-top: 2px; color: var(--accent-color); }
+    .action-buttons { display: flex; justify-content: space-between; gap: 8px; width: 90%; margin-top: 25px; }
+    .action-btn {
+      background: #23262b; border: 1px solid var(--border-color);
+      border-radius: 10px; padding: 10px 2px; flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-decoration: none; cursor: pointer; transition: 0.2s; min-width: 0;
     }
-    input:focus, textarea:focus { border-color: #0e8c6f; }
-    input::placeholder, textarea::placeholder { color: #555; }
-    .save-btn {
-      width: 100%;
-      padding: 13px;
-      background: #0e8c6f;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-      margin-top: 8px;
+    .action-btn:hover { background: #2c3036; }
+    .action-btn span { font-size: 0.65rem; margin-top: 6px; color: var(--text-grey); font-weight: 500; white-space: nowrap; }
+    .highlight-btn { background: var(--accent-color); border-color: var(--accent-color); }
+    .highlight-btn:hover { background: #0b7058; }
+    .highlight-btn span { color: #fff; }
+    .btn-icon { width: 20px; height: 20px; }
+
+    .scroll-content {
+      margin-top: 445px; width: 100%; max-width: var(--site-width);
+      margin-left: auto; margin-right: auto;
+      position: relative; z-index: 100; padding-bottom: 40px;
     }
-    .save-btn:hover { background: #0b7058; }
-    .save-btn:disabled { background: #333; cursor: not-allowed; }
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
+    .card-body {
+      background-color: #181a1e; border-radius: 25px; padding: 20px;
+      min-height: 60vh; border: 1px solid #2a2d35; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+    }
+    .card-body::before {
+      content: ''; display: block; width: 40px; height: 4px;
+      background-color: #333; margin: 0 auto 15px auto; border-radius: 2px;
+    }
+    .info-list, .company-list { display: flex; flex-direction: column; gap: 12px; }
+    .info-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #1e2125; padding: 12px 15px;
+      border-radius: 10px; border: 1px solid var(--border-color); gap: 10px;
+    }
+    .list-icon { width: 20px; height: 20px; fill: var(--text-grey); flex-shrink: 0; }
+    .list-text { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .label { font-size: 0.7rem; color: var(--text-grey); margin-bottom: 2px; }
+    .value { font-size: 0.9rem; color: #fff; word-wrap: break-word; }
+    .value-link { text-decoration: none; color: #fff; }
+    .value-link:hover { color: var(--accent-color); }
+    .copy-btn-box {
+      background: #2a2d35; border: 1px solid #333; color: var(--text-grey);
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: 0.2s; flex-shrink: 0;
+    }
+    .copy-btn-box:hover { background: #444; color: #fff; }
+    .icon-sm { width: 16px; height: 16px; fill: currentColor; }
+
+    .map-section { margin-top: 20px; padding: 15px; background: #1e2125; border-radius: 12px; border: 1px solid var(--border-color); }
+    .section-title { font-size: 0.9rem; margin-bottom: 12px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .directions-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--accent-color); color: white; padding: 10px;
+      border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; width: 100%;
+    }
+
+    /* Sosyal medya */
+    .social-section { margin-top: 20px; }
+    .social-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    .social-btn {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; transition: 0.2s;
+    }
+    .social-btn:hover { opacity: 0.8; transform: scale(0.95); }
+    .social-btn svg { width: 30px; height: 30px; }
+
+    .company-section { margin-top: 20px; }
+
+    /* Modal */
+    .modal {
+      display: none; position: fixed; z-index: 100; left: 0; top: 0;
+      width: 100%; height: 100%; background-color: rgba(0,0,0,0.9);
+      align-items: center; justify-content: center; backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background-color: #1e2126; padding: 30px; border-radius: 20px;
+      text-align: center; width: 90%; max-width: 320px;
+      position: relative; border: 1px solid var(--border-color);
+    }
+    .modal-content h3 { margin-bottom: 15px; }
+    .modal-qr { width: 100%; max-width: 220px; margin: 0 auto 15px; background: #fff; padding: 10px; border-radius: 10px; display: block; }
+    .close-modal { background: #2a2d35; border: none; color: #fff; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+
+    footer { text-align: center; padding: 30px 0 10px; color: #444; font-size: 11px; }
+    .hidden { display: none !important; }
+
+    #toast {
+      position: fixed; bottom: 30px; left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: #0e8c6f;
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 25px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      opacity: 0;
-      transition: 0.3s;
-      pointer-events: none;
-      white-space: nowrap;
-      z-index: 999;
+      background: #0e8c6f; color: #fff; padding: 10px 22px;
+      border-radius: 25px; font-size: 0.85rem; font-weight: 600;
+      opacity: 0; transition: 0.3s; z-index: 9999; pointer-events: none;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .card-link-box {
-      background: #1e2125;
-      border: 1px solid #2a2d35;
-      border-radius: 10px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .card-link-box a {
-      color: #0e8c6f;
-      font-size: 0.85rem;
-      text-decoration: none;
-      word-break: break-all;
-    }
-    .card-link-box a:hover { text-decoration: underline; }
-    .copy-link {
-      background: #2a2d35;
-      border: none;
-      color: #8b9bb4;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      white-space: nowrap;
-      transition: 0.2s;
-    }
-    .copy-link:hover { background: #444; color: #fff; }
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 
-  <div class="topbar">
-    <div class="logo">🪪 Kartvizit</div>
-    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+  <div id="loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
+    <div style="color:#8b9bb4;">Yükleniyor...</div>
   </div>
 
-  <div class="container">
+  <div id="not-found" class="hidden" style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;">
+    <div><h2 style="margin-bottom:8px;">Profil bulunamadı</h2><p style="color:#8b9bb4;">Bu kullanıcı adına ait kartvizit yok.</p></div>
+  </div>
 
-    <!-- Kartvizit Linki -->
-    <div class="section">
-      <h3>Kartvizit Linkin</h3>
-      <div class="card-link-box">
-        <a id="card-link" href="#" target="_blank">Yükleniyor...</a>
-        <button class="copy-link" onclick="copyLink()">Kopyala</button>
-      </div>
-    </div>
+  <div id="card-content" class="hidden">
 
-    <!-- Kişisel Bilgiler -->
-    <div class="section">
-      <h3>Kişisel Bilgiler</h3>
-      <div class="form-group">
-        <label>Ad Soyad</label>
-        <input type="text" id="full_name" placeholder="Burak Yılmaz">
+    <div class="fixed-header">
+      <div class="banner-container" id="banner-container">
       </div>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Şirket</label>
-          <input type="text" id="company" placeholder="Şirket Adı">
+      <div class="profile-container" id="profile-container">
+        <div class="profile-initials" id="initials">?</div>
+      </div>
+      <div class="fixed-card-part">
+        <div class="header-info">
+          <h1 class="name" id="p-name">-</h1>
+          <p class="company" id="p-company"></p>
+          <p class="job-title" id="p-title"></p>
         </div>
-        <div class="form-group">
-          <label>Unvan</label>
-          <input type="text" id="title" placeholder="Sistem Yöneticisi">
-        </div>
-      </div>
-    </div>
-
-    <!-- İletişim -->
-    <div class="section">
-      <h3>İletişim</h3>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Cep Telefonu</label>
-          <input type="text" id="mobile" placeholder="+90 555 000 00 00">
-        </div>
-        <div class="form-group">
-          <label>İş Telefonu</label>
-          <input type="text" id="work_phone" placeholder="+90 212 000 00 00">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>E-posta</label>
-        <input type="email" id="email" placeholder="email@sirket.com">
-      </div>
-      <div class="form-group">
-        <label>Web Sitesi</label>
-        <input type="text" id="website" placeholder="www.sirket.com">
-      </div>
-    </div>
-
-    <!-- Adres & Sosyal -->
-    <div class="section">
-      <h3>Adres & Sosyal Medya</h3>
-      <div class="form-group">
-        <label>Adres</label>
-        <input type="text" id="address" placeholder="Maslak Mah. Büyükdere Cad. İstanbul">
-      </div>
-      <div class="form-group">
-        <label>LinkedIn URL</label>
-        <input type="text" id="linkedin" placeholder="https://linkedin.com/in/kullanici">
-      </div>
-    </div>
-
-    <!-- Şirket Bilgileri -->
-    <div class="section">
-      <h3>Şirket Bilgileri</h3>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Vergi Dairesi</label>
-          <input type="text" id="tax_office" placeholder="Boğaziçi Kurumlar">
-        </div>
-        <div class="form-group">
-          <label>Vergi No</label>
-          <input type="text" id="tax_no" placeholder="1234567890">
+        <div class="action-buttons">
+          <a href="#" id="btn-call" class="action-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.12 15.12 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1.01A11.36 11.36 0 018.59 3.99C8.59 3.45 8.14 3 7.6 3H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+            <span>Ara</span>
+          </a>
+          <a href="#" id="btn-email" class="action-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <span>E-mail</span>
+          </a>
+          <button onclick="document.getElementById('qrModal').style.display='flex'" class="action-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M3 3h7v7H3V3zm2 2v3h3V5H5zm8-2h7v7h-7V3zm2 2v3h3V5h-3zM3 14h7v7H3v-7zm2 2v3h3v-3H5zm11 1h2v2h-2v-2zm-3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm3-3h2v2h-2v-2zm0 6h2v2h-2v-2zm3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm-3-6h2v2h-2v-2z"/></svg>
+            <span>QR</span>
+          </button>
+          <a href="#" id="btn-whatsapp" target="_blank" class="action-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24">
+              <path fill="#fff" stroke="#fff" stroke-width="2" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
+              <path fill="#25D366" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
+              <path fill="#fff" d="M16.74 14.38c-.28-.14-1.65-.81-1.9-.9-.25-.1-.43-.14-.62.14-.18.28-.71.9-.87 1.09-.16.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.38-.83-.74-1.4-1.66-1.56-1.94-.16-.28-.02-.43.12-.57.13-.12.28-.33.42-.49.14-.17.19-.28.28-.47.1-.19.05-.35-.02-.49-.08-.14-.62-1.52-.85-2.08-.23-.54-.46-.47-.63-.48h-.53c-.19 0-.49.07-.75.35-.26.28-1 .98-1 2.4s1.03 2.79 1.17 2.98c.14.19 2.02 3.09 4.9 4.33.68.29 1.21.47 1.63.6.69.22 1.31.19 1.8.11.55-.08 1.65-.67 1.89-1.32.23-.65.23-1.21.16-1.33-.07-.1-.25-.18-.53-.32z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+          <a id="btn-vcf" href="#" download class="action-btn highlight-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="#fff"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Kişilere Ekle</span>
+          </a>
         </div>
       </div>
     </div>
 
-    <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Değişiklikleri Kaydet</button>
+    <div class="scroll-content">
+      <div class="card-body">
+        <div class="info-list">
+          <div class="info-item" id="row-mobile">
+            <svg class="list-icon" viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+            <div class="list-text"><span class="label">Cep Telefonu</span><span class="value" id="p-mobile"></span></div>
+            <button class="copy-btn-box" onclick="copyText('p-mobile')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+          </div>
+          <div class="info-item" id="row-work">
+            <svg class="list-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            <div class="list-text"><span class="label">İş Telefonu</span><span class="value" id="p-work"></span></div>
+            <button class="copy-btn-box" onclick="copyText('p-work')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+          </div>
+          <div class="info-item" id="row-email">
+            <svg class="list-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <div class="list-text"><span class="label">E-posta</span><span class="value" id="p-email"></span></div>
+            <button class="copy-btn-box" onclick="copyText('p-email')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+          </div>
+          <div class="info-item" id="row-web">
+            <svg class="list-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.91-4.33-3.56zm2.95-8H5.08c.96-1.65 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+            <div class="list-text"><span class="label">Web Sitesi</span><a class="value value-link" id="p-web" href="#" target="_blank"></a></div>
+            <button class="copy-btn-box" onclick="copyText('p-web')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+          </div>
+        </div>
+
+        <div class="map-section" id="row-address">
+          <p class="section-title">Adres Bilgileri</p>
+          <div class="info-item" style="margin-bottom:12px;">
+            <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <div class="list-text"><span class="label">Adres</span><span class="value" id="p-address"></span></div>
+          </div>
+          <a id="btn-direction" href="#" target="_blank" class="directions-btn">
+            <svg style="width:16px;height:16px;fill:white;" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+            Yol Tarifi Al
+          </a>
+        </div>
+
+        <!-- Sosyal Medya -->
+        <div class="social-section" id="row-social">
+          <p class="section-title">Sosyal Medya</p>
+          <div class="social-buttons">
+            <a id="btn-linkedin" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" style="fill:#0077b5"/><circle cx="6.5" cy="6.5" r="1.8" style="fill:#fff"/><rect x="5" y="9.5" width="3" height="9" style="fill:#fff"/><path style="fill:#fff" d="M10.5 9.5h2.9v1.23h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.6v5.23h-3v-4.64c0-1.1-.02-2.52-1.53-2.52-1.54 0-1.77 1.2-1.77 2.44v4.72h-3V9.5z"/></svg>
+            </a>
+            <a id="btn-instagram" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><defs><radialGradient id="ig" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect width="24" height="24" rx="5" fill="url(#ig)"/><rect x="6" y="6" width="12" height="12" rx="3.5" fill="none" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="none" stroke="white" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="white"/></svg>
+            </a>
+            <a id="btn-twitter" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000"/><path fill="white" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.166 2.25H8.07l4.259 5.631 5.915-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a id="btn-facebook" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#1877f2"/><path fill="white" d="M16 8h-2c-.55 0-1 .45-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9c0-2.21 1.79-4 4-4h2v3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="company-section" id="row-company-info">
+          <p class="section-title">Şirket Bilgileri</p>
+          <div class="company-list">
+            <div class="info-item" id="row-comp-name">
+              <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+              <div class="list-text"><span class="label">Şirket Adı</span><span class="value" id="p-comp-name"></span></div>
+              <button class="copy-btn-box" onclick="copyText('p-comp-name')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+            </div>
+            <div class="info-item" id="row-tax-office">
+              <svg class="list-icon" viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
+              <div class="list-text"><span class="label">Vergi Dairesi</span><span class="value" id="p-tax-office"></span></div>
+              <button class="copy-btn-box" onclick="copyText('p-tax-office')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+            </div>
+            <div class="info-item" id="row-tax-no">
+              <svg class="list-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2.01.89-2.01 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-1 14H5v-2h14v2zm0-6H5V8h14v4z"/></svg>
+              <div class="list-text"><span class="label">Vergi No</span><span class="value" id="p-tax-no"></span></div>
+              <button class="copy-btn-box" onclick="copyText('p-tax-no')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <footer>&copy; <span id="footer-year"></span> <span id="footer-name"></span></footer>
+      </div>
+    </div>
+
+    <div id="qrModal" class="modal" onclick="this.style.display='none'">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <h3>QR Kod</h3>
+        <canvas id="qr-canvas" class="modal-qr"></canvas>
+        <p style="font-size:0.8rem;color:#8b9bb4;margin-bottom:15px;">Taratarak bu kartvizite ulaşın</p>
+        <button class="close-modal" onclick="document.getElementById('qrModal').style.display='none'">Kapat</button>
+      </div>
+    </div>
 
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="supabase.js"></script>
   <script>
-    let currentUser = null;
-    let currentUsername = null;
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-    // Giriş kontrolü
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) {
-        window.location.href = 'login.html';
-        return;
-      }
-      currentUser = data.session.user;
-      loadProfile();
-    });
+    const params = new URLSearchParams(window.location.search);
+    const username = params.get('username');
 
-    async function loadProfile() {
-      const { data } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .single();
-
-      if (!data) return;
-
-      currentUsername = data.username;
-
-      // Kartvizit linkini güncelle
-      const link = `${window.location.origin}/kartvizit-platform/card.html?username=${data.username}`;
-      const linkEl = document.getElementById('card-link');
-      linkEl.href = link;
-      linkEl.textContent = link;
-
-      // Alanları doldur
-      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','tax_office','tax_no'];
-      fields.forEach(f => {
-        if (data[f]) document.getElementById(f).value = data[f];
-      });
+    if (!username) {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('not-found').classList.remove('hidden');
+    } else {
+      loadCard(username);
     }
 
-    async function saveProfile() {
-      const btn = document.getElementById('save-btn');
-      btn.disabled = true;
-      btn.textContent = 'Kaydediliyor...';
+    async function loadCard(username) {
+      const { data } = await sb.from('profiles').select('*').eq('username', username).single();
+      document.getElementById('loading').classList.add('hidden');
 
-      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','tax_office','tax_no'];
-      const updates = {};
-      fields.forEach(f => { updates[f] = document.getElementById(f).value.trim(); });
+      if (!data) { document.getElementById('not-found').classList.remove('hidden'); return; }
 
-      const { error } = await sb
-        .from('profiles')
-        .upsert({
-          user_id: currentUser.id,
-          username: currentUsername || currentUser.email.split('@')[0],
-          ...updates
-        }, { onConflict: 'user_id' });
+      document.getElementById('card-content').classList.remove('hidden');
 
-      btn.disabled = false;
-      btn.textContent = '💾 Değişiklikleri Kaydet';
+      const name = data.full_name || data.username;
+      document.getElementById('p-name').textContent = name;
+      document.getElementById('footer-name').textContent = name;
+      document.title = name + ' | Dijital Kartvizit';
 
-      if (error) {
-        showToast('Hata: ' + error.message, true);
+      if (data.company) document.getElementById('p-company').textContent = data.company;
+      if (data.title) document.getElementById('p-title').textContent = data.title;
+
+      // Profil fotoğrafı
+      if (data.avatar_url) {
+        document.getElementById('profile-container').innerHTML = `<img src="${data.avatar_url}" alt="${name}">`;
       } else {
-        showToast('✓ Kaydedildi!');
-        loadProfile();
+        const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+        document.getElementById('initials').textContent = initials;
       }
+
+      // Banner
+      if (data.banner_url) {
+        document.getElementById('banner-container').innerHTML = `<img src="${data.banner_url}" alt="Banner">`;
+      }
+
+      // Butonlar
+      if (data.mobile) {
+        document.getElementById('btn-call').href = 'tel:' + data.mobile;
+        document.getElementById('btn-whatsapp').href = 'https://wa.me/' + data.mobile.replace(/[^0-9]/g, '');
+        document.getElementById('p-mobile').textContent = data.mobile;
+      } else { document.getElementById('row-mobile').classList.add('hidden'); }
+
+      if (data.work_phone) document.getElementById('p-work').textContent = data.work_phone;
+      else document.getElementById('row-work').classList.add('hidden');
+
+      if (data.email) {
+        document.getElementById('btn-email').href = 'mailto:' + data.email;
+        document.getElementById('p-email').textContent = data.email;
+      } else { document.getElementById('row-email').classList.add('hidden'); }
+
+      if (data.website) {
+        const cleanWeb = data.website.replace(/^https?:\/\//, '');
+        const webEl = document.getElementById('p-web');
+        webEl.textContent = cleanWeb;
+        webEl.href = data.website.startsWith('http') ? data.website : 'https://' + data.website;
+      } else { document.getElementById('row-web').classList.add('hidden'); }
+
+      if (data.address) {
+        document.getElementById('p-address').textContent = data.address;
+        document.getElementById('btn-direction').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.address);
+      } else { document.getElementById('row-address').classList.add('hidden'); }
+
+      // Sosyal medya
+      let hasSocial = false;
+      if (data.linkedin) { const el = document.getElementById('btn-linkedin'); el.href = data.linkedin.startsWith('http') ? data.linkedin : 'https://' + data.linkedin; el.classList.remove('hidden'); hasSocial = true; }
+      if (data.instagram) { const el = document.getElementById('btn-instagram'); el.href = data.instagram.startsWith('http') ? data.instagram : 'https://' + data.instagram; el.classList.remove('hidden'); hasSocial = true; }
+      if (data.twitter) { const el = document.getElementById('btn-twitter'); el.href = data.twitter.startsWith('http') ? data.twitter : 'https://' + data.twitter; el.classList.remove('hidden'); hasSocial = true; }
+      if (data.facebook) { const el = document.getElementById('btn-facebook'); el.href = data.facebook.startsWith('http') ? data.facebook : 'https://' + data.facebook; el.classList.remove('hidden'); hasSocial = true; }
+      if (!hasSocial) document.getElementById('row-social').classList.add('hidden');
+
+      // Şirket bilgileri
+      if (data.company) document.getElementById('p-comp-name').textContent = data.company;
+      else document.getElementById('row-comp-name').classList.add('hidden');
+      if (data.tax_office) document.getElementById('p-tax-office').textContent = data.tax_office;
+      else document.getElementById('row-tax-office').classList.add('hidden');
+      if (data.tax_no) document.getElementById('p-tax-no').textContent = data.tax_no;
+      else document.getElementById('row-tax-no').classList.add('hidden');
+      if (!data.company && !data.tax_office && !data.tax_no) document.getElementById('row-company-info').classList.add('hidden');
+
+      // VCF
+      generateVCF(data);
+
+      // QR
+      QRCode.toCanvas(document.getElementById('qr-canvas'), window.location.href, { width: 200, margin: 1 });
     }
 
-    async function logout() {
-      await sb.auth.signOut();
-      window.location.href = 'index.html';
+    function generateVCF(d) {
+      const vcf = `BEGIN:VCARD\nVERSION:3.0\nFN:${d.full_name||d.username}\nORG:${d.company||''}\nTITLE:${d.title||''}\nTEL;TYPE=CELL:${d.mobile||''}\nTEL;TYPE=WORK:${d.work_phone||''}\nEMAIL:${d.email||''}\nURL:${d.website||''}\nADR;TYPE=WORK:;;${d.address||''};;;;\nX-TAX-OFFICE:${d.tax_office||''}\nX-TAX-NUMBER:${d.tax_no||''}\nEND:VCARD`;
+      const blob = new Blob([vcf], { type: 'text/vcard' });
+      const url = URL.createObjectURL(blob);
+      document.getElementById('btn-vcf').href = url;
+      document.getElementById('btn-vcf').download = (d.full_name || d.username) + '.vcf';
     }
 
-    function copyLink() {
-      const link = document.getElementById('card-link').textContent;
-      navigator.clipboard.writeText(link).then(() => showToast('✓ Link kopyalandı!'));
+    function copyText(id) {
+      const el = document.getElementById(id);
+      const text = el.textContent || el.innerText;
+      if (!text) return;
+      navigator.clipboard.writeText(text.trim()).then(() => showToast('✓ Kopyalandı!'));
     }
 
-    function showToast(msg, isError = false) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.style.background = isError ? '#c0392b' : '#0e8c6f';
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
     }
   </script>
 </body>
