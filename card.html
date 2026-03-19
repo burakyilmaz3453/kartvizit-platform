@@ -18,7 +18,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     body { background-color: var(--bg-dark); color: var(--text-white); overflow-x: hidden; }
 
-    /* HEADER */
     .fixed-header {
       position: fixed; top: 0; left: 50%; transform: translateX(-50%);
       width: 100%; max-width: var(--site-width); height: 425px;
@@ -28,9 +27,9 @@
     .banner-container {
       width: 100%; height: 160px; flex-shrink: 0;
       overflow: hidden; border-radius: 0 0 20px 20px; z-index: 1;
-      background: #1a1a2e;
+      background: linear-gradient(135deg, #0e2a22, #0e8c6f44);
     }
-    .banner-img { width: 100%; height: 100%; object-fit: cover; }
+    .banner-container img { width: 100%; height: 100%; object-fit: cover; }
     .fixed-card-part {
       width: 100%; background-color: #181a1e;
       margin-top: -40px; padding-top: 105px; padding-bottom: 25px;
@@ -46,16 +45,13 @@
       position: absolute; top: 160px;
       display: flex; align-items: center; justify-content: center;
     }
-    .profile-img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-container img { width: 100%; height: 100%; object-fit: cover; }
     .profile-initials { font-size: 2.5rem; font-weight: 700; color: #0e8c6f; }
     .header-info { margin-bottom: 5px; text-align: center; z-index: 5; position: relative; }
     .name { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
     .company { color: var(--text-grey); font-size: 0.8rem; letter-spacing: 0.5px; }
-    .title { font-size: 0.85rem; font-weight: 500; margin-top: 2px; color: var(--accent-color); }
-    .action-buttons {
-      display: flex; justify-content: space-between; gap: 8px;
-      width: 90%; margin-top: 25px;
-    }
+    .job-title { font-size: 0.85rem; font-weight: 500; margin-top: 2px; color: var(--accent-color); }
+    .action-buttons { display: flex; justify-content: space-between; gap: 8px; width: 90%; margin-top: 25px; }
     .action-btn {
       background: #23262b; border: 1px solid var(--border-color);
       border-radius: 10px; padding: 10px 2px; flex: 1;
@@ -69,7 +65,6 @@
     .highlight-btn span { color: #fff; }
     .btn-icon { width: 20px; height: 20px; }
 
-    /* SCROLL CONTENT */
     .scroll-content {
       margin-top: 445px; width: 100%; max-width: var(--site-width);
       margin-left: auto; margin-right: auto;
@@ -77,15 +72,14 @@
     }
     .card-body {
       background-color: #181a1e; border-radius: 25px; padding: 20px;
-      min-height: 60vh; border: 1px solid #2a2d35;
-      box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+      min-height: 60vh; border: 1px solid #2a2d35; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
     }
     .card-body::before {
       content: ''; display: block; width: 40px; height: 4px;
       background-color: #333; margin: 0 auto 15px auto; border-radius: 2px;
     }
-    .info-list, .company-section { display: flex; flex-direction: column; gap: 12px; }
-    .info-item, .company-item {
+    .info-list, .company-list { display: flex; flex-direction: column; gap: 12px; }
+    .info-item {
       display: flex; align-items: center; justify-content: space-between;
       background: #1e2125; padding: 12px 15px;
       border-radius: 10px; border: 1px solid var(--border-color); gap: 10px;
@@ -104,30 +98,29 @@
     }
     .copy-btn-box:hover { background: #444; color: #fff; }
     .icon-sm { width: 16px; height: 16px; fill: currentColor; }
-    .map-section {
-      margin-top: 20px; padding: 15px; background: #1e2125;
-      border-radius: 12px; border: 1px solid var(--border-color);
-    }
-    .map-section h3, .social-section h3, .company-section h3 {
-      font-size: 0.9rem; margin-bottom: 12px; color: #fff;
-      border-bottom: 1px solid #333; padding-bottom: 8px;
-    }
+
+    .map-section { margin-top: 20px; padding: 15px; background: #1e2125; border-radius: 12px; border: 1px solid var(--border-color); }
+    .section-title { font-size: 0.9rem; margin-bottom: 12px; color: #fff; border-bottom: 1px solid #333; padding-bottom: 8px; }
     .directions-btn {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       background: var(--accent-color); color: white; padding: 10px;
-      border-radius: 8px; text-decoration: none; font-weight: 600;
-      font-size: 0.85rem; width: 100%;
+      border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; width: 100%;
     }
-    .social-section { margin-top: 20px; padding: 0 5px; }
+
+    /* Sosyal medya */
+    .social-section { margin-top: 20px; }
+    .social-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
     .social-btn {
+      width: 44px; height: 44px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      width: 30px; height: 30px; border-radius: 8px;
       text-decoration: none; transition: 0.2s;
     }
-    .social-btn.linkedin { background-color: transparent; }
-    .social-btn.linkedin:hover { opacity: 0.8; }
-    .linkedin-icon { width: 30px; height: 30px; }
+    .social-btn:hover { opacity: 0.8; transform: scale(0.95); }
+    .social-btn svg { width: 30px; height: 30px; }
+
     .company-section { margin-top: 20px; }
+
+    /* Modal */
     .modal {
       display: none; position: fixed; z-index: 100; left: 0; top: 0;
       width: 100%; height: 100%; background-color: rgba(0,0,0,0.9);
@@ -138,12 +131,13 @@
       text-align: center; width: 90%; max-width: 320px;
       position: relative; border: 1px solid var(--border-color);
     }
-    .modal-qr { width: 100%; max-width: 220px; margin: 20px 0; background: #fff; padding: 10px; border-radius: 10px; }
+    .modal-content h3 { margin-bottom: 15px; }
+    .modal-qr { width: 100%; max-width: 220px; margin: 0 auto 15px; background: #fff; padding: 10px; border-radius: 10px; display: block; }
+    .close-modal { background: #2a2d35; border: none; color: #fff; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+
     footer { text-align: center; padding: 30px 0 10px; color: #444; font-size: 11px; }
-    .not-found {
-      text-align: center; padding: 60px 20px; color: var(--text-grey);
-    }
-    .not-found h2 { color: #fff; margin-bottom: 10px; }
+    .hidden { display: none !important; }
+
     #toast {
       position: fixed; bottom: 30px; left: 50%;
       transform: translateX(-50%) translateY(20px);
@@ -152,40 +146,31 @@
       opacity: 0; transition: 0.3s; z-index: 9999; pointer-events: none;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- YÜKLENİYOR -->
   <div id="loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
-    <div style="color:#8b9bb4;font-size:0.9rem;">Yükleniyor...</div>
+    <div style="color:#8b9bb4;">Yükleniyor...</div>
   </div>
 
-  <!-- BULUNAMADI -->
-  <div id="not-found" class="hidden">
-    <div class="not-found">
-      <h2>Profil bulunamadı</h2>
-      <p>Bu kullanıcı adına ait kartvizit yok.</p>
-    </div>
+  <div id="not-found" class="hidden" style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;">
+    <div><h2 style="margin-bottom:8px;">Profil bulunamadı</h2><p style="color:#8b9bb4;">Bu kullanıcı adına ait kartvizit yok.</p></div>
   </div>
 
-  <!-- KARTVİZİT -->
   <div id="card-content" class="hidden">
 
-    <!-- HEADER -->
     <div class="fixed-header">
-      <div class="banner-container">
-        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0e2a22,#0e8c6f22);"></div>
+      <div class="banner-container" id="banner-container">
       </div>
-      <div class="profile-container">
+      <div class="profile-container" id="profile-container">
         <div class="profile-initials" id="initials">?</div>
       </div>
       <div class="fixed-card-part">
         <div class="header-info">
           <h1 class="name" id="p-name">-</h1>
           <p class="company" id="p-company"></p>
-          <p class="title" id="p-title"></p>
+          <p class="job-title" id="p-title"></p>
         </div>
         <div class="action-buttons">
           <a href="#" id="btn-call" class="action-btn">
@@ -202,21 +187,20 @@
           </button>
           <a href="#" id="btn-whatsapp" target="_blank" class="action-btn">
             <svg class="btn-icon" viewBox="0 0 24 24">
-              <path fill="#ffffff" stroke="#ffffff" stroke-width="2" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
+              <path fill="#fff" stroke="#fff" stroke-width="2" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
               <path fill="#25D366" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
               <path fill="#fff" d="M16.74 14.38c-.28-.14-1.65-.81-1.9-.9-.25-.1-.43-.14-.62.14-.18.28-.71.9-.87 1.09-.16.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.38-.83-.74-1.4-1.66-1.56-1.94-.16-.28-.02-.43.12-.57.13-.12.28-.33.42-.49.14-.17.19-.28.28-.47.1-.19.05-.35-.02-.49-.08-.14-.62-1.52-.85-2.08-.23-.54-.46-.47-.63-.48h-.53c-.19 0-.49.07-.75.35-.26.28-1 .98-1 2.4s1.03 2.79 1.17 2.98c.14.19 2.02 3.09 4.9 4.33.68.29 1.21.47 1.63.6.69.22 1.31.19 1.8.11.55-.08 1.65-.67 1.89-1.32.23-.65.23-1.21.16-1.33-.07-.1-.25-.18-.53-.32z"/>
             </svg>
             <span>WhatsApp</span>
           </a>
           <a id="btn-vcf" href="#" download class="action-btn highlight-btn">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="#ffffff"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="#fff"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             <span>Kişilere Ekle</span>
           </a>
         </div>
       </div>
     </div>
 
-    <!-- SCROLL -->
     <div class="scroll-content">
       <div class="card-body">
         <div class="info-list">
@@ -242,9 +226,8 @@
           </div>
         </div>
 
-        <!-- Adres -->
         <div class="map-section" id="row-address">
-          <h3>Adres Bilgileri</h3>
+          <p class="section-title">Adres Bilgileri</p>
           <div class="info-item" style="margin-bottom:12px;">
             <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
             <div class="list-text"><span class="label">Adres</span><span class="value" id="p-address"></span></div>
@@ -256,35 +239,42 @@
         </div>
 
         <!-- Sosyal Medya -->
-        <div class="social-section" id="row-linkedin">
-          <h3>Sosyal Medya</h3>
-          <a id="btn-linkedin" href="#" target="_blank" class="social-btn linkedin">
-            <svg class="linkedin-icon" viewBox="0 0 24 24">
-              <rect width="24" height="24" rx="4" style="fill:#0077b5"/>
-              <circle cx="6.5" cy="6.5" r="1.8" style="fill:#ffffff"/>
-              <rect x="5" y="9.5" width="3" height="9" style="fill:#ffffff"/>
-              <path style="fill:#ffffff" d="M10.5 9.5h2.9v1.23h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.6v5.23h-3v-4.64c0-1.1-.02-2.52-1.53-2.52-1.54 0-1.77 1.2-1.77 2.44v4.72h-3V9.5z"/>
-            </svg>
-          </a>
+        <div class="social-section" id="row-social">
+          <p class="section-title">Sosyal Medya</p>
+          <div class="social-buttons">
+            <a id="btn-linkedin" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" style="fill:#0077b5"/><circle cx="6.5" cy="6.5" r="1.8" style="fill:#fff"/><rect x="5" y="9.5" width="3" height="9" style="fill:#fff"/><path style="fill:#fff" d="M10.5 9.5h2.9v1.23h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.6v5.23h-3v-4.64c0-1.1-.02-2.52-1.53-2.52-1.54 0-1.77 1.2-1.77 2.44v4.72h-3V9.5z"/></svg>
+            </a>
+            <a id="btn-instagram" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><defs><radialGradient id="ig" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect width="24" height="24" rx="5" fill="url(#ig)"/><rect x="6" y="6" width="12" height="12" rx="3.5" fill="none" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="none" stroke="white" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="white"/></svg>
+            </a>
+            <a id="btn-twitter" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000"/><path fill="white" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.166 2.25H8.07l4.259 5.631 5.915-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a id="btn-facebook" href="#" target="_blank" class="social-btn hidden">
+              <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#1877f2"/><path fill="white" d="M16 8h-2c-.55 0-1 .45-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9c0-2.21 1.79-4 4-4h2v3z"/></svg>
+            </a>
+          </div>
         </div>
 
-        <!-- Şirket Bilgileri -->
         <div class="company-section" id="row-company-info">
-          <h3>Şirket Bilgileri</h3>
-          <div class="company-item" id="row-comp-name">
-            <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
-            <div class="list-text"><span class="label">Şirket Adı</span><span class="value" id="p-comp-name"></span></div>
-            <button class="copy-btn-box" onclick="copyText('p-comp-name')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
-          </div>
-          <div class="company-item" id="row-tax-office">
-            <svg class="list-icon" viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
-            <div class="list-text"><span class="label">Vergi Dairesi</span><span class="value" id="p-tax-office"></span></div>
-            <button class="copy-btn-box" onclick="copyText('p-tax-office')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
-          </div>
-          <div class="company-item" id="row-tax-no">
-            <svg class="list-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2.01.89-2.01 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-1 14H5v-2h14v2zm0-6H5V8h14v4z"/></svg>
-            <div class="list-text"><span class="label">Vergi No</span><span class="value" id="p-tax-no"></span></div>
-            <button class="copy-btn-box" onclick="copyText('p-tax-no')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+          <p class="section-title">Şirket Bilgileri</p>
+          <div class="company-list">
+            <div class="info-item" id="row-comp-name">
+              <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+              <div class="list-text"><span class="label">Şirket Adı</span><span class="value" id="p-comp-name"></span></div>
+              <button class="copy-btn-box" onclick="copyText('p-comp-name')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+            </div>
+            <div class="info-item" id="row-tax-office">
+              <svg class="list-icon" viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
+              <div class="list-text"><span class="label">Vergi Dairesi</span><span class="value" id="p-tax-office"></span></div>
+              <button class="copy-btn-box" onclick="copyText('p-tax-office')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+            </div>
+            <div class="info-item" id="row-tax-no">
+              <svg class="list-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2.01.89-2.01 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-1 14H5v-2h14v2zm0-6H5V8h14v4z"/></svg>
+              <div class="list-text"><span class="label">Vergi No</span><span class="value" id="p-tax-no"></span></div>
+              <button class="copy-btn-box" onclick="copyText('p-tax-no')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+            </div>
           </div>
         </div>
 
@@ -292,12 +282,12 @@
       </div>
     </div>
 
-    <!-- QR Modal -->
     <div id="qrModal" class="modal" onclick="this.style.display='none'">
       <div class="modal-content" onclick="event.stopPropagation()">
         <h3>QR Kod</h3>
-        <img id="qr-img" src="" alt="QR Kod" class="modal-qr">
-        <p style="font-size:0.8rem;color:#8b9bb4;">Bu sayfanın QR kodu</p>
+        <canvas id="qr-canvas" class="modal-qr"></canvas>
+        <p style="font-size:0.8rem;color:#8b9bb4;margin-bottom:15px;">Taratarak bu kartvizite ulaşın</p>
+        <button class="close-modal" onclick="document.getElementById('qrModal').style.display='none'">Kapat</button>
       </div>
     </div>
 
@@ -322,22 +312,13 @@
     }
 
     async function loadCard(username) {
-      const { data, error } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('username', username)
-        .single();
-
+      const { data } = await sb.from('profiles').select('*').eq('username', username).single();
       document.getElementById('loading').classList.add('hidden');
 
-      if (!data) {
-        document.getElementById('not-found').classList.remove('hidden');
-        return;
-      }
+      if (!data) { document.getElementById('not-found').classList.remove('hidden'); return; }
 
       document.getElementById('card-content').classList.remove('hidden');
 
-      // Başlık
       const name = data.full_name || data.username;
       document.getElementById('p-name').textContent = name;
       document.getElementById('footer-name').textContent = name;
@@ -346,9 +327,18 @@
       if (data.company) document.getElementById('p-company').textContent = data.company;
       if (data.title) document.getElementById('p-title').textContent = data.title;
 
-      // İnisiyaller
-      const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-      document.getElementById('initials').textContent = initials;
+      // Profil fotoğrafı
+      if (data.avatar_url) {
+        document.getElementById('profile-container').innerHTML = `<img src="${data.avatar_url}" alt="${name}">`;
+      } else {
+        const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+        document.getElementById('initials').textContent = initials;
+      }
+
+      // Banner
+      if (data.banner_url) {
+        document.getElementById('banner-container').innerHTML = `<img src="${data.banner_url}" alt="Banner">`;
+      }
 
       // Butonlar
       if (data.mobile) {
@@ -377,48 +367,32 @@
         document.getElementById('btn-direction').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.address);
       } else { document.getElementById('row-address').classList.add('hidden'); }
 
-      if (data.linkedin) {
-        document.getElementById('btn-linkedin').href = data.linkedin.startsWith('http') ? data.linkedin : 'https://' + data.linkedin;
-      } else { document.getElementById('row-linkedin').classList.add('hidden'); }
+      // Sosyal medya
+      let hasSocial = false;
+      if (data.linkedin) { const el = document.getElementById('btn-linkedin'); el.href = data.linkedin.startsWith('http') ? data.linkedin : 'https://' + data.linkedin; el.classList.remove('hidden'); hasSocial = true; }
+      if (data.instagram) { const el = document.getElementById('btn-instagram'); el.href = data.instagram.startsWith('http') ? data.instagram : 'https://' + data.instagram; el.classList.remove('hidden'); hasSocial = true; }
+      if (data.twitter) { const el = document.getElementById('btn-twitter'); el.href = data.twitter.startsWith('http') ? data.twitter : 'https://' + data.twitter; el.classList.remove('hidden'); hasSocial = true; }
+      if (data.facebook) { const el = document.getElementById('btn-facebook'); el.href = data.facebook.startsWith('http') ? data.facebook : 'https://' + data.facebook; el.classList.remove('hidden'); hasSocial = true; }
+      if (!hasSocial) document.getElementById('row-social').classList.add('hidden');
 
+      // Şirket bilgileri
       if (data.company) document.getElementById('p-comp-name').textContent = data.company;
       else document.getElementById('row-comp-name').classList.add('hidden');
-
       if (data.tax_office) document.getElementById('p-tax-office').textContent = data.tax_office;
       else document.getElementById('row-tax-office').classList.add('hidden');
-
       if (data.tax_no) document.getElementById('p-tax-no').textContent = data.tax_no;
       else document.getElementById('row-tax-no').classList.add('hidden');
+      if (!data.company && !data.tax_office && !data.tax_no) document.getElementById('row-company-info').classList.add('hidden');
 
-      if (!data.company && !data.tax_office && !data.tax_no) {
-        document.getElementById('row-company-info').classList.add('hidden');
-      }
-
-      // VCF oluştur
+      // VCF
       generateVCF(data);
 
-      // QR oluştur
-      QRCode.toDataURL(window.location.href, { width: 220, margin: 1 }, (err, url) => {
-        if (!err) document.getElementById('qr-img').src = url;
-      });
+      // QR
+      QRCode.toCanvas(document.getElementById('qr-canvas'), window.location.href, { width: 200, margin: 1 });
     }
 
     function generateVCF(d) {
-      const vcf = `BEGIN:VCARD
-VERSION:3.0
-FN:${d.full_name || d.username}
-ORG:${d.company || ''}
-TITLE:${d.title || ''}
-TEL;TYPE=CELL:${d.mobile || ''}
-TEL;TYPE=WORK:${d.work_phone || ''}
-EMAIL:${d.email || ''}
-URL:${d.website || ''}
-ADR;TYPE=WORK:;;${d.address || ''};;;;
-X-SOCIALPROFILE;type=linkedin:${d.linkedin || ''}
-X-TAX-OFFICE:${d.tax_office || ''}
-X-TAX-NUMBER:${d.tax_no || ''}
-END:VCARD`;
-
+      const vcf = `BEGIN:VCARD\nVERSION:3.0\nFN:${d.full_name||d.username}\nORG:${d.company||''}\nTITLE:${d.title||''}\nTEL;TYPE=CELL:${d.mobile||''}\nTEL;TYPE=WORK:${d.work_phone||''}\nEMAIL:${d.email||''}\nURL:${d.website||''}\nADR;TYPE=WORK:;;${d.address||''};;;;\nX-TAX-OFFICE:${d.tax_office||''}\nX-TAX-NUMBER:${d.tax_no||''}\nEND:VCARD`;
       const blob = new Blob([vcf], { type: 'text/vcard' });
       const url = URL.createObjectURL(blob);
       document.getElementById('btn-vcf').href = url;
