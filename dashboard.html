@@ -16,8 +16,8 @@
     .section h3 { font-size: 0.85rem; color: #8b9bb4; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #2a2d35; }
     .form-group { margin-bottom: 14px; }
     label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
-    input { width: 100%; background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 11px 14px; color: #fff; font-size: 0.88rem; outline: none; transition: 0.2s; font-family: inherit; }
-    input:focus { border-color: #0e8c6f; }
+    input[type="text"], input[type="email"], input[type="password"] { width: 100%; background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 11px 14px; color: #fff; font-size: 0.88rem; outline: none; transition: 0.2s; font-family: inherit; }
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus { border-color: #0e8c6f; }
     input::placeholder { color: #555; }
     .save-btn { width: 100%; padding: 13px; background: #0e8c6f; color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 8px; }
     .save-btn:hover { background: #0b7058; }
@@ -39,6 +39,16 @@
     .upload-btn:hover { color: #fff; background: #2c3036; }
     input[type="file"] { display: none; }
     .uploading { color: #0e8c6f; font-size: 0.8rem; margin-top: 4px; }
+
+    /* Renk seçici */
+    .color-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    .color-option { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: 0.2s; position: relative; }
+    .color-option:hover { transform: scale(1.1); }
+    .color-option.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+    .color-option.active::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 0.8rem; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    .custom-color-row { display: flex; align-items: center; gap: 10px; }
+    .custom-color-row label { margin: 0; white-space: nowrap; }
+    input[type="color"] { width: 44px; height: 36px; border: 1px solid #2a2d35; border-radius: 8px; background: #1e2125; cursor: pointer; padding: 2px; }
   </style>
 </head>
 <body>
@@ -72,6 +82,26 @@
       <button class="upload-btn" onclick="document.getElementById('banner-input').click()">Banner Seç</button>
       <input type="file" id="banner-input" accept="image/*" onchange="uploadBanner(this)">
       <p class="uploading" id="banner-status"></p>
+    </div>
+
+    <!-- Tema Rengi -->
+    <div class="section">
+      <h3>Tema Rengi</h3>
+      <div class="color-grid" id="color-grid">
+        <div class="color-option" style="background:#0e8c6f" data-color="#0e8c6f" onclick="selectColor('#0e8c6f')"></div>
+        <div class="color-option" style="background:#2563eb" data-color="#2563eb" onclick="selectColor('#2563eb')"></div>
+        <div class="color-option" style="background:#7c3aed" data-color="#7c3aed" onclick="selectColor('#7c3aed')"></div>
+        <div class="color-option" style="background:#db2777" data-color="#db2777" onclick="selectColor('#db2777')"></div>
+        <div class="color-option" style="background:#dc2626" data-color="#dc2626" onclick="selectColor('#dc2626')"></div>
+        <div class="color-option" style="background:#ea580c" data-color="#ea580c" onclick="selectColor('#ea580c')"></div>
+        <div class="color-option" style="background:#ca8a04" data-color="#ca8a04" onclick="selectColor('#ca8a04')"></div>
+        <div class="color-option" style="background:#0891b2" data-color="#0891b2" onclick="selectColor('#0891b2')"></div>
+      </div>
+      <div class="custom-color-row">
+        <label>Özel renk:</label>
+        <input type="color" id="custom-color" value="#0e8c6f" onchange="selectColor(this.value)">
+        <span id="color-hex" style="color:#8b9bb4;font-size:0.82rem;">#0e8c6f</span>
+      </div>
     </div>
 
     <div class="section">
@@ -116,7 +146,6 @@
 
     <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Değişiklikleri Kaydet</button>
 
-    <!-- Şifre Değiştir -->
     <div class="section" style="margin-top:16px;">
       <h3>Şifre Değiştir</h3>
       <div class="form-group"><label>Yeni Şifre</label><input type="password" id="new-password" placeholder="En az 6 karakter"></div>
@@ -132,6 +161,7 @@
   <script>
     let currentUser = null;
     let currentUsername = null;
+    let selectedColor = '#0e8c6f';
 
     sb.auth.getSession().then(async ({ data }) => {
       if (!data.session) { window.location.href = 'login.html'; return; }
@@ -151,8 +181,22 @@
       if (data.avatar_url) document.getElementById('avatar-preview').innerHTML = `<img src="${data.avatar_url}" alt="Profil">`;
       if (data.banner_url) document.getElementById('banner-preview').innerHTML = `<img src="${data.banner_url}" alt="Banner">`;
 
+      if (data.theme_color) {
+        selectColor(data.theme_color);
+        document.getElementById('custom-color').value = data.theme_color;
+      }
+
       const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','instagram','twitter','facebook','tax_office','tax_no'];
       fields.forEach(f => { if (data[f]) document.getElementById(f).value = data[f]; });
+    }
+
+    function selectColor(color) {
+      selectedColor = color;
+      document.getElementById('color-hex').textContent = color;
+      document.getElementById('custom-color').value = color;
+      document.querySelectorAll('.color-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.color === color);
+      });
     }
 
     async function uploadAvatar(input) {
@@ -194,6 +238,8 @@
       const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','instagram','twitter','facebook','tax_office','tax_no'];
       const updates = {};
       fields.forEach(f => { updates[f] = document.getElementById(f).value.trim(); });
+      updates.theme_color = selectedColor;
+
       const { error } = await sb.from('profiles').upsert({
         user_id: currentUser.id,
         username: currentUsername || currentUser.email.split('@')[0],
@@ -208,13 +254,10 @@
     async function changePassword() {
       const newPass = document.getElementById('new-password').value;
       const confirmPass = document.getElementById('confirm-password').value;
-
       if (!newPass || !confirmPass) { showToast('Tüm alanları doldurun.', true); return; }
       if (newPass.length < 6) { showToast('Şifre en az 6 karakter olmalı.', true); return; }
       if (newPass !== confirmPass) { showToast('Şifreler eşleşmiyor.', true); return; }
-
       const { error } = await sb.auth.updateUser({ password: newPass });
-
       if (error) {
         var msg = error.message;
         if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
