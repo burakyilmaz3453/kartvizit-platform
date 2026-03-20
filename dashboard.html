@@ -115,6 +115,15 @@
     </div>
 
     <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Değişiklikleri Kaydet</button>
+
+    <!-- Şifre Değiştir -->
+    <div class="section" style="margin-top:16px;">
+      <h3>Şifre Değiştir</h3>
+      <div class="form-group"><label>Yeni Şifre</label><input type="password" id="new-password" placeholder="En az 6 karakter"></div>
+      <div class="form-group"><label>Şifre Tekrar</label><input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir"></div>
+      <button class="save-btn" onclick="changePassword()">🔒 Şifreyi Güncelle</button>
+    </div>
+
   </div>
   <div class="toast" id="toast"></div>
 
@@ -194,6 +203,27 @@
       btn.textContent = '💾 Değişiklikleri Kaydet';
       if (error) { showToast('Hata: ' + error.message, true); }
       else { showToast('✓ Kaydedildi!'); loadProfile(); }
+    }
+
+    async function changePassword() {
+      const newPass = document.getElementById('new-password').value;
+      const confirmPass = document.getElementById('confirm-password').value;
+
+      if (!newPass || !confirmPass) { showToast('Tüm alanları doldurun.', true); return; }
+      if (newPass.length < 6) { showToast('Şifre en az 6 karakter olmalı.', true); return; }
+      if (newPass !== confirmPass) { showToast('Şifreler eşleşmiyor.', true); return; }
+
+      const { error } = await sb.auth.updateUser({ password: newPass });
+
+      if (error) {
+        var msg = error.message;
+        if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
+        showToast(msg, true);
+      } else {
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+        showToast('✓ Şifre güncellendi!');
+      }
     }
 
     async function logout() { await sb.auth.signOut(); window.location.href = 'index.html'; }
