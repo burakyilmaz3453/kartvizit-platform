@@ -79,7 +79,11 @@
       const { error } = await sb.auth.updateUser({ password: newPass });
 
       if (error) {
-        errorEl.textContent = 'Hata: ' + error.message;
+        var msg = error.message;
+if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
+else if (msg.includes('at least 6')) msg = 'Şifre en az 6 karakter olmalı.';
+else if (msg.includes('weak')) msg = 'Şifre çok zayıf, daha güçlü bir şifre seç.';
+errorEl.textContent = msg;
         errorEl.style.display = 'block';
         btn.disabled = false;
         btn.textContent = 'Şifreyi Kaydet';
