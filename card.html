@@ -7,7 +7,6 @@
   <link rel="icon" id="favicon" type="image/x-icon" href="https://burakyilmaz3453.github.io/kartvizit-platform/favicon.ico">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <style>
-    /* KOYU TEMA (varsayılan) */
     :root {
       --bg: #000;
       --card-bg: #181a1e;
@@ -21,8 +20,6 @@
       --accent: #0e8c6f;
       --site-width: 450px;
     }
-
-    /* AYDINLIK TEMA */
     [data-theme="light"] {
       --bg: #f0f2f5;
       --card-bg: #ffffff;
@@ -35,10 +32,8 @@
       --copy-bg: #e8eaed;
       --accent: #0e8c6f;
     }
-
     * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
     body { background-color:var(--bg); color:var(--text); overflow-x:hidden; transition: background-color 0.3s, color 0.3s; }
-
     .fixed-header { position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:var(--site-width); height:425px; z-index:1; background-color:var(--bg); display:flex; flex-direction:column; align-items:center; }
     .banner-container { width:100%; height:160px; flex-shrink:0; overflow:hidden; border-radius:0 0 20px 20px; z-index:1; background:linear-gradient(135deg,#0e2a22,var(--accent)); }
     .banner-container img { width:100%; height:100%; object-fit:cover; }
@@ -58,7 +53,6 @@
     .highlight-btn:hover { filter:brightness(0.9); }
     .highlight-btn span { color:#fff; }
     .btn-icon { width:20px; height:20px; }
-
     .scroll-content { margin-top:445px; width:100%; max-width:var(--site-width); margin-left:auto; margin-right:auto; position:relative; z-index:100; padding-bottom:40px; }
     .card-body { background-color:var(--card-bg); border-radius:25px; padding:20px; min-height:60vh; border:1px solid var(--border); box-shadow:0 -5px 20px rgba(0,0,0,0.1); }
     .card-body::before { content:''; display:block; width:40px; height:4px; background-color:var(--border); margin:0 auto 15px auto; border-radius:2px; }
@@ -91,14 +85,17 @@
     #toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--accent); color:#fff; padding:10px 22px; border-radius:25px; font-size:0.85rem; font-weight:600; opacity:0; transition:0.3s; z-index:9999; pointer-events:none; }
     #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
     @keyframes zoomIn { from { transform:scale(0.5); opacity:0; } to { transform:scale(1); opacity:1; } }
-
-    /* Kalem butonu */
-    .edit-btn { position:fixed; top:12px; right:12px; z-index:10; background:rgba(0,0,0,0.45); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.15); color:#fff; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:0.2s; }
+    .edit-btn { position:fixed; top:12px; right:12px; z-index:200; background:rgba(0,0,0,0.45); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.15); color:#fff; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:0.2s; cursor:pointer; }
     .edit-btn:hover { background:var(--accent); }
     [data-theme="light"] .edit-btn { background:rgba(255,255,255,0.7); border-color:rgba(0,0,0,0.15); }
     [data-theme="light"] .edit-btn svg { fill:#333; }
     [data-theme="light"] .edit-btn:hover { background:var(--accent); }
     [data-theme="light"] .edit-btn:hover svg { fill:#fff; }
+    /* Customizer panel */
+    #customizer { display:none; position:fixed; bottom:70px; right:12px; z-index:201; background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:18px; width:230px; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+    .pre-color { width:28px; height:28px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:0.15s; display:inline-block; }
+    .pre-color:hover { transform:scale(1.15); }
+    .pre-color.active { border-color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,0.3); }
   </style>
 </head>
 <body>
@@ -114,9 +111,35 @@
   <div id="card-content" class="hidden">
 
     <!-- Kalem butonu -->
-    <a href="https://burakyilmaz3453.github.io/kartvizit-platform/login.html" class="edit-btn" title="Düzenle">
+    <a href="#" onclick="handleEdit()" class="edit-btn" title="Düzenle">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
     </a>
+
+    <!-- Demo Customizer Panel -->
+    <div id="customizer">
+      <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:12px;font-weight:600;">🎨 Kartvizitini özelleştir</p>
+
+      <p style="font-size:0.72rem;color:var(--text-secondary);margin-bottom:7px;">Tema</p>
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <div onclick="previewTheme('dark')" id="pre-dark" style="flex:1;padding:8px;background:#000;border:2px solid var(--accent);border-radius:8px;cursor:pointer;text-align:center;font-size:0.72rem;color:#fff;">🌙 Koyu</div>
+        <div onclick="previewTheme('light')" id="pre-light" style="flex:1;padding:8px;background:#f0f2f5;border:2px solid transparent;border-radius:8px;cursor:pointer;text-align:center;font-size:0.72rem;color:#333;">☀️ Aydınlık</div>
+      </div>
+
+      <p style="font-size:0.72rem;color:var(--text-secondary);margin-bottom:7px;">Accent Rengi</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+        <div onclick="previewColor('#0e8c6f')" style="background:#0e8c6f" class="pre-color active"></div>
+        <div onclick="previewColor('#2563eb')" style="background:#2563eb" class="pre-color"></div>
+        <div onclick="previewColor('#7c3aed')" style="background:#7c3aed" class="pre-color"></div>
+        <div onclick="previewColor('#db2777')" style="background:#db2777" class="pre-color"></div>
+        <div onclick="previewColor('#dc2626')" style="background:#dc2626" class="pre-color"></div>
+        <div onclick="previewColor('#ea580c')" style="background:#ea580c" class="pre-color"></div>
+        <div onclick="previewColor('#ca8a04')" style="background:#ca8a04" class="pre-color"></div>
+        <div onclick="previewColor('#0891b2')" style="background:#0891b2" class="pre-color"></div>
+      </div>
+
+      <a id="register-btn" href="https://burakyilmaz3453.github.io/kartvizit-platform/register.html" style="display:block;background:var(--accent);color:#fff;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-size:0.82rem;font-weight:600;margin-bottom:8px;">✨ Beğendim, kayıt ol!</a>
+      <button onclick="document.getElementById('customizer').style.display='none'" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:8px;border-radius:8px;cursor:pointer;font-size:0.78rem;">Kapat</button>
+    </div>
 
     <div class="fixed-header">
       <div class="banner-container" id="banner-container"></div>
@@ -282,12 +305,7 @@
       if (!data) { document.getElementById('not-found').classList.remove('hidden'); return; }
       document.getElementById('card-content').classList.remove('hidden');
 
-      // Tema uygula
-      if (data.theme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-
-      // Tema rengi uygula
+      if (data.theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
       if (data.theme_color) {
         document.documentElement.style.setProperty('--accent', data.theme_color);
         document.documentElement.style.setProperty('--accent-color', data.theme_color);
@@ -309,9 +327,7 @@
         document.getElementById('initials').textContent = initials;
       }
 
-      if (data.banner_url) {
-        document.getElementById('banner-container').innerHTML = '<img src="' + data.banner_url + '" alt="Banner">';
-      }
+      if (data.banner_url) document.getElementById('banner-container').innerHTML = '<img src="' + data.banner_url + '" alt="Banner">';
 
       if (data.mobile) {
         document.getElementById('btn-call').href = 'tel:' + data.mobile;
@@ -366,6 +382,31 @@
       var blob = new Blob([vcf], { type: 'text/vcard' });
       document.getElementById('btn-vcf').href = URL.createObjectURL(blob);
       document.getElementById('btn-vcf').download = (d.full_name || d.username) + '.vcf';
+    }
+
+    // Demo: customizer paneli aç, diğerleri: login'e git
+    function handleEdit() {
+      if (username === 'demo') {
+        var c = document.getElementById('customizer');
+        c.style.display = c.style.display === 'none' ? 'block' : 'none';
+      } else {
+        window.location.href = 'https://burakyilmaz3453.github.io/kartvizit-platform/login.html';
+      }
+    }
+
+    function previewTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('pre-dark').style.borderColor = theme === 'dark' ? 'var(--accent)' : 'transparent';
+      document.getElementById('pre-light').style.borderColor = theme === 'light' ? 'var(--accent)' : 'transparent';
+    }
+
+    function previewColor(color) {
+      document.documentElement.style.setProperty('--accent', color);
+      document.documentElement.style.setProperty('--accent-color', color);
+      document.getElementById('register-btn').style.background = color;
+      document.querySelectorAll('.pre-color').forEach(function(el) {
+        el.classList.toggle('active', el.style.background === color);
+      });
     }
 
     function openProfile() {
