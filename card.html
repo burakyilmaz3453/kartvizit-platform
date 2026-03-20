@@ -146,16 +146,15 @@
         </div>
 
         <div class="map-section" id="row-address">
-          <p class="section-title">Adres Bilgileri</p>
-          <div class="info-item" style="margin-bottom:12px;">
-            <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            <div class="list-text"><span class="label">Adres</span><span class="value" id="p-address"></span></div>
-          </div>
-          <a id="btn-direction" href="#" target="_blank" class="directions-btn">
-            <svg style="width:16px;height:16px;fill:white;" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-            Yol Tarifi Al
-          </a>
-        </div>
+  <p class="section-title">Adres Bilgileri</p>
+  <iframe id="map-iframe" src="" width="100%" height="180" 
+    style="border:0;border-radius:10px;margin-bottom:10px;" 
+    allowfullscreen="" loading="lazy"></iframe>
+  <a id="btn-direction" href="#" target="_blank" class="directions-btn">
+    <svg style="width:16px;height:16px;fill:white;" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+    Yol Tarifi Al
+  </a>
+</div>
 
         <div class="social-section" id="row-social">
           <p class="section-title">Sosyal Medya</p>
@@ -183,6 +182,11 @@
               <div class="list-text"><span class="label">Şirket Adı</span><span class="value" id="p-comp-name"></span></div>
               <button class="copy-btn-box" onclick="copyText('p-comp-name')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
             </div>
+            <div class="info-item" id="row-comp-address">
+  <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+  <div class="list-text"><span class="label">Adres</span><span class="value" id="p-address2"></span></div>
+  <button class="copy-btn-box" onclick="copyText('p-address2')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+</div>
             <div class="info-item" id="row-tax-office">
               <svg class="list-icon" viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
               <div class="list-text"><span class="label">Vergi Dairesi</span><span class="value" id="p-tax-office"></span></div>
@@ -287,9 +291,13 @@
       } else { document.getElementById('row-web').classList.add('hidden'); }
 
       if (data.address) {
-        document.getElementById('p-address').textContent = data.address;
-        document.getElementById('btn-direction').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.address);
-      } else { document.getElementById('row-address').classList.add('hidden'); }
+  document.getElementById('map-iframe').src = 'https://maps.google.com/maps?q=' + encodeURIComponent(data.address) + '&output=embed&z=15';
+  document.getElementById('btn-direction').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.address);
+  document.getElementById('p-address2').textContent = data.address;
+} else {
+  document.getElementById('row-address').classList.add('hidden');
+  document.getElementById('row-comp-address').classList.add('hidden');
+}
 
       // Sosyal medya
       var hasSocial = false;
