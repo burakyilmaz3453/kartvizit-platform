@@ -84,9 +84,23 @@
       <p class="uploading" id="banner-status"></p>
     </div>
 
-    <!-- Tema Rengi -->
+    <!-- Tema & Renk -->
     <div class="section">
-      <h3>Tema Rengi</h3>
+      <h3>Görünüm</h3>
+
+      <label style="margin-bottom:10px;display:block;">Tema</label>
+      <div style="display:flex;gap:10px;margin-bottom:20px;">
+        <div id="theme-dark" onclick="selectTheme('dark')" style="flex:1;padding:12px;background:#000;border:2px solid #0e8c6f;border-radius:10px;cursor:pointer;text-align:center;transition:0.2s;">
+          <div style="font-size:1.2rem;">🌙</div>
+          <div style="font-size:0.78rem;color:#fff;margin-top:4px;">Koyu</div>
+        </div>
+        <div id="theme-light" onclick="selectTheme('light')" style="flex:1;padding:12px;background:#f0f2f5;border:2px solid transparent;border-radius:10px;cursor:pointer;text-align:center;transition:0.2s;">
+          <div style="font-size:1.2rem;">☀️</div>
+          <div style="font-size:0.78rem;color:#333;margin-top:4px;">Aydınlık</div>
+        </div>
+      </div>
+
+      <label style="margin-bottom:10px;display:block;">Accent Rengi</label>
       <div class="color-grid" id="color-grid">
         <div class="color-option" style="background:#0e8c6f" data-color="#0e8c6f" onclick="selectColor('#0e8c6f')"></div>
         <div class="color-option" style="background:#2563eb" data-color="#2563eb" onclick="selectColor('#2563eb')"></div>
@@ -162,6 +176,7 @@
     let currentUser = null;
     let currentUsername = null;
     let selectedColor = '#0e8c6f';
+    let selectedTheme = 'dark';
 
     sb.auth.getSession().then(async ({ data }) => {
       if (!data.session) { window.location.href = 'login.html'; return; }
@@ -181,13 +196,17 @@
       if (data.avatar_url) document.getElementById('avatar-preview').innerHTML = `<img src="${data.avatar_url}" alt="Profil">`;
       if (data.banner_url) document.getElementById('banner-preview').innerHTML = `<img src="${data.banner_url}" alt="Banner">`;
 
-      if (data.theme_color) {
-        selectColor(data.theme_color);
-        document.getElementById('custom-color').value = data.theme_color;
-      }
+      if (data.theme_color) { selectColor(data.theme_color); document.getElementById('custom-color').value = data.theme_color; }
+      if (data.theme) selectTheme(data.theme);
 
       const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','instagram','twitter','facebook','tax_office','tax_no'];
       fields.forEach(f => { if (data[f]) document.getElementById(f).value = data[f]; });
+    }
+
+    function selectTheme(theme) {
+      selectedTheme = theme;
+      document.getElementById('theme-dark').style.borderColor = theme === 'dark' ? '#0e8c6f' : 'transparent';
+      document.getElementById('theme-light').style.borderColor = theme === 'light' ? '#0e8c6f' : 'transparent';
     }
 
     function selectColor(color) {
@@ -239,6 +258,7 @@
       const updates = {};
       fields.forEach(f => { updates[f] = document.getElementById(f).value.trim(); });
       updates.theme_color = selectedColor;
+      updates.theme = selectedTheme;
 
       const { error } = await sb.from('profiles').upsert({
         user_id: currentUser.id,
