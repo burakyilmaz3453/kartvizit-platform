@@ -1,197 +1,199 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- Platform favicon -->
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
-  <!-- Mobil uyumlu görünüm -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Giriş Yap | Kartvizit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* Tüm elementlerin sıfırlanması */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    /* Sayfa gövdesi: siyah arka plan, ortalanmış içerik */
-    body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-
-    /* Form kartı: koyu arka plan, yuvarlatılmış köşeler */
-    .card { background: #181a1e; border: 1px solid #2a2d35; border-radius: 20px; padding: 40px; width: 100%; max-width: 400px; }
-
-    /* Geri butonu: ana sayfaya döner */
-    .back { color: #8b9bb4; text-decoration: none; font-size: 0.85rem; display: inline-block; margin-bottom: 25px; }
-    .back:hover { color: #fff; }
-
-    /* Sayfa başlığı */
-    h2 { font-size: 1.4rem; margin-bottom: 6px; }
-
-    /* Alt başlık açıklama metni */
-    .subtitle { color: #8b9bb4; font-size: 0.85rem; margin-bottom: 30px; }
-
-    /* Form alanı grubu: her input için boşluk */
-    .form-group { margin-bottom: 16px; }
-
-    /* Input etiketi: küçük, gri */
-    label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
-
-    /* Input alanı: koyu arka plan, beyaz yazı */
-    input { width: 100%; background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 0.9rem; outline: none; transition: 0.2s; }
-    /* Odaklanınca yeşil kenarlık */
-    input:focus { border-color: #0e8c6f; }
-    input::placeholder { color: #555; }
-
-    /* Giriş yap butonu: yeşil, tam genişlik */
-    .btn { width: 100%; padding: 14px; background: #0e8c6f; color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 8px; }
-    .btn:hover { background: #0b7058; }
-    /* Yükleniyor durumunda buton pasif */
-    .btn:disabled { background: #333; cursor: not-allowed; }
-
-    /* Hata mesajı kutusu: kırmızı tonlu, varsayılan gizli */
-    .error { background: #2d1515; border: 1px solid #5a1f1f; color: #ff6b6b; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
-
-    /* Başarı mesajı kutusu: yeşil tonlu, varsayılan gizli */
-    .success { background: #0e2a22; border: 1px solid #0e8c6f; color: #0e8c6f; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
-
-    /* Şifremi unuttum linki: sağa hizalı */
-    .forgot { text-align: right; margin-top: -8px; margin-bottom: 14px; }
-    .forgot a { color: #8b9bb4; font-size: 0.78rem; text-decoration: none; cursor: pointer; }
-    .forgot a:hover { color: #0e8c6f; }
-
-    /* Kayıt ol yönlendirme linki: ortalanmış, alt kısımda */
-    .register-link { text-align: center; margin-top: 20px; font-size: 0.83rem; color: #8b9bb4; }
-    .register-link a { color: #0e8c6f; text-decoration: none; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --gold:#C9A84C; --gold-light:#E2C47A; --gold-dim:#7A6235;
+      --bg:#080808; --surface:#111111; --surface2:#161616;
+      --border:rgba(201,168,76,0.14); --border-subtle:rgba(255,255,255,0.06);
+      --text:#F0EBE1; --text-secondary:#7A7570; --text-muted:#4A4845;
+    }
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:'DM Sans',sans-serif; font-weight:300;
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:24px; overflow-x:hidden;
+    }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:0; opacity:0.35;
+    }
+    .wrap {
+      width:100%; max-width:380px; position:relative; z-index:1;
+      animation:fadeUp 0.7s ease forwards;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .brand {
+      text-align:center; margin-bottom:36px;
+    }
+    .brand-name {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.6rem; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--gold);
+    }
+    .brand-tagline {
+      font-size:0.65rem; letter-spacing:0.14em;
+      text-transform:uppercase; color:var(--text-muted);
+      margin-top:6px;
+    }
+    .card {
+      background:var(--surface);
+      border:1px solid var(--border-subtle);
+      border-radius:12px;
+      padding:36px 32px;
+    }
+    .back {
+      display:inline-flex; align-items:center; gap:6px;
+      color:var(--text-muted); text-decoration:none;
+      font-size:0.7rem; letter-spacing:0.08em;
+      text-transform:uppercase; margin-bottom:28px;
+      transition:color 0.2s;
+    }
+    .back:hover { color:var(--text-secondary); }
+    .back svg { width:14px; height:14px; fill:currentColor; }
+    h2 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.5rem; font-weight:300;
+      color:var(--text); margin-bottom:4px;
+    }
+    .subtitle {
+      font-size:0.78rem; color:var(--text-muted);
+      margin-bottom:28px; line-height:1.5;
+    }
+    .form-group { margin-bottom:14px; }
+    label {
+      display:block; font-size:0.65rem;
+      letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:6px;
+    }
+    input {
+      width:100%; background:var(--surface2);
+      border:1px solid var(--border-subtle); border-radius:6px;
+      padding:11px 14px; color:var(--text);
+      font-size:0.85rem; font-weight:300;
+      font-family:'DM Sans',sans-serif; outline:none; transition:0.2s;
+    }
+    input:focus { border-color:var(--gold-dim); }
+    input::placeholder { color:var(--text-muted); }
+    .forgot {
+      text-align:right; margin-top:-6px; margin-bottom:14px;
+    }
+    .forgot a {
+      color:var(--text-muted); font-size:0.7rem;
+      letter-spacing:0.04em; cursor:pointer; text-decoration:none;
+      transition:color 0.2s;
+    }
+    .forgot a:hover { color:var(--gold); }
+    .btn {
+      width:100%; padding:13px;
+      background:var(--gold); color:#080808;
+      border:none; border-radius:6px;
+      font-family:'DM Sans',sans-serif; font-size:0.78rem;
+      font-weight:500; letter-spacing:0.12em; text-transform:uppercase;
+      cursor:pointer; transition:0.2s; margin-top:6px;
+    }
+    .btn:hover { background:var(--gold-light); }
+    .btn:disabled { background:var(--surface2); color:var(--text-muted); cursor:not-allowed; }
+    .error {
+      background:rgba(139,42,42,0.12); border:1px solid rgba(139,42,42,0.3);
+      color:#FF8080; padding:10px 14px; border-radius:6px;
+      font-size:0.78rem; margin-bottom:14px; display:none; line-height:1.4;
+    }
+    .success {
+      background:rgba(201,168,76,0.06); border:1px solid var(--border);
+      color:var(--gold); padding:10px 14px; border-radius:6px;
+      font-size:0.78rem; margin-bottom:14px; display:none; line-height:1.4;
+    }
+    .bottom-link {
+      text-align:center; margin-top:20px;
+      font-size:0.75rem; color:var(--text-muted);
+    }
+    .bottom-link a { color:var(--gold); text-decoration:none; }
+    .bottom-link a:hover { color:var(--gold-light); }
+    .divider {
+      height:1px; background:var(--border-subtle); margin:20px 0;
+    }
   </style>
 </head>
 <body>
-  <!-- Giriş formu kartı -->
-  <div class="card">
-    <!-- Ana sayfaya dön linki -->
-    <a href="index.html" class="back">← Geri</a>
-
-    <h2>Giriş Yap</h2>
-    <p class="subtitle">Hesabına giriş yap ve kartvizitini yönet.</p>
-
-    <!-- Hata mesajı: JS tarafından doldurulur ve gösterilir -->
-    <div class="error" id="error-msg"></div>
-    <!-- Başarı mesajı: şifre sıfırlama maili gönderilince gösterilir -->
-    <div class="success" id="success-msg"></div>
-
-    <!-- E-posta alanı -->
-    <div class="form-group">
-      <label>E-posta</label>
-      <input type="email" id="email" placeholder="email@ornek.com">
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-name">Kartvizit</div>
+      <div class="brand-tagline">Dijital Kimliğinin Altın Standardı</div>
     </div>
-
-    <!-- Şifre alanı -->
-    <div class="form-group">
-      <label>Şifre</label>
-      <input type="password" id="password" placeholder="Şifreniz">
-    </div>
-
-    <!-- Şifremi unuttum: tıklayınca resetPassword() çalışır -->
-    <div class="forgot">
-      <a onclick="resetPassword()">Şifremi unuttum</a>
-    </div>
-
-    <!-- Giriş yap butonu: tıklayınca login() çalışır -->
-    <button class="btn" id="login-btn" onclick="login()">Giriş Yap</button>
-
-    <!-- Kayıt ol yönlendirmesi -->
-    <div class="register-link">
-      Hesabın yok mu? <a href="register.html">Kayıt ol</a>
+    <div class="card">
+      <a href="index.html" class="back">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Geri
+      </a>
+      <h2>Giriş Yap</h2>
+      <p class="subtitle">Hesabına giriş yap ve kartvizitini yönet.</p>
+      <div class="error" id="error-msg"></div>
+      <div class="success" id="success-msg"></div>
+      <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="email" placeholder="email@sirket.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="password" placeholder="Şifreniz">
+      </div>
+      <div class="forgot">
+        <a onclick="resetPassword()">Şifremi unuttum</a>
+      </div>
+      <button class="btn" id="login-btn" onclick="login()">Giriş Yap</button>
+      <div class="divider"></div>
+      <div class="bottom-link">
+        Hesabın yok mu? <a href="register.html">Kayıt ol</a>
+      </div>
     </div>
   </div>
 
-  <!-- Supabase JS kütüphanesi: auth işlemleri için -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Supabase bağlantı bilgileri -->
   <script src="supabase.js"></script>
-
   <script>
-    // Sayfa yüklenince aktif oturum kontrolü
-    // Zaten giriş yapıldıysa direkt dashboard'a yönlendir
     sb.auth.getSession().then(({ data }) => {
       if (data.session) window.location.href = 'dashboard.html';
     });
-
-    // Giriş yapma fonksiyonu
     async function login() {
-      // Form değerlerini oku
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const btn = document.getElementById('login-btn');
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
-
-      // Önceki mesajları gizle
-      errorEl.style.display = 'none';
-      successEl.style.display = 'none';
-
-      // Boş alan kontrolü
-      if (!email || !password) {
-        errorEl.textContent = 'E-posta ve şifreyi girin.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      // Butonu pasif yap ve yükleniyor metni göster
-      btn.disabled = true;
-      btn.textContent = 'Giriş yapılıyor...';
-
-      // Supabase Auth ile giriş dene
+      errorEl.style.display = 'none'; successEl.style.display = 'none';
+      if (!email || !password) { errorEl.textContent = 'E-posta ve şifreyi girin.'; errorEl.style.display = 'block'; return; }
+      btn.disabled = true; btn.textContent = 'Giriş yapılıyor...';
       const { error } = await sb.auth.signInWithPassword({ email, password });
-
-      // Hata varsa mesaj göster ve butonu tekrar aktif yap
       if (error) {
         errorEl.textContent = 'E-posta veya şifre hatalı.';
         errorEl.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = 'Giriş Yap';
-        return;
+        btn.disabled = false; btn.textContent = 'Giriş Yap'; return;
       }
-
-      // Başarılı girişte dashboard'a yönlendir
       window.location.href = 'dashboard.html';
     }
-
-    // Şifre sıfırlama fonksiyonu
     async function resetPassword() {
-      // E-posta alanından değeri oku
       const email = document.getElementById('email').value.trim();
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
-
-      // Önceki mesajları gizle
-      errorEl.style.display = 'none';
-      successEl.style.display = 'none';
-
-      // E-posta boşsa uyarı ver
-      if (!email) {
-        errorEl.textContent = 'Önce e-posta adresinizi girin.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      // Supabase Auth ile şifre sıfırlama maili gönder
-      // redirectTo: kullanıcı mailindekilinke tıklayınca reset.html'e gider
+      errorEl.style.display = 'none'; successEl.style.display = 'none';
+      if (!email) { errorEl.textContent = 'Önce e-posta adresinizi girin.'; errorEl.style.display = 'block'; return; }
       const { error } = await sb.auth.resetPasswordForEmail(email, {
         redirectTo: 'https://burakyilmaz3453.github.io/kartvizit-platform/reset.html'
       });
-
-      // Mail başarıyla gönderildiyse başarı mesajı göster
-      if (!error) {
-        successEl.textContent = '✓ Şifre sıfırlama maili gönderildi! Mailini kontrol et.';
-        successEl.style.display = 'block';
-      } else {
-        // Hata varsa mesajı göster
-        errorEl.textContent = 'Hata: ' + error.message;
-        errorEl.style.display = 'block';
-      }
+      if (!error) { successEl.textContent = '✓ Şifre sıfırlama maili gönderildi.'; successEl.style.display = 'block'; }
+      else { errorEl.textContent = 'Hata: ' + error.message; errorEl.style.display = 'block'; }
     }
-
-    // Enter tuşuna basınca login() fonksiyonunu tetikle
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') login();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
   </script>
 </body>
 </html>

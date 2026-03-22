@@ -1,512 +1,777 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- Favicon: platform ikonu -->
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
-  <!-- Mobil uyumlu görünüm için viewport ayarı -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel | Kartvizit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* Tüm elementlerin margin/padding sıfırlanması ve box-sizing düzenlenmesi */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-    /* Sayfa genel stili: siyah arka plan, beyaz yazı, sistem fontu */
-    body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; padding: 20px; }
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E2C47A;
+      --gold-dim: #7A6235;
+      --bg: #080808;
+      --bg2: #0D0D0D;
+      --surface: #111111;
+      --surface2: #161616;
+      --border: rgba(201,168,76,0.12);
+      --border-subtle: rgba(255,255,255,0.06);
+      --text: #F0EBE1;
+      --text-secondary: #7A7570;
+      --text-muted: #4A4845;
+      --danger: #8B2A2A;
+      --danger-text: #FF8080;
+    }
 
-    /* Üst çubuk: logo ve çıkış butonu yan yana */
-    .topbar { max-width: 600px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: space-between; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
 
-    /* Logo stili: büyük, kalın, yeşil */
-    .logo { font-size: 1.2rem; font-weight: 800; color: #0e8c6f; }
+    body::before {
+      content:'';
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events:none;
+      z-index:0;
+      opacity:0.3;
+    }
 
-    /* Çıkış butonu stili */
-    .logout-btn { background: #23262b; border: 1px solid #2a2d35; color: #8b9bb4; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; transition: 0.2s; }
-    .logout-btn:hover { color: #fff; background: #2c3036; }
+    /* ── TOPBAR ── */
+    .topbar {
+      position:sticky;
+      top:0;
+      z-index:100;
+      background:rgba(8,8,8,0.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border-subtle);
+      padding:0 32px;
+      height:60px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      max-width:100%;
+    }
 
-    /* İçerik alanı: maksimum 600px genişlik, ortalı */
-    .container { max-width: 600px; margin: 0 auto; }
+    .topbar-left { display:flex; align-items:center; gap:20px; }
 
-    /* Bölüm kartları: koyu arka plan, kenarlık, yuvarlatılmış köşeler */
-    .section { background: #181a1e; border: 1px solid #2a2d35; border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+    .logo {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.15rem;
+      letter-spacing:0.15em;
+      text-transform:uppercase;
+      color:var(--gold);
+      text-decoration:none;
+    }
 
-    /* Bölüm başlıkları: küçük, gri, büyük harf */
-    .section h3 { font-size: 0.85rem; color: #8b9bb4; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #2a2d35; }
+    .topbar-divider {
+      width:1px;
+      height:18px;
+      background:var(--border-subtle);
+    }
 
-    /* Form grubu: her alan arasında boşluk */
-    .form-group { margin-bottom: 14px; }
+    .topbar-subtitle {
+      font-size:0.7rem;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      color:var(--text-muted);
+    }
 
-    /* Form etiketleri: küçük, gri */
-    label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
+    .topbar-right { display:flex; align-items:center; gap:12px; }
 
-    /* Metin, email ve şifre inputları: koyu arka plan, beyaz yazı */
-    input[type="text"], input[type="email"], input[type="password"] { width: 100%; background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 11px 14px; color: #fff; font-size: 0.88rem; outline: none; transition: 0.2s; font-family: inherit; }
-    /* Odaklanınca yeşil kenarlık */
-    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus { border-color: #0e8c6f; }
-    input::placeholder { color: #555; }
+    .preview-btn {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 16px;
+      background:transparent;
+      border:1px solid var(--border);
+      color:var(--text-secondary);
+      font-family:'DM Sans',sans-serif;
+      font-size:0.72rem;
+      font-weight:400;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      text-decoration:none;
+      border-radius:3px;
+      transition:0.2s;
+      cursor:pointer;
+    }
+    .preview-btn:hover { border-color:var(--gold-dim); color:var(--text); }
+    .preview-btn svg { width:12px; height:12px; fill:currentColor; }
 
-    /* Kaydet butonu: yeşil, tam genişlik */
-    .save-btn { width: 100%; padding: 13px; background: #0e8c6f; color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 8px; }
-    .save-btn:hover { background: #0b7058; }
-    .save-btn:disabled { background: #333; cursor: not-allowed; }
+    .logout-btn {
+      padding:7px 16px;
+      background:transparent;
+      border:1px solid var(--border-subtle);
+      color:var(--text-muted);
+      font-family:'DM Sans',sans-serif;
+      font-size:0.72rem;
+      font-weight:400;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      border-radius:3px;
+      cursor:pointer;
+      transition:0.2s;
+    }
+    .logout-btn:hover { border-color:rgba(139,42,42,0.4); color:var(--danger-text); }
 
-    /* Toast bildirimi: ekranın alt ortasında beliren geçici mesaj */
-    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0e8c6f; color: #fff; padding: 10px 22px; border-radius: 25px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: 0.3s; pointer-events: none; white-space: nowrap; z-index: 999; }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    /* ── LAYOUT ── */
+    .page-wrap {
+      max-width:720px;
+      margin:0 auto;
+      padding:32px 20px 80px;
+      position:relative;
+      z-index:1;
+    }
 
-    /* Kartvizit link kutusu */
-    .card-link-box { background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .card-link-box a { color: #0e8c6f; font-size: 0.85rem; text-decoration: none; word-break: break-all; }
+    /* ── LINK BOX ── */
+    .link-box {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:16px 20px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:24px;
+    }
 
-    /* Kopyala butonu */
-    .copy-link { background: #2a2d35; border: none; color: #8b9bb4; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; white-space: nowrap; transition: 0.2s; }
-    .copy-link:hover { background: #444; color: #fff; }
+    .link-dot {
+      width:6px;
+      height:6px;
+      background:var(--gold);
+      border-radius:50%;
+      flex-shrink:0;
+      animation:pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    /* İki kolonlu grid düzeni (telefon, vergi no gibi yan yana alanlar için) */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    /* Küçük ekranlarda tek kolon */
-    @media (max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
+    .link-url {
+      flex:1;
+      color:var(--gold);
+      font-size:0.82rem;
+      text-decoration:none;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .link-url:hover { color:var(--gold-light); }
 
-    /* Profil fotoğrafı yükleme alanı: fotoğraf önizleme + buton yan yana */
-    .photo-upload-area { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+    .copy-link-btn {
+      background:rgba(201,168,76,0.06);
+      border:1px solid var(--border);
+      color:var(--text-secondary);
+      padding:5px 14px;
+      border-radius:3px;
+      cursor:pointer;
+      font-family:'DM Sans',sans-serif;
+      font-size:0.68rem;
+      font-weight:500;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      transition:0.2s;
+      white-space:nowrap;
+      flex-shrink:0;
+    }
+    .copy-link-btn:hover { border-color:var(--gold-dim); color:var(--gold); }
 
-    /* Profil fotoğrafı önizlemesi: yuvarlak, koyu arka plan */
-    .photo-preview { width: 80px; height: 80px; border-radius: 50%; background: #1e2125; border: 2px solid #2a2d35; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #0e8c6f; flex-shrink: 0; overflow: hidden; }
-    .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+    /* ── SECTIONS ── */
+    .section {
+      background:var(--surface);
+      border:1px solid var(--border-subtle);
+      border-radius:10px;
+      margin-bottom:12px;
+      overflow:hidden;
+    }
 
-    /* Banner önizlemesi: geniş, alçak kutu */
-    .banner-preview { width: 100%; height: 80px; border-radius: 10px; background: #1e2125; border: 2px solid #2a2d35; margin-bottom: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #555; font-size: 0.82rem; }
-    .banner-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .section-head {
+      padding:14px 20px;
+      border-bottom:1px solid var(--border-subtle);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
 
-    /* Dosya seç butonu: gri, ince kenarlık */
-    .upload-btn { background: #23262b; border: 1px solid #2a2d35; color: #8b9bb4; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; transition: 0.2s; }
-    .upload-btn:hover { color: #fff; background: #2c3036; }
+    .section-head-line {
+      width:16px;
+      height:1px;
+      background:var(--gold-dim);
+    }
 
-    /* Kaldır butonu: kırmızı tonlu */
-    .remove-btn { background: #2d1515; border: 1px solid #5a1f1f; color: #ff6b6b; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; transition: 0.2s; }
-    .remove-btn:hover { background: #3d1f1f; color: #ff4444; }
+    .section-head-title {
+      font-size:0.65rem;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--text-secondary);
+    }
 
-    /* Dosya input gizli (özel butonla tetikleniyor) */
-    input[type="file"] { display: none; }
+    .section-body { padding:20px; }
 
-    /* Yükleme durum mesajı: yeşil, küçük */
-    .uploading { color: #0e8c6f; font-size: 0.8rem; margin-top: 4px; }
+    /* ── FORMS ── */
+    .form-group { margin-bottom:14px; }
+    .form-group:last-child { margin-bottom:0; }
 
-    /* Renk seçici grid: renkli daireler yan yana */
-    .color-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    label {
+      display:block;
+      font-size:0.67rem;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      color:var(--text-muted);
+      margin-bottom:6px;
+    }
 
-    /* Her renk seçeneği: yuvarlak daire */
-    .color-option { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: 0.2s; position: relative; }
-    .color-option:hover { transform: scale(1.1); }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width:100%;
+      background:var(--surface2);
+      border:1px solid var(--border-subtle);
+      border-radius:6px;
+      padding:10px 14px;
+      color:var(--text);
+      font-size:0.85rem;
+      font-weight:300;
+      font-family:'DM Sans',sans-serif;
+      outline:none;
+      transition:border-color 0.2s;
+    }
+    input:focus { border-color:var(--gold-dim); }
+    input::placeholder { color:var(--text-muted); }
 
-    /* Seçili renk: beyaz kenarlık + tik işareti */
-    .color-option.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
-    .color-option.active::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 0.8rem; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    .two-col {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width:520px) { .two-col { grid-template-columns:1fr; } }
 
-    /* Özel renk satırı: renk picker + hex kodu */
-    .custom-color-row { display: flex; align-items: center; gap: 10px; }
-    .custom-color-row label { margin: 0; white-space: nowrap; }
+    /* ── PHOTO UPLOAD ── */
+    .photo-row {
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
+    }
 
-    /* Renk picker input */
-    input[type="color"] { width: 44px; height: 36px; border: 1px solid #2a2d35; border-radius: 8px; background: #1e2125; cursor: pointer; padding: 2px; }
+    .photo-thumb {
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      background:var(--surface2);
+      border:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.6rem;
+      color:var(--gold-dim);
+      flex-shrink:0;
+      overflow:hidden;
+    }
+    .photo-thumb img { width:100%; height:100%; object-fit:cover; }
 
-    /* Fotoğraf buton grubu: seç ve kaldır yan yana */
-    .photo-btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .banner-thumb {
+      width:100%;
+      height:72px;
+      border-radius:6px;
+      background:var(--surface2);
+      border:1px solid var(--border-subtle);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.75rem;
+      color:var(--text-muted);
+      margin-bottom:10px;
+      overflow:hidden;
+    }
+    .banner-thumb img { width:100%; height:100%; object-fit:cover; }
+
+    .btn-group { display:flex; gap:8px; flex-wrap:wrap; }
+
+    .upload-btn {
+      background:var(--surface2);
+      border:1px solid var(--border-subtle);
+      color:var(--text-secondary);
+      padding:7px 16px;
+      border-radius:4px;
+      cursor:pointer;
+      font-family:'DM Sans',sans-serif;
+      font-size:0.72rem;
+      font-weight:400;
+      letter-spacing:0.06em;
+      transition:0.2s;
+    }
+    .upload-btn:hover { border-color:var(--border); color:var(--text); }
+
+    .remove-btn {
+      background:rgba(139,42,42,0.08);
+      border:1px solid rgba(139,42,42,0.25);
+      color:var(--danger-text);
+      padding:7px 16px;
+      border-radius:4px;
+      cursor:pointer;
+      font-family:'DM Sans',sans-serif;
+      font-size:0.72rem;
+      font-weight:400;
+      letter-spacing:0.06em;
+      transition:0.2s;
+    }
+    .remove-btn:hover { background:rgba(139,42,42,0.14); }
+
+    .status-text {
+      font-size:0.72rem;
+      color:var(--gold);
+      margin-top:4px;
+      letter-spacing:0.04em;
+    }
+
+    input[type="file"] { display:none; }
+
+    /* ── THEME SELECTOR ── */
+    .theme-grid { display:flex; gap:10px; margin-bottom:18px; }
+
+    .theme-opt {
+      flex:1;
+      padding:12px;
+      border-radius:6px;
+      cursor:pointer;
+      text-align:center;
+      border:1px solid var(--border-subtle);
+      transition:0.2s;
+    }
+    .theme-opt-dark { background:#050505; }
+    .theme-opt-light { background:#EFEBE3; }
+    .theme-opt.active { border-color:var(--gold); }
+
+    .theme-opt-label {
+      font-size:0.7rem;
+      margin-top:6px;
+      letter-spacing:0.08em;
+    }
+    .theme-opt-dark .theme-opt-label { color:#888; }
+    .theme-opt-dark.active .theme-opt-label { color:var(--gold); }
+    .theme-opt-light .theme-opt-label { color:#888; }
+    .theme-opt-light.active .theme-opt-label { color:#8A6020; }
+
+    /* ── COLOR SELECTOR ── */
+    .color-grid { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+
+    .color-dot {
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      cursor:pointer;
+      border:2px solid transparent;
+      transition:0.15s;
+      position:relative;
+    }
+    .color-dot:hover { transform:scale(1.1); }
+    .color-dot.active { border-color:#fff; box-shadow:0 0 0 2px rgba(255,255,255,0.25); }
+    .color-dot.active::after {
+      content:'✓';
+      position:absolute;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      color:#fff;
+      font-size:0.7rem;
+      font-weight:700;
+      text-shadow:0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .custom-row {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .custom-row label { margin:0; }
+
+    input[type="color"] {
+      width:40px;
+      height:32px;
+      border:1px solid var(--border-subtle);
+      border-radius:6px;
+      background:var(--surface2);
+      cursor:pointer;
+      padding:2px;
+    }
+
+    .hex-code {
+      font-size:0.78rem;
+      color:var(--text-muted);
+      font-family:'DM Sans',sans-serif;
+    }
+
+    /* ── SAVE BUTTON ── */
+    .save-btn {
+      width:100%;
+      padding:13px;
+      background:var(--gold);
+      color:#080808;
+      border:none;
+      border-radius:6px;
+      font-family:'DM Sans',sans-serif;
+      font-size:0.78rem;
+      font-weight:500;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:0.2s;
+      margin-top:4px;
+    }
+    .save-btn:hover { background:var(--gold-light); }
+    .save-btn:disabled { background:var(--surface2); color:var(--text-muted); cursor:not-allowed; }
+
+    /* ── TOAST ── */
+    .toast {
+      position:fixed;
+      bottom:28px;
+      left:50%;
+      transform:translateX(-50%) translateY(16px);
+      background:var(--gold);
+      color:#080808;
+      padding:9px 24px;
+      border-radius:100px;
+      font-size:0.75rem;
+      font-weight:500;
+      letter-spacing:0.08em;
+      opacity:0;
+      transition:0.3s;
+      pointer-events:none;
+      white-space:nowrap;
+      z-index:999;
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* ── SECTION SPACER ── */
+    .spacer { height:8px; }
   </style>
 </head>
 <body>
-  <!-- Üst çubuk: logo ve çıkış butonu -->
+
+  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="logo">💼 Kartvizit</div>
-    <!-- Çıkış butonuna tıklayınca logout() fonksiyonu çalışır -->
-    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+    <div class="topbar-left">
+      <a href="index.html" class="logo">Kartvizit</a>
+      <div class="topbar-divider"></div>
+      <span class="topbar-subtitle">Yönetim Paneli</span>
+    </div>
+    <div class="topbar-right">
+      <a id="preview-link" href="#" target="_blank" class="preview-btn">
+        <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        Önizle
+      </a>
+      <button class="logout-btn" onclick="logout()">Çıkış</button>
+    </div>
   </div>
 
-  <!-- Ana içerik alanı -->
-  <div class="container">
+  <!-- MAIN -->
+  <div class="page-wrap">
 
-    <!-- Kartvizit linki bölümü -->
-    <div class="section">
-      <h3>Kartvizit Linkin</h3>
-      <div class="card-link-box">
-        <!-- Kullanıcının kartvizit linki buraya dinamik yazılır -->
-        <a id="card-link" href="#" target="_blank">Yükleniyor...</a>
-        <!-- Linki panoya kopyalar -->
-        <button class="copy-link" onclick="copyLink()">Kopyala</button>
-      </div>
+    <!-- Kartvizit linki -->
+    <div class="link-box">
+      <div class="link-dot"></div>
+      <a id="card-link" href="#" target="_blank" class="link-url">Yükleniyor...</a>
+      <button class="copy-link-btn" onclick="copyLink()">Kopyala</button>
     </div>
 
-    <!-- Fotoğraf yükleme bölümü -->
+    <!-- Fotoğraflar -->
     <div class="section">
-      <h3>Fotoğraflar</h3>
-
-      <!-- Profil fotoğrafı -->
-      <label>Profil Fotoğrafı</label>
-      <div class="photo-upload-area">
-        <!-- Profil fotoğrafı önizlemesi: yüklü değilse emoji gösterir -->
-        <div class="photo-preview" id="avatar-preview">👤</div>
-        <div>
-          <div class="photo-btn-group">
-            <!-- Tıklayınca gizli file input'u tetikler -->
-            <button class="upload-btn" onclick="document.getElementById('avatar-input').click()">Fotoğraf Seç</button>
-            <!-- Profil fotoğrafını siler -->
-            <button class="remove-btn" id="avatar-remove-btn" onclick="removeAvatar()" style="display:none;">Kaldır</button>
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Fotoğraflar</span></div>
+      <div class="section-body">
+        <label>Profil Fotoğrafı</label>
+        <div class="photo-row">
+          <div class="photo-thumb" id="avatar-preview">👤</div>
+          <div>
+            <div class="btn-group">
+              <button class="upload-btn" onclick="document.getElementById('avatar-input').click()">Seç</button>
+              <button class="remove-btn" id="avatar-remove-btn" onclick="removeAvatar()" style="display:none">Kaldır</button>
+            </div>
+            <input type="file" id="avatar-input" accept="image/*" onchange="uploadAvatar(this)">
+            <p class="status-text" id="avatar-status"></p>
           </div>
-          <!-- Gizli dosya seçici: sadece resim formatları -->
-          <input type="file" id="avatar-input" accept="image/*" onchange="uploadAvatar(this)">
-          <!-- Yükleme durumu mesajı -->
-          <p class="uploading" id="avatar-status"></p>
+        </div>
+
+        <label>Banner Görseli</label>
+        <div class="banner-thumb" id="banner-preview">Banner yok</div>
+        <div class="btn-group">
+          <button class="upload-btn" onclick="document.getElementById('banner-input').click()">Seç</button>
+          <button class="remove-btn" id="banner-remove-btn" onclick="removeBanner()" style="display:none">Kaldır</button>
+        </div>
+        <input type="file" id="banner-input" accept="image/*" onchange="uploadBanner(this)">
+        <p class="status-text" id="banner-status"></p>
+      </div>
+    </div>
+
+    <!-- Görünüm -->
+    <div class="section">
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Görünüm</span></div>
+      <div class="section-body">
+        <label style="margin-bottom:10px">Tema</label>
+        <div class="theme-grid">
+          <div class="theme-opt theme-opt-dark active" id="theme-dark" onclick="selectTheme('dark')">
+            <div style="font-size:1.1rem">🌙</div>
+            <div class="theme-opt-label">Koyu</div>
+          </div>
+          <div class="theme-opt theme-opt-light" id="theme-light" onclick="selectTheme('light')">
+            <div style="font-size:1.1rem">☀️</div>
+            <div class="theme-opt-label">Açık</div>
+          </div>
+        </div>
+
+        <label style="margin-bottom:10px">Accent Rengi</label>
+        <div class="color-grid" id="color-grid">
+          <div class="color-dot active" style="background:#C9A84C" data-color="#C9A84C" onclick="selectColor('#C9A84C')"></div>
+          <div class="color-dot" style="background:#0e8c6f" data-color="#0e8c6f" onclick="selectColor('#0e8c6f')"></div>
+          <div class="color-dot" style="background:#2563eb" data-color="#2563eb" onclick="selectColor('#2563eb')"></div>
+          <div class="color-dot" style="background:#7c3aed" data-color="#7c3aed" onclick="selectColor('#7c3aed')"></div>
+          <div class="color-dot" style="background:#db2777" data-color="#db2777" onclick="selectColor('#db2777')"></div>
+          <div class="color-dot" style="background:#dc2626" data-color="#dc2626" onclick="selectColor('#dc2626')"></div>
+          <div class="color-dot" style="background:#ea580c" data-color="#ea580c" onclick="selectColor('#ea580c')"></div>
+          <div class="color-dot" style="background:#0891b2" data-color="#0891b2" onclick="selectColor('#0891b2')"></div>
+        </div>
+        <div class="custom-row">
+          <label>Özel</label>
+          <input type="color" id="custom-color" value="#C9A84C" onchange="selectColor(this.value)">
+          <span class="hex-code" id="color-hex">#C9A84C</span>
         </div>
       </div>
-
-      <!-- Banner görseli -->
-      <label>Banner Görseli</label>
-      <!-- Banner önizlemesi -->
-      <div class="banner-preview" id="banner-preview">Banner görseli yok</div>
-      <div class="photo-btn-group" style="margin-bottom:4px;">
-        <!-- Banner seçmek için gizli file input'u tetikler -->
-        <button class="upload-btn" onclick="document.getElementById('banner-input').click()">Banner Seç</button>
-        <!-- Banner'ı siler -->
-        <button class="remove-btn" id="banner-remove-btn" onclick="removeBanner()" style="display:none;">Kaldır</button>
-      </div>
-      <!-- Gizli banner dosya seçici -->
-      <input type="file" id="banner-input" accept="image/*" onchange="uploadBanner(this)">
-      <!-- Banner yükleme durumu mesajı -->
-      <p class="uploading" id="banner-status"></p>
     </div>
 
-    <!-- Görünüm ayarları: tema ve renk -->
+    <!-- Kişisel Bilgiler -->
     <div class="section">
-      <h3>Görünüm</h3>
-
-      <label style="margin-bottom:10px;display:block;">Tema</label>
-      <div style="display:flex;gap:10px;margin-bottom:20px;">
-        <!-- Koyu tema seçeneği -->
-        <div id="theme-dark" onclick="selectTheme('dark')" style="flex:1;padding:12px;background:#000;border:2px solid #0e8c6f;border-radius:10px;cursor:pointer;text-align:center;transition:0.2s;">
-          <div style="font-size:1.2rem;">🌙</div>
-          <div style="font-size:0.78rem;color:#fff;margin-top:4px;">Koyu</div>
-        </div>
-        <!-- Aydınlık tema seçeneği -->
-        <div id="theme-light" onclick="selectTheme('light')" style="flex:1;padding:12px;background:#f0f2f5;border:2px solid transparent;border-radius:10px;cursor:pointer;text-align:center;transition:0.2s;">
-          <div style="font-size:1.2rem;">☀️</div>
-          <div style="font-size:0.78rem;color:#333;margin-top:4px;">Aydınlık</div>
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Kişisel Bilgiler</span></div>
+      <div class="section-body">
+        <div class="form-group"><label>Ad Soyad</label><input type="text" id="full_name" placeholder="Ahmet Karaca"></div>
+        <div class="two-col">
+          <div class="form-group"><label>Şirket</label><input type="text" id="company" placeholder="Karaca Holding"></div>
+          <div class="form-group"><label>Unvan</label><input type="text" id="title" placeholder="Kurucu Ortak"></div>
         </div>
       </div>
+    </div>
 
-      <label style="margin-bottom:10px;display:block;">Accent Rengi</label>
-      <!-- Hazır renk seçenekleri -->
-      <div class="color-grid" id="color-grid">
-        <div class="color-option" style="background:#0e8c6f" data-color="#0e8c6f" onclick="selectColor('#0e8c6f')"></div>
-        <div class="color-option" style="background:#2563eb" data-color="#2563eb" onclick="selectColor('#2563eb')"></div>
-        <div class="color-option" style="background:#7c3aed" data-color="#7c3aed" onclick="selectColor('#7c3aed')"></div>
-        <div class="color-option" style="background:#db2777" data-color="#db2777" onclick="selectColor('#db2777')"></div>
-        <div class="color-option" style="background:#dc2626" data-color="#dc2626" onclick="selectColor('#dc2626')"></div>
-        <div class="color-option" style="background:#ea580c" data-color="#ea580c" onclick="selectColor('#ea580c')"></div>
-        <div class="color-option" style="background:#ca8a04" data-color="#ca8a04" onclick="selectColor('#ca8a04')"></div>
-        <div class="color-option" style="background:#0891b2" data-color="#0891b2" onclick="selectColor('#0891b2')"></div>
-      </div>
-      <!-- Özel renk seçici -->
-      <div class="custom-color-row">
-        <label>Özel renk:</label>
-        <input type="color" id="custom-color" value="#0e8c6f" onchange="selectColor(this.value)">
-        <!-- Seçili rengin hex kodu -->
-        <span id="color-hex" style="color:#8b9bb4;font-size:0.82rem;">#0e8c6f</span>
+    <!-- İletişim -->
+    <div class="section">
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">İletişim</span></div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="form-group"><label>Cep Telefonu</label><input type="text" id="mobile" placeholder="+90 555 000 00 00"></div>
+          <div class="form-group"><label>İş Telefonu</label><input type="text" id="work_phone" placeholder="+90 212 000 00 00"></div>
+        </div>
+        <div class="form-group"><label>E-posta</label><input type="email" id="email" placeholder="ahmet@karaca.com"></div>
+        <div class="form-group"><label>Web Sitesi</label><input type="text" id="website" placeholder="www.karaca.com"></div>
       </div>
     </div>
 
-    <!-- Kişisel bilgiler formu -->
+    <!-- Adres -->
     <div class="section">
-      <h3>Kişisel Bilgiler</h3>
-      <div class="form-group"><label>Ad Soyad</label><input type="text" id="full_name" placeholder="Burak Yılmaz"></div>
-      <div class="two-col">
-        <div class="form-group"><label>Şirket</label><input type="text" id="company" placeholder="Şirket Adı"></div>
-        <div class="form-group"><label>Unvan</label><input type="text" id="title" placeholder="Sistem Yöneticisi"></div>
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Adres</span></div>
+      <div class="section-body">
+        <div class="form-group"><label>Adres</label><input type="text" id="address" placeholder="Maslak Mah. Büyükdere Cad. İstanbul"></div>
       </div>
     </div>
 
-    <!-- İletişim bilgileri formu -->
+    <!-- Sosyal Medya -->
     <div class="section">
-      <h3>İletişim</h3>
-      <div class="two-col">
-        <div class="form-group"><label>Cep Telefonu</label><input type="text" id="mobile" placeholder="+90 555 000 00 00"></div>
-        <div class="form-group"><label>İş Telefonu</label><input type="text" id="work_phone" placeholder="+90 212 000 00 00"></div>
-      </div>
-      <div class="form-group"><label>E-posta</label><input type="email" id="email" placeholder="email@sirket.com"></div>
-      <div class="form-group"><label>Web Sitesi</label><input type="text" id="website" placeholder="www.sirket.com"></div>
-    </div>
-
-    <!-- Adres bilgisi -->
-    <div class="section">
-      <h3>Adres</h3>
-      <div class="form-group"><label>Adres</label><input type="text" id="address" placeholder="Maslak Mah. Büyükdere Cad. İstanbul"></div>
-    </div>
-
-    <!-- Sosyal medya linkleri -->
-    <div class="section">
-      <h3>Sosyal Medya</h3>
-      <div class="form-group"><label>LinkedIn</label><input type="text" id="linkedin" placeholder="https://linkedin.com/in/kullanici"></div>
-      <div class="form-group"><label>Instagram</label><input type="text" id="instagram" placeholder="https://instagram.com/kullanici"></div>
-      <div class="form-group"><label>Twitter / X</label><input type="text" id="twitter" placeholder="https://twitter.com/kullanici"></div>
-      <div class="form-group"><label>Facebook</label><input type="text" id="facebook" placeholder="https://facebook.com/kullanici"></div>
-    </div>
-
-    <!-- Şirket vergi bilgileri -->
-    <div class="section">
-      <h3>Şirket Bilgileri</h3>
-      <div class="two-col">
-        <div class="form-group"><label>Vergi Dairesi</label><input type="text" id="tax_office" placeholder="Boğaziçi Kurumlar"></div>
-        <div class="form-group"><label>Vergi No</label><input type="text" id="tax_no" placeholder="1234567890"></div>
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Sosyal Medya</span></div>
+      <div class="section-body">
+        <div class="form-group"><label>LinkedIn</label><input type="text" id="linkedin" placeholder="https://linkedin.com/in/kullanici"></div>
+        <div class="form-group"><label>Instagram</label><input type="text" id="instagram" placeholder="https://instagram.com/kullanici"></div>
+        <div class="form-group"><label>Twitter / X</label><input type="text" id="twitter" placeholder="https://twitter.com/kullanici"></div>
+        <div class="form-group"><label>Facebook</label><input type="text" id="facebook" placeholder="https://facebook.com/kullanici"></div>
       </div>
     </div>
 
-    <!-- Tüm form alanlarını kaydeden ana buton -->
-    <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Değişiklikleri Kaydet</button>
-
-    <!-- Şifre değiştirme bölümü -->
-    <div class="section" style="margin-top:16px;">
-      <h3>Şifre Değiştir</h3>
-      <div class="form-group"><label>Yeni Şifre</label><input type="password" id="new-password" placeholder="En az 6 karakter"></div>
-      <div class="form-group"><label>Şifre Tekrar</label><input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir"></div>
-      <button class="save-btn" onclick="changePassword()">🔒 Şifreyi Güncelle</button>
+    <!-- Şirket Bilgileri -->
+    <div class="section">
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Şirket Bilgileri</span></div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="form-group"><label>Vergi Dairesi</label><input type="text" id="tax_office" placeholder="Boğaziçi Kurumlar"></div>
+          <div class="form-group"><label>Vergi No</label><input type="text" id="tax_no" placeholder="1234567890"></div>
+        </div>
+      </div>
     </div>
 
-  </div>
+    <!-- Save -->
+    <button class="save-btn" id="save-btn" onclick="saveProfile()">Değişiklikleri Kaydet</button>
 
-  <!-- Toast bildirim elementi (JS tarafından gösterilip gizlenir) -->
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+
+    <!-- Şifre Değiştir -->
+    <div class="section">
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Şifre Değiştir</span></div>
+      <div class="section-body">
+        <div class="form-group"><label>Yeni Şifre</label><input type="password" id="new-password" placeholder="En az 6 karakter"></div>
+        <div class="form-group"><label>Şifre Tekrar</label><input type="password" id="confirm-password" placeholder="Tekrar gir"></div>
+        <button class="save-btn" onclick="changePassword()" style="margin-top:8px">Şifreyi Güncelle</button>
+      </div>
+    </div>
+
+  </div><!-- end page-wrap -->
+
   <div class="toast" id="toast"></div>
 
-  <!-- Supabase kütüphanesi: veritabanı ve auth işlemleri için -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Supabase bağlantı ayarları (URL ve API key) -->
   <script src="supabase.js"></script>
 
   <script>
-    // Giriş yapan kullanıcı bilgisi
     let currentUser = null;
-    // Kullanıcının username'i (kartvizit linki için)
     let currentUsername = null;
-    // Seçili accent rengi (varsayılan yeşil)
-    let selectedColor = '#0e8c6f';
-    // Seçili tema (varsayılan koyu)
+    let selectedColor = '#C9A84C';
     let selectedTheme = 'dark';
 
-    // Sayfa yüklenince aktif oturumu kontrol et
     sb.auth.getSession().then(async ({ data }) => {
-      // Oturum yoksa login sayfasına yönlendir
       if (!data.session) { window.location.href = 'login.html'; return; }
-      // Kullanıcı bilgisini kaydet
       currentUser = data.session.user;
-      // Profil verilerini yükle
       loadProfile();
     });
 
-    // Veritabanından kullanıcı profilini çekip formu doldurur
     async function loadProfile() {
-      // profiles tablosundan mevcut kullanıcının satırını çek
       const { data } = await sb.from('profiles').select('*').eq('user_id', currentUser.id).single();
       if (!data) return;
-
-      // Username'i global değişkene kaydet
       currentUsername = data.username;
 
-      // Kartvizit linkini oluştur ve göster
       const link = `${window.location.origin}/kartvizit-platform/card.html?username=${data.username}`;
       document.getElementById('card-link').href = link;
       document.getElementById('card-link').textContent = link;
+      document.getElementById('preview-link').href = link;
 
-      // Profil fotoğrafı varsa önizleme göster ve kaldır butonunu aktif et
       if (data.avatar_url) {
         document.getElementById('avatar-preview').innerHTML = `<img src="${data.avatar_url}" alt="Profil">`;
         document.getElementById('avatar-remove-btn').style.display = 'block';
       }
-
-      // Banner varsa önizleme göster ve kaldır butonunu aktif et
       if (data.banner_url) {
         document.getElementById('banner-preview').innerHTML = `<img src="${data.banner_url}" alt="Banner">`;
         document.getElementById('banner-remove-btn').style.display = 'block';
       }
-
-      // Kayıtlı tema rengini seç
       if (data.theme_color) { selectColor(data.theme_color); document.getElementById('custom-color').value = data.theme_color; }
-      // Kayıtlı temayı seç
       if (data.theme) selectTheme(data.theme);
 
-      // Tüm metin alanlarını veritabanındaki değerlerle doldur
       const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','instagram','twitter','facebook','tax_office','tax_no'];
       fields.forEach(f => { if (data[f]) document.getElementById(f).value = data[f]; });
     }
 
-    // Tema seçilince görsel günceller ve seçimi kaydeder
     function selectTheme(theme) {
       selectedTheme = theme;
-      // Seçili temanın kenarlığını yeşil yap, diğerini şeffaf
-      document.getElementById('theme-dark').style.borderColor = theme === 'dark' ? '#0e8c6f' : 'transparent';
-      document.getElementById('theme-light').style.borderColor = theme === 'light' ? '#0e8c6f' : 'transparent';
+      document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
+      document.getElementById('theme-light').classList.toggle('active', theme === 'light');
     }
 
-    // Renk seçilince görseli ve seçimi günceller
     function selectColor(color) {
       selectedColor = color;
-      // Hex kodunu göster
       document.getElementById('color-hex').textContent = color;
-      // Renk picker'ı güncelle
       document.getElementById('custom-color').value = color;
-      // Seçili renk dairesini aktif yap, diğerlerini pasif yap
-      document.querySelectorAll('.color-option').forEach(el => {
+      document.querySelectorAll('.color-dot').forEach(el => {
         el.classList.toggle('active', el.dataset.color === color);
       });
     }
 
-    // Profil fotoğrafı yükler: Supabase Storage'a kaydeder, URL'yi veritabanına yazar
     async function uploadAvatar(input) {
       const file = input.files[0];
       if (!file) return;
       document.getElementById('avatar-status').textContent = 'Yükleniyor...';
-
-      // Benzersiz dosya adı: kullanıcı ID + zaman damgası
       const ext = file.name.split('.').pop();
       const path = `${currentUser.id}/avatar_${Date.now()}.${ext}`;
-
-      // Avatars bucket'ına yükle
-      const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert: true });
+      const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert:true });
       if (error) { document.getElementById('avatar-status').textContent = 'Hata!'; return; }
-
-      // Public URL al (önbellek bozma için timestamp ekle)
       const { data } = sb.storage.from('Avatars').getPublicUrl(path);
       const url = data.publicUrl + '?t=' + Date.now();
-
-      // URL'yi veritabanına kaydet
-      await sb.from('profiles').update({ avatar_url: url }).eq('user_id', currentUser.id);
-
-      // Önizlemeyi güncelle ve kaldır butonunu göster
+      await sb.from('profiles').update({ avatar_url:url }).eq('user_id', currentUser.id);
       document.getElementById('avatar-preview').innerHTML = `<img src="${url}" alt="Profil">`;
       document.getElementById('avatar-remove-btn').style.display = 'block';
-      document.getElementById('avatar-status').textContent = '✓ Yüklendi!';
+      document.getElementById('avatar-status').textContent = '✓ Yüklendi';
       setTimeout(() => document.getElementById('avatar-status').textContent = '', 2000);
     }
 
-    // Banner yükler: Supabase Storage'a kaydeder, URL'yi veritabanına yazar
     async function uploadBanner(input) {
       const file = input.files[0];
       if (!file) return;
       document.getElementById('banner-status').textContent = 'Yükleniyor...';
-
-      // Benzersiz dosya adı
       const ext = file.name.split('.').pop();
       const path = `${currentUser.id}/banner_${Date.now()}.${ext}`;
-
-      // Avatars bucket'ına yükle
-      const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert: true });
+      const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert:true });
       if (error) { document.getElementById('banner-status').textContent = 'Hata!'; return; }
-
-      // Public URL al
       const { data } = sb.storage.from('Avatars').getPublicUrl(path);
       const url = data.publicUrl + '?t=' + Date.now();
-
-      // URL'yi veritabanına kaydet
-      await sb.from('profiles').update({ banner_url: url }).eq('user_id', currentUser.id);
-
-      // Önizlemeyi güncelle ve kaldır butonunu göster
+      await sb.from('profiles').update({ banner_url:url }).eq('user_id', currentUser.id);
       document.getElementById('banner-preview').innerHTML = `<img src="${url}" alt="Banner">`;
       document.getElementById('banner-remove-btn').style.display = 'block';
-      document.getElementById('banner-status').textContent = '✓ Yüklendi!';
+      document.getElementById('banner-status').textContent = '✓ Yüklendi';
       setTimeout(() => document.getElementById('banner-status').textContent = '', 2000);
     }
 
-    // Profil fotoğrafını kaldırır: veritabanından URL'yi siler
     async function removeAvatar() {
-      const { error } = await sb.from('profiles').update({ avatar_url: null }).eq('user_id', currentUser.id);
-      if (error) { showToast('Hata!', true); return; }
-
-      // Önizlemeyi emoji haline getir
+      await sb.from('profiles').update({ avatar_url:null }).eq('user_id', currentUser.id);
       document.getElementById('avatar-preview').innerHTML = '👤';
-      // Kaldır butonunu gizle
       document.getElementById('avatar-remove-btn').style.display = 'none';
-      showToast('✓ Profil fotoğrafı kaldırıldı!');
+      showToast('Profil fotoğrafı kaldırıldı');
     }
 
-    // Banner'ı kaldırır: veritabanından URL'yi siler
     async function removeBanner() {
-      const { error } = await sb.from('profiles').update({ banner_url: null }).eq('user_id', currentUser.id);
-      if (error) { showToast('Hata!', true); return; }
-
-      // Önizlemeyi varsayılan metne döndür
-      document.getElementById('banner-preview').innerHTML = 'Banner görseli yok';
-      // Kaldır butonunu gizle
+      await sb.from('profiles').update({ banner_url:null }).eq('user_id', currentUser.id);
+      document.getElementById('banner-preview').innerHTML = 'Banner yok';
       document.getElementById('banner-remove-btn').style.display = 'none';
-      showToast('✓ Banner kaldırıldı!');
+      showToast('Banner kaldırıldı');
     }
 
-    // Tüm form verilerini veritabanına kaydeder
     async function saveProfile() {
       const btn = document.getElementById('save-btn');
-      btn.disabled = true;
-      btn.textContent = 'Kaydediliyor...';
-
-      // Tüm metin alanlarının değerlerini topla
+      btn.disabled = true; btn.textContent = 'Kaydediliyor...';
       const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','instagram','twitter','facebook','tax_office','tax_no'];
       const updates = {};
       fields.forEach(f => { updates[f] = document.getElementById(f).value.trim(); });
-
-      // Tema ve renk bilgisini ekle
       updates.theme_color = selectedColor;
       updates.theme = selectedTheme;
-
-      // Upsert: kayıt varsa günceller, yoksa oluşturur
       const { error } = await sb.from('profiles').upsert({
         user_id: currentUser.id,
         username: currentUsername || currentUser.email.split('@')[0],
         ...updates
-      }, { onConflict: 'user_id' });
-
-      btn.disabled = false;
-      btn.textContent = '💾 Değişiklikleri Kaydet';
-
-      if (error) { showToast('Hata: ' + error.message, true); }
-      else { showToast('✓ Kaydedildi!'); loadProfile(); }
+      }, { onConflict:'user_id' });
+      btn.disabled = false; btn.textContent = 'Değişiklikleri Kaydet';
+      if (error) showToast('Hata: ' + error.message, true);
+      else { showToast('✓ Kaydedildi'); loadProfile(); }
     }
 
-    // Şifreyi değiştirir: Supabase Auth üzerinden günceller
     async function changePassword() {
       const newPass = document.getElementById('new-password').value;
       const confirmPass = document.getElementById('confirm-password').value;
-
-      // Validasyon kontrolleri
-      if (!newPass || !confirmPass) { showToast('Tüm alanları doldurun.', true); return; }
-      if (newPass.length < 6) { showToast('Şifre en az 6 karakter olmalı.', true); return; }
-      if (newPass !== confirmPass) { showToast('Şifreler eşleşmiyor.', true); return; }
-
-      // Supabase Auth ile şifreyi güncelle
-      const { error } = await sb.auth.updateUser({ password: newPass });
-
+      if (!newPass || !confirmPass) { showToast('Tüm alanları doldurun', true); return; }
+      if (newPass.length < 6) { showToast('Şifre en az 6 karakter olmalı', true); return; }
+      if (newPass !== confirmPass) { showToast('Şifreler eşleşmiyor', true); return; }
+      const { error } = await sb.auth.updateUser({ password:newPass });
       if (error) {
         var msg = error.message;
-        // İngilizce hata mesajını Türkçeye çevir
-        if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
+        if (msg.includes('different from the old password')) msg = 'Yeni şifre eskisinden farklı olmalı';
         showToast(msg, true);
       } else {
-        // Başarılıysa alanları temizle
         document.getElementById('new-password').value = '';
         document.getElementById('confirm-password').value = '';
-        showToast('✓ Şifre güncellendi!');
+        showToast('✓ Şifre güncellendi');
       }
     }
 
-    // Oturumu kapatır ve ana sayfaya yönlendirir
     async function logout() { await sb.auth.signOut(); window.location.href = 'index.html'; }
 
-    // Kartvizit linkini panoya kopyalar
     function copyLink() {
-      navigator.clipboard.writeText(document.getElementById('card-link').textContent).then(() => showToast('✓ Kopyalandı!'));
+      navigator.clipboard.writeText(document.getElementById('card-link').textContent).then(() => showToast('✓ Kopyalandı'));
     }
 
-    // Toast bildirimi gösterir (isError=true ise kırmızı, false ise yeşil)
     function showToast(msg, isError = false) {
       const t = document.getElementById('toast');
       t.textContent = msg;
-      t.style.background = isError ? '#c0392b' : '#0e8c6f';
+      t.style.background = isError ? '#8B2A2A' : 'var(--gold)';
+      t.style.color = isError ? '#FFB0B0' : '#080808';
       t.classList.add('show');
-      // 2.5 saniye sonra gizle
       setTimeout(() => t.classList.remove('show'), 2500);
     }
   </script>

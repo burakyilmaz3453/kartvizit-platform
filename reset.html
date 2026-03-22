@@ -1,149 +1,139 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- Platform favicon -->
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
-  <!-- Mobil uyumlu görünüm -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Şifre Sıfırla | Kartvizit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* Tüm elementlerin sıfırlanması */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    /* Sayfa gövdesi: siyah arka plan, ortalanmış içerik */
-    body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-
-    /* Form kartı: koyu arka plan, yuvarlatılmış köşeler */
-    .card { background: #181a1e; border: 1px solid #2a2d35; border-radius: 20px; padding: 40px; width: 100%; max-width: 400px; }
-
-    /* Sayfa başlığı */
-    h2 { font-size: 1.4rem; margin-bottom: 6px; }
-
-    /* Alt başlık açıklama metni */
-    .subtitle { color: #8b9bb4; font-size: 0.85rem; margin-bottom: 30px; }
-
-    /* Form alanı grubu: her input için boşluk */
-    .form-group { margin-bottom: 16px; }
-
-    /* Input etiketi: küçük, gri */
-    label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
-
-    /* Input alanı: koyu arka plan, beyaz yazı */
-    input { width: 100%; background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 0.9rem; outline: none; transition: 0.2s; }
-    /* Odaklanınca yeşil kenarlık */
-    input:focus { border-color: #0e8c6f; }
-    input::placeholder { color: #555; }
-
-    /* Kaydet butonu: yeşil, tam genişlik */
-    .btn { width: 100%; padding: 14px; background: #0e8c6f; color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 8px; }
-    .btn:hover { background: #0b7058; }
-    /* Yükleniyor durumunda buton pasif */
-    .btn:disabled { background: #333; cursor: not-allowed; }
-
-    /* Hata mesajı kutusu: kırmızı tonlu, varsayılan gizli */
-    .error { background: #2d1515; border: 1px solid #5a1f1f; color: #ff6b6b; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
-
-    /* Başarı mesajı kutusu: yeşil tonlu, varsayılan gizli */
-    .success { background: #0e2a22; border: 1px solid #0e8c6f; color: #0e8c6f; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --gold:#C9A84C; --gold-light:#E2C47A; --gold-dim:#7A6235;
+      --bg:#080808; --surface:#111111; --surface2:#161616;
+      --border:rgba(201,168,76,0.14); --border-subtle:rgba(255,255,255,0.06);
+      --text:#F0EBE1; --text-secondary:#7A7570; --text-muted:#4A4845;
+    }
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:'DM Sans',sans-serif; font-weight:300;
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:24px; overflow-x:hidden;
+    }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:0; opacity:0.35;
+    }
+    .wrap {
+      width:100%; max-width:380px; position:relative; z-index:1;
+      animation:fadeUp 0.7s ease forwards;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .brand { text-align:center; margin-bottom:36px; }
+    .brand-name {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.6rem; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--gold);
+    }
+    .brand-tagline {
+      font-size:0.65rem; letter-spacing:0.14em;
+      text-transform:uppercase; color:var(--text-muted); margin-top:6px;
+    }
+    .card {
+      background:var(--surface);
+      border:1px solid var(--border-subtle);
+      border-radius:12px; padding:36px 32px;
+    }
+    h2 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.5rem; font-weight:300; color:var(--text); margin-bottom:4px;
+    }
+    .subtitle { font-size:0.78rem; color:var(--text-muted); margin-bottom:28px; line-height:1.5; }
+    .form-group { margin-bottom:14px; }
+    label {
+      display:block; font-size:0.65rem; letter-spacing:0.1em;
+      text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;
+    }
+    input {
+      width:100%; background:var(--surface2);
+      border:1px solid var(--border-subtle); border-radius:6px;
+      padding:11px 14px; color:var(--text);
+      font-size:0.85rem; font-weight:300;
+      font-family:'DM Sans',sans-serif; outline:none; transition:0.2s;
+    }
+    input:focus { border-color:var(--gold-dim); }
+    input::placeholder { color:var(--text-muted); }
+    .btn {
+      width:100%; padding:13px; background:var(--gold); color:#080808;
+      border:none; border-radius:6px; font-family:'DM Sans',sans-serif;
+      font-size:0.78rem; font-weight:500; letter-spacing:0.12em;
+      text-transform:uppercase; cursor:pointer; transition:0.2s; margin-top:6px;
+    }
+    .btn:hover { background:var(--gold-light); }
+    .btn:disabled { background:var(--surface2); color:var(--text-muted); cursor:not-allowed; }
+    .error {
+      background:rgba(139,42,42,0.12); border:1px solid rgba(139,42,42,0.3);
+      color:#FF8080; padding:10px 14px; border-radius:6px;
+      font-size:0.78rem; margin-bottom:14px; display:none; line-height:1.4;
+    }
+    .success {
+      background:rgba(201,168,76,0.06); border:1px solid var(--border);
+      color:var(--gold); padding:10px 14px; border-radius:6px;
+      font-size:0.78rem; margin-bottom:14px; display:none; line-height:1.4;
+    }
   </style>
 </head>
 <body>
-  <!-- Şifre sıfırlama formu: kullanıcı maildeki linkten buraya gelir -->
-  <div class="card">
-    <h2>Yeni Şifre Belirle</h2>
-    <p class="subtitle">Yeni şifreni gir ve kaydet.</p>
-
-    <!-- Hata mesajı: JS tarafından doldurulur ve gösterilir -->
-    <div class="error" id="error-msg"></div>
-    <!-- Başarı mesajı: şifre güncellenince gösterilir -->
-    <div class="success" id="success-msg"></div>
-
-    <!-- Yeni şifre alanı -->
-    <div class="form-group">
-      <label>Yeni Şifre</label>
-      <input type="password" id="new-password" placeholder="En az 6 karakter">
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-name">Kartvizit</div>
+      <div class="brand-tagline">Dijital Kimliğinin Altın Standardı</div>
     </div>
-
-    <!-- Şifre tekrar alanı: eşleşme kontrolü için -->
-    <div class="form-group">
-      <label>Şifre Tekrar</label>
-      <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir">
+    <div class="card">
+      <h2>Yeni Şifre</h2>
+      <p class="subtitle">Yeni şifreni belirle ve hesabına geri dön.</p>
+      <div class="error" id="error-msg"></div>
+      <div class="success" id="success-msg"></div>
+      <div class="form-group">
+        <label>Yeni Şifre</label>
+        <input type="password" id="new-password" placeholder="En az 6 karakter">
+      </div>
+      <div class="form-group">
+        <label>Şifre Tekrar</label>
+        <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir">
+      </div>
+      <button class="btn" id="reset-btn" onclick="updatePassword()">Şifreyi Kaydet</button>
     </div>
-
-    <!-- Kaydet butonu: tıklayınca updatePassword() çalışır -->
-    <button class="btn" id="reset-btn" onclick="updatePassword()">Şifreyi Kaydet</button>
   </div>
 
-  <!-- Supabase JS kütüphanesi: auth işlemleri için -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Supabase bağlantı bilgileri -->
   <script src="supabase.js"></script>
-
   <script>
-    // Şifre güncelleme fonksiyonu
     async function updatePassword() {
-      // Form değerlerini oku
       const newPass = document.getElementById('new-password').value;
       const confirmPass = document.getElementById('confirm-password').value;
       const btn = document.getElementById('reset-btn');
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
-
-      // Önceki mesajları gizle
-      errorEl.style.display = 'none';
-      successEl.style.display = 'none';
-
-      // Boş alan kontrolü
-      if (!newPass || !confirmPass) {
-        errorEl.textContent = 'Tüm alanları doldurun.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      // Minimum şifre uzunluğu kontrolü
-      if (newPass.length < 6) {
-        errorEl.textContent = 'Şifre en az 6 karakter olmalı.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      // İki şifrenin eşleşip eşleşmediğini kontrol et
-      if (newPass !== confirmPass) {
-        errorEl.textContent = 'Şifreler eşleşmiyor.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      // Butonu pasif yap ve yükleniyor metni göster
-      btn.disabled = true;
-      btn.textContent = 'Kaydediliyor...';
-
-      // Supabase Auth ile şifreyi güncelle
+      errorEl.style.display = 'none'; successEl.style.display = 'none';
+      if (!newPass || !confirmPass) { errorEl.textContent = 'Tüm alanları doldurun.'; errorEl.style.display = 'block'; return; }
+      if (newPass.length < 6) { errorEl.textContent = 'Şifre en az 6 karakter olmalı.'; errorEl.style.display = 'block'; return; }
+      if (newPass !== confirmPass) { errorEl.textContent = 'Şifreler eşleşmiyor.'; errorEl.style.display = 'block'; return; }
+      btn.disabled = true; btn.textContent = 'Kaydediliyor...';
       const { error } = await sb.auth.updateUser({ password: newPass });
-
-      // Hata varsa İngilizce mesajları Türkçeye çevir ve göster
       if (error) {
         var msg = error.message;
-        // Eski şifreyle aynı şifre girildi
         if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
-        // Şifre çok kısa
         else if (msg.includes('at least 6')) msg = 'Şifre en az 6 karakter olmalı.';
-        // Şifre çok zayıf
         else if (msg.includes('weak')) msg = 'Şifre çok zayıf, daha güçlü bir şifre seç.';
-        errorEl.textContent = msg;
-        errorEl.style.display = 'block';
-        // Butonu tekrar aktif yap
-        btn.disabled = false;
-        btn.textContent = 'Şifreyi Kaydet';
-        return;
+        errorEl.textContent = msg; errorEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Şifreyi Kaydet'; return;
       }
-
-      // Başarılı güncelleme: mesaj göster
       successEl.textContent = '✓ Şifren güncellendi! Giriş sayfasına yönlendiriliyorsun...';
       successEl.style.display = 'block';
-
-      // 2.5 saniye sonra login sayfasına yönlendir
       setTimeout(() => { window.location.href = 'login.html'; }, 2500);
     }
   </script>
