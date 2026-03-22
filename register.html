@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+  <!-- Platform favicon -->
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
+  <!-- Mobil uyumlu görünüm -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kayıt Ol | Kartvizit</title>
   <style>
+    /* Tüm elementlerin sıfırlanması */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Sayfa gövdesi: siyah arka plan, ortalanmış içerik */
     body {
       background: #000;
       color: #fff;
@@ -17,6 +22,8 @@
       justify-content: center;
       padding: 20px;
     }
+
+    /* Form kartı: koyu arka plan, yuvarlatılmış köşeler */
     .card {
       background: #181a1e;
       border: 1px solid #2a2d35;
@@ -25,6 +32,8 @@
       width: 100%;
       max-width: 400px;
     }
+
+    /* Geri butonu: ana sayfaya döner */
     .back {
       color: #8b9bb4;
       text-decoration: none;
@@ -33,10 +42,20 @@
       margin-bottom: 25px;
     }
     .back:hover { color: #fff; }
+
+    /* Sayfa başlığı */
     h2 { font-size: 1.4rem; margin-bottom: 6px; }
+
+    /* Alt başlık açıklama metni */
     .subtitle { color: #8b9bb4; font-size: 0.85rem; margin-bottom: 30px; }
+
+    /* Form alanı grubu: her input için boşluk */
     .form-group { margin-bottom: 16px; }
+
+    /* Input etiketi: küçük, gri */
     label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
+
+    /* Input alanı: koyu arka plan, beyaz yazı */
     input {
       width: 100%;
       background: #1e2125;
@@ -48,8 +67,11 @@
       outline: none;
       transition: 0.2s;
     }
+    /* Odaklanınca yeşil kenarlık */
     input:focus { border-color: #0e8c6f; }
     input::placeholder { color: #555; }
+
+    /* Kayıt ol butonu: yeşil, tam genişlik */
     .btn {
       width: 100%;
       padding: 14px;
@@ -64,7 +86,10 @@
       margin-top: 8px;
     }
     .btn:hover { background: #0b7058; }
+    /* Yükleniyor durumunda buton pasif */
     .btn:disabled { background: #333; cursor: not-allowed; }
+
+    /* Hata mesajı kutusu: kırmızı tonlu, varsayılan gizli */
     .error {
       background: #2d1515;
       border: 1px solid #5a1f1f;
@@ -75,6 +100,8 @@
       margin-bottom: 16px;
       display: none;
     }
+
+    /* Başarı mesajı kutusu: yeşil tonlu, varsayılan gizli */
     .success {
       background: #0e2a22;
       border: 1px solid #0e8c6f;
@@ -85,6 +112,8 @@
       margin-bottom: 16px;
       display: none;
     }
+
+    /* Giriş yap yönlendirme linki: ortalanmış, alt kısımda */
     .login-link {
       text-align: center;
       margin-top: 20px;
@@ -92,6 +121,8 @@
       color: #8b9bb4;
     }
     .login-link a { color: #0e8c6f; text-decoration: none; }
+
+    /* İpucu metni: kullanıcı adı formatı hakkında bilgi */
     .hint {
       font-size: 0.75rem;
       color: #555;
@@ -100,39 +131,58 @@
   </style>
 </head>
 <body>
+  <!-- Kayıt formu kartı -->
   <div class="card">
+    <!-- Ana sayfaya dön linki -->
     <a href="index.html" class="back">← Geri</a>
+
     <h2>Kayıt Ol</h2>
     <p class="subtitle">Dijital kartvizitini oluşturmaya başla.</p>
 
+    <!-- Hata mesajı: JS tarafından doldurulur ve gösterilir -->
     <div class="error" id="error-msg"></div>
+    <!-- Başarı mesajı: kayıt tamamlanınca gösterilir -->
     <div class="success" id="success-msg"></div>
 
+    <!-- Kullanıcı adı alanı: kartvizit URL'sinde kullanılır -->
     <div class="form-group">
       <label>Kullanıcı Adı</label>
+      <!-- autocomplete kapalı: tarayıcı önerileri göstermesin -->
       <input type="text" id="username" placeholder="ornek: burak" autocomplete="off">
+      <!-- Kullanıcıya link formatını gösterir -->
       <p class="hint">Kartvizit linkin: kartvizit.com/card.html?username=...</p>
     </div>
+
+    <!-- E-posta alanı -->
     <div class="form-group">
       <label>E-posta</label>
       <input type="email" id="email" placeholder="email@ornek.com">
     </div>
+
+    <!-- Şifre alanı -->
     <div class="form-group">
       <label>Şifre</label>
       <input type="password" id="password" placeholder="En az 6 karakter">
     </div>
 
+    <!-- Kayıt ol butonu: tıklayınca register() çalışır -->
     <button class="btn" id="register-btn" onclick="register()">Kayıt Ol</button>
 
+    <!-- Giriş yap yönlendirmesi -->
     <div class="login-link">
       Hesabın var mı? <a href="login.html">Giriş yap</a>
     </div>
   </div>
 
+  <!-- Supabase JS kütüphanesi: auth ve veritabanı işlemleri için -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase bağlantı bilgileri -->
   <script src="supabase.js"></script>
+
   <script>
+    // Kayıt fonksiyonu
     async function register() {
+      // Form değerlerini oku (username küçük harfe çevrilir)
       const username = document.getElementById('username').value.trim().toLowerCase();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -140,36 +190,43 @@
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
 
+      // Önceki mesajları gizle
       errorEl.style.display = 'none';
       successEl.style.display = 'none';
 
-      // Validasyon
+      // Boş alan kontrolü
       if (!username || !email || !password) {
         errorEl.textContent = 'Tüm alanları doldurun.';
         errorEl.style.display = 'block';
         return;
       }
+
+      // Kullanıcı adı minimum uzunluk kontrolü
       if (username.length < 3) {
         errorEl.textContent = 'Kullanıcı adı en az 3 karakter olmalı.';
         errorEl.style.display = 'block';
         return;
       }
+
+      // Kullanıcı adı format kontrolü: sadece harf, rakam ve alt çizgi
       if (!/^[a-z0-9_]+$/.test(username)) {
         errorEl.textContent = 'Kullanıcı adı sadece harf, rakam ve _ içerebilir.';
         errorEl.style.display = 'block';
         return;
       }
 
+      // Butonu pasif yap ve yükleniyor metni göster
       btn.disabled = true;
       btn.textContent = 'Kayıt yapılıyor...';
 
-      // Kullanıcı adı dolu mu kontrol et
+      // Kullanıcı adının daha önce alınıp alınmadığını kontrol et
       const { data: existing } = await sb
         .from('profiles')
         .select('username')
         .eq('username', username)
         .single();
 
+      // Kullanıcı adı zaten varsa hata göster
       if (existing) {
         errorEl.textContent = 'Bu kullanıcı adı zaten alınmış.';
         errorEl.style.display = 'block';
@@ -178,9 +235,10 @@
         return;
       }
 
-      // Kayıt ol
+      // Supabase Auth ile yeni kullanıcı oluştur
       const { data, error } = await sb.auth.signUp({ email, password });
 
+      // Auth hatası varsa göster
       if (error) {
         errorEl.textContent = error.message;
         errorEl.style.display = 'block';
@@ -189,22 +247,24 @@
         return;
       }
 
-      // Profil oluştur
+      // Kullanıcı kaydı başarılıysa profiles tablosuna profil satırı ekle
       await sb.from('profiles').insert({
-        user_id: data.user.id,
-        username: username,
-        email: email
+        user_id: data.user.id,  // Auth kullanıcısının ID'si
+        username: username,      // Benzersiz kullanıcı adı
+        email: email             // E-posta adresi
       });
 
+      // Başarı mesajı göster
       successEl.textContent = 'Kayıt başarılı! E-postanı onaylayıp giriş yap.';
       successEl.style.display = 'block';
       btn.textContent = 'Kayıt Ol';
       btn.disabled = false;
 
+      // 2.5 saniye sonra login sayfasına yönlendir
       setTimeout(() => { window.location.href = 'login.html'; }, 2500);
     }
 
-    // Enter tuşu desteği
+    // Enter tuşuna basınca register() fonksiyonunu tetikle
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') register();
     });
