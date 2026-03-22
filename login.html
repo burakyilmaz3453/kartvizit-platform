@@ -1,92 +1,146 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+  <!-- Platform favicon -->
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
+  <!-- Mobil uyumlu görünüm -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Giriş Yap | Kartvizit</title>
   <style>
+    /* Tüm elementlerin sıfırlanması */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Sayfa gövdesi: siyah arka plan, ortalanmış içerik */
     body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+    /* Form kartı: koyu arka plan, yuvarlatılmış köşeler */
     .card { background: #181a1e; border: 1px solid #2a2d35; border-radius: 20px; padding: 40px; width: 100%; max-width: 400px; }
+
+    /* Geri butonu: ana sayfaya döner */
     .back { color: #8b9bb4; text-decoration: none; font-size: 0.85rem; display: inline-block; margin-bottom: 25px; }
     .back:hover { color: #fff; }
+
+    /* Sayfa başlığı */
     h2 { font-size: 1.4rem; margin-bottom: 6px; }
+
+    /* Alt başlık açıklama metni */
     .subtitle { color: #8b9bb4; font-size: 0.85rem; margin-bottom: 30px; }
+
+    /* Form alanı grubu: her input için boşluk */
     .form-group { margin-bottom: 16px; }
+
+    /* Input etiketi: küçük, gri */
     label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
+
+    /* Input alanı: koyu arka plan, beyaz yazı */
     input { width: 100%; background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 0.9rem; outline: none; transition: 0.2s; }
+    /* Odaklanınca yeşil kenarlık */
     input:focus { border-color: #0e8c6f; }
     input::placeholder { color: #555; }
+
+    /* Giriş yap butonu: yeşil, tam genişlik */
     .btn { width: 100%; padding: 14px; background: #0e8c6f; color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 8px; }
     .btn:hover { background: #0b7058; }
+    /* Yükleniyor durumunda buton pasif */
     .btn:disabled { background: #333; cursor: not-allowed; }
+
+    /* Hata mesajı kutusu: kırmızı tonlu, varsayılan gizli */
     .error { background: #2d1515; border: 1px solid #5a1f1f; color: #ff6b6b; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
+
+    /* Başarı mesajı kutusu: yeşil tonlu, varsayılan gizli */
     .success { background: #0e2a22; border: 1px solid #0e8c6f; color: #0e8c6f; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
+
+    /* Şifremi unuttum linki: sağa hizalı */
     .forgot { text-align: right; margin-top: -8px; margin-bottom: 14px; }
     .forgot a { color: #8b9bb4; font-size: 0.78rem; text-decoration: none; cursor: pointer; }
     .forgot a:hover { color: #0e8c6f; }
+
+    /* Kayıt ol yönlendirme linki: ortalanmış, alt kısımda */
     .register-link { text-align: center; margin-top: 20px; font-size: 0.83rem; color: #8b9bb4; }
     .register-link a { color: #0e8c6f; text-decoration: none; }
   </style>
 </head>
 <body>
+  <!-- Giriş formu kartı -->
   <div class="card">
+    <!-- Ana sayfaya dön linki -->
     <a href="index.html" class="back">← Geri</a>
+
     <h2>Giriş Yap</h2>
     <p class="subtitle">Hesabına giriş yap ve kartvizitini yönet.</p>
 
+    <!-- Hata mesajı: JS tarafından doldurulur ve gösterilir -->
     <div class="error" id="error-msg"></div>
+    <!-- Başarı mesajı: şifre sıfırlama maili gönderilince gösterilir -->
     <div class="success" id="success-msg"></div>
 
+    <!-- E-posta alanı -->
     <div class="form-group">
       <label>E-posta</label>
       <input type="email" id="email" placeholder="email@ornek.com">
     </div>
+
+    <!-- Şifre alanı -->
     <div class="form-group">
       <label>Şifre</label>
       <input type="password" id="password" placeholder="Şifreniz">
     </div>
 
+    <!-- Şifremi unuttum: tıklayınca resetPassword() çalışır -->
     <div class="forgot">
       <a onclick="resetPassword()">Şifremi unuttum</a>
     </div>
 
+    <!-- Giriş yap butonu: tıklayınca login() çalışır -->
     <button class="btn" id="login-btn" onclick="login()">Giriş Yap</button>
 
+    <!-- Kayıt ol yönlendirmesi -->
     <div class="register-link">
       Hesabın yok mu? <a href="register.html">Kayıt ol</a>
     </div>
   </div>
 
+  <!-- Supabase JS kütüphanesi: auth işlemleri için -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase bağlantı bilgileri -->
   <script src="supabase.js"></script>
+
   <script>
+    // Sayfa yüklenince aktif oturum kontrolü
+    // Zaten giriş yapıldıysa direkt dashboard'a yönlendir
     sb.auth.getSession().then(({ data }) => {
       if (data.session) window.location.href = 'dashboard.html';
     });
 
+    // Giriş yapma fonksiyonu
     async function login() {
+      // Form değerlerini oku
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const btn = document.getElementById('login-btn');
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
 
+      // Önceki mesajları gizle
       errorEl.style.display = 'none';
       successEl.style.display = 'none';
 
+      // Boş alan kontrolü
       if (!email || !password) {
         errorEl.textContent = 'E-posta ve şifreyi girin.';
         errorEl.style.display = 'block';
         return;
       }
 
+      // Butonu pasif yap ve yükleniyor metni göster
       btn.disabled = true;
       btn.textContent = 'Giriş yapılıyor...';
 
+      // Supabase Auth ile giriş dene
       const { error } = await sb.auth.signInWithPassword({ email, password });
 
+      // Hata varsa mesaj göster ve butonu tekrar aktif yap
       if (error) {
         errorEl.textContent = 'E-posta veya şifre hatalı.';
         errorEl.style.display = 'block';
@@ -95,36 +149,46 @@
         return;
       }
 
+      // Başarılı girişte dashboard'a yönlendir
       window.location.href = 'dashboard.html';
     }
 
+    // Şifre sıfırlama fonksiyonu
     async function resetPassword() {
+      // E-posta alanından değeri oku
       const email = document.getElementById('email').value.trim();
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
 
+      // Önceki mesajları gizle
       errorEl.style.display = 'none';
       successEl.style.display = 'none';
 
+      // E-posta boşsa uyarı ver
       if (!email) {
         errorEl.textContent = 'Önce e-posta adresinizi girin.';
         errorEl.style.display = 'block';
         return;
       }
 
+      // Supabase Auth ile şifre sıfırlama maili gönder
+      // redirectTo: kullanıcı mailindekilinke tıklayınca reset.html'e gider
       const { error } = await sb.auth.resetPasswordForEmail(email, {
         redirectTo: 'https://burakyilmaz3453.github.io/kartvizit-platform/reset.html'
       });
 
+      // Mail başarıyla gönderildiyse başarı mesajı göster
       if (!error) {
         successEl.textContent = '✓ Şifre sıfırlama maili gönderildi! Mailini kontrol et.';
         successEl.style.display = 'block';
       } else {
+        // Hata varsa mesajı göster
         errorEl.textContent = 'Hata: ' + error.message;
         errorEl.style.display = 'block';
       }
     }
 
+    // Enter tuşuna basınca login() fonksiyonunu tetikle
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') login();
     });
