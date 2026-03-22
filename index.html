@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+  <!-- Platform favicon -->
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
+  <!-- Mobil uyumlu görünüm -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kartvizit Platform</title>
   <style>
+    /* Tüm elementlerin sıfırlanması */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* Sayfa gövdesi: tam ekran, siyah arka plan, ortalanmış içerik */
     body {
       background: #000;
       color: #fff;
@@ -20,6 +24,7 @@
       padding: 20px;
     }
 
+    /* Platform logosu: büyük, kalın, yeşil */
     .logo {
       font-size: 2rem;
       font-weight: 800;
@@ -27,6 +32,7 @@
       color: #0e8c6f;
     }
 
+    /* Slogan yazısı: gri, ortalanmış */
     .tagline {
       color: #8b9bb4;
       font-size: 0.95rem;
@@ -34,6 +40,7 @@
       text-align: center;
     }
 
+    /* Ana kart: butonları içeren merkez kutu */
     .card {
       background: #181a1e;
       border: 1px solid #2a2d35;
@@ -44,17 +51,20 @@
       text-align: center;
     }
 
+    /* Kart başlığı */
     .card h2 {
       font-size: 1.4rem;
       margin-bottom: 8px;
     }
 
+    /* Kart açıklama metni */
     .card p {
       color: #8b9bb4;
       font-size: 0.85rem;
       margin-bottom: 30px;
     }
 
+    /* Buton temel stili: tam genişlik, yuvarlatılmış */
     .btn {
       display: block;
       width: 100%;
@@ -69,51 +79,59 @@
       margin-bottom: 12px;
     }
 
+    /* Birincil buton: yeşil arka plan (Kayıt Ol) */
     .btn-primary {
       background: #0e8c6f;
       color: #fff;
     }
-
     .btn-primary:hover { background: #0b7058; }
 
+    /* İkincil buton: koyu arka plan (Giriş Yap) */
     .btn-secondary {
       background: #23262b;
       color: #fff;
       border: 1px solid #2a2d35;
     }
-
     .btn-secondary:hover { background: #2c3036; }
 
+    /* Ayırıcı çizgi: butonlar ile demo link arasında */
     .divider {
       border: none;
       border-top: 1px solid #2a2d35;
       margin: 20px 0;
     }
 
+    /* Demo linki: küçük, yeşil */
     .demo-link {
       color: #0e8c6f;
       font-size: 0.8rem;
       text-decoration: none;
     }
-
     .demo-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-
+  <!-- Platform logosu -->
   <div class="logo">💼 Kartvizit</div>
+  <!-- Slogan -->
   <p class="tagline">Dijital kartvizitini oluştur, paylaş, yönet.</p>
 
+  <!-- Ana içerik kartı -->
   <div class="card">
     <h2>Hoş Geldiniz</h2>
     <p>Kendi dijital kartvizitini oluşturmak için kayıt ol.</p>
 
+    <!-- Kayıt ol butonu: register.html sayfasına yönlendirir -->
     <a href="register.html" class="btn btn-primary">Kayıt Ol</a>
+
+    <!-- Giriş yap butonu: login.html sayfasına yönlendirir -->
     <a href="login.html" class="btn btn-secondary">Giriş Yap</a>
 
+    <!-- Ayırıcı çizgi -->
     <hr class="divider">
+
+    <!-- Demo kartvizit linki: username=demo ile card.html'i açar -->
     <a href="card.html?username=demo" class="demo-link">Demo kartviziti görüntüle →</a>
   </div>
-
 </body>
 </html>
