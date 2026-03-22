@@ -56,17 +56,6 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* Grain overlay */
-    body::before {
-      content:'';
-      position:fixed;
-      inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events:none;
-      z-index:999;
-      opacity:0.35;
-    }
-
     /* ── LOADING / NOT FOUND ── */
     #loading {
       display:flex;
@@ -127,9 +116,8 @@
       width:34px;
       height:34px;
       border-radius:50%;
-      background:rgba(8,8,8,0.55);
-      border:1px solid rgba(255,255,255,0.12);
-      backdrop-filter:blur(8px);
+      background:rgba(8,8,8,0.75);
+      border:1px solid rgba(255,255,255,0.15);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -673,7 +661,7 @@
       display:flex;
       align-items:center;
       gap:7px;
-      background:rgba(8,8,8,0.85);
+      background:rgba(8,8,8,0.9);
       border:1px solid var(--border);
       color:var(--gold);
       padding:9px 14px;
@@ -683,7 +671,6 @@
       letter-spacing:0.1em;
       text-transform:uppercase;
       text-decoration:none;
-      backdrop-filter:blur(10px);
       transition:background 0.2s, border-color 0.2s, transform 0.2s;
       font-family:'DM Sans',sans-serif;
     }
@@ -718,6 +705,8 @@
   </style>
 </head>
 <body>
+  <!-- Grain overlay: body::before yerine bağımsız div, fixed position'ı kırmaz -->
+  <div style="position:fixed;inset:0;background-image:url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.04%22/%3E%3C/svg%3E');pointer-events:none;z-index:0;opacity:0.35;"></div>
 
   <!-- LOADING -->
   <div id="loading">
@@ -740,34 +729,34 @@
   </a>
 
   <!-- Customizer: fixed konumda, card-content DIŞINDA -->
+  <!-- Customizer (demo only) -->
+  <div id="customizer">
+    <div class="customizer-title">Özelleştir</div>
+    <span class="customizer-label">Tema</span>
+    <div class="theme-row">
+    <div class="theme-pill theme-pill-dark active" id="pre-dark" onclick="previewTheme('dark')">Koyu</div>
+    <div class="theme-pill theme-pill-light" id="pre-light" onclick="previewTheme('light')">Açık</div>
+    </div>
+    <span class="customizer-label">Renk</span>
+    <div class="color-dots">
+    <div onclick="previewColor('#C9A84C')" style="background:#C9A84C" class="pre-color active"></div>
+    <div onclick="previewColor('#0e8c6f')" style="background:#0e8c6f" class="pre-color"></div>
+    <div onclick="previewColor('#2563eb')" style="background:#2563eb" class="pre-color"></div>
+    <div onclick="previewColor('#7c3aed')" style="background:#7c3aed" class="pre-color"></div>
+    <div onclick="previewColor('#db2777')" style="background:#db2777" class="pre-color"></div>
+    <div onclick="previewColor('#dc2626')" style="background:#dc2626" class="pre-color"></div>
+    <div onclick="previewColor('#ea580c')" style="background:#ea580c" class="pre-color"></div>
+    <div onclick="previewColor('#0891b2')" style="background:#0891b2" class="pre-color"></div>
+    </div>
+    <a id="register-btn" href="https://burakyilmaz3453.github.io/kartvizit-platform/register.html" class="customizer-cta">Kayıt Ol</a>
+    <button class="customizer-close" onclick="document.getElementById('customizer').style.display='none'">Kapat</button>
+  </div>
+
 
   <!-- MAIN CARD CONTENT -->
   <div id="card-content" class="hidden">
 
-    <!-- Customizer (demo only) -->
-    <div id="customizer">
-      <div class="customizer-title">Özelleştir</div>
-      <span class="customizer-label">Tema</span>
-      <div class="theme-row">
-        <div class="theme-pill theme-pill-dark active" id="pre-dark" onclick="previewTheme('dark')">Koyu</div>
-        <div class="theme-pill theme-pill-light" id="pre-light" onclick="previewTheme('light')">Açık</div>
-      </div>
-      <span class="customizer-label">Renk</span>
-      <div class="color-dots">
-        <div onclick="previewColor('#C9A84C')" style="background:#C9A84C" class="pre-color active"></div>
-        <div onclick="previewColor('#0e8c6f')" style="background:#0e8c6f" class="pre-color"></div>
-        <div onclick="previewColor('#2563eb')" style="background:#2563eb" class="pre-color"></div>
-        <div onclick="previewColor('#7c3aed')" style="background:#7c3aed" class="pre-color"></div>
-        <div onclick="previewColor('#db2777')" style="background:#db2777" class="pre-color"></div>
-        <div onclick="previewColor('#dc2626')" style="background:#dc2626" class="pre-color"></div>
-        <div onclick="previewColor('#ea580c')" style="background:#ea580c" class="pre-color"></div>
-        <div onclick="previewColor('#0891b2')" style="background:#0891b2" class="pre-color"></div>
-      </div>
-      <a id="register-btn" href="https://burakyilmaz3453.github.io/kartvizit-platform/register.html" class="customizer-cta">Kayıt Ol</a>
-      <button class="customizer-close" onclick="document.getElementById('customizer').style.display='none'">Kapat</button>
-    </div>
-
-    <!-- BANNER + PROFILE -->
+    <!-- BANNER    <!-- BANNER + PROFILE -->
     <div class="card-header">
       <div class="banner-wrap" id="banner-container"></div>
       <div class="profile-wrap">
