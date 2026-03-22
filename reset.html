@@ -1,98 +1,149 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+  <!-- Platform favicon -->
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
+  <!-- Mobil uyumlu görünüm -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Şifre Sıfırla | Kartvizit</title>
   <style>
+    /* Tüm elementlerin sıfırlanması */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Sayfa gövdesi: siyah arka plan, ortalanmış içerik */
     body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+    /* Form kartı: koyu arka plan, yuvarlatılmış köşeler */
     .card { background: #181a1e; border: 1px solid #2a2d35; border-radius: 20px; padding: 40px; width: 100%; max-width: 400px; }
+
+    /* Sayfa başlığı */
     h2 { font-size: 1.4rem; margin-bottom: 6px; }
+
+    /* Alt başlık açıklama metni */
     .subtitle { color: #8b9bb4; font-size: 0.85rem; margin-bottom: 30px; }
+
+    /* Form alanı grubu: her input için boşluk */
     .form-group { margin-bottom: 16px; }
+
+    /* Input etiketi: küçük, gri */
     label { display: block; font-size: 0.78rem; color: #8b9bb4; margin-bottom: 6px; }
+
+    /* Input alanı: koyu arka plan, beyaz yazı */
     input { width: 100%; background: #1e2125; border: 1px solid #2a2d35; border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 0.9rem; outline: none; transition: 0.2s; }
+    /* Odaklanınca yeşil kenarlık */
     input:focus { border-color: #0e8c6f; }
     input::placeholder { color: #555; }
+
+    /* Kaydet butonu: yeşil, tam genişlik */
     .btn { width: 100%; padding: 14px; background: #0e8c6f; color: #fff; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 8px; }
     .btn:hover { background: #0b7058; }
+    /* Yükleniyor durumunda buton pasif */
     .btn:disabled { background: #333; cursor: not-allowed; }
+
+    /* Hata mesajı kutusu: kırmızı tonlu, varsayılan gizli */
     .error { background: #2d1515; border: 1px solid #5a1f1f; color: #ff6b6b; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
+
+    /* Başarı mesajı kutusu: yeşil tonlu, varsayılan gizli */
     .success { background: #0e2a22; border: 1px solid #0e8c6f; color: #0e8c6f; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 16px; display: none; }
   </style>
 </head>
 <body>
+  <!-- Şifre sıfırlama formu: kullanıcı maildeki linkten buraya gelir -->
   <div class="card">
     <h2>Yeni Şifre Belirle</h2>
     <p class="subtitle">Yeni şifreni gir ve kaydet.</p>
 
+    <!-- Hata mesajı: JS tarafından doldurulur ve gösterilir -->
     <div class="error" id="error-msg"></div>
+    <!-- Başarı mesajı: şifre güncellenince gösterilir -->
     <div class="success" id="success-msg"></div>
 
+    <!-- Yeni şifre alanı -->
     <div class="form-group">
       <label>Yeni Şifre</label>
       <input type="password" id="new-password" placeholder="En az 6 karakter">
     </div>
+
+    <!-- Şifre tekrar alanı: eşleşme kontrolü için -->
     <div class="form-group">
       <label>Şifre Tekrar</label>
       <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir">
     </div>
 
+    <!-- Kaydet butonu: tıklayınca updatePassword() çalışır -->
     <button class="btn" id="reset-btn" onclick="updatePassword()">Şifreyi Kaydet</button>
   </div>
 
+  <!-- Supabase JS kütüphanesi: auth işlemleri için -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase bağlantı bilgileri -->
   <script src="supabase.js"></script>
+
   <script>
+    // Şifre güncelleme fonksiyonu
     async function updatePassword() {
+      // Form değerlerini oku
       const newPass = document.getElementById('new-password').value;
       const confirmPass = document.getElementById('confirm-password').value;
       const btn = document.getElementById('reset-btn');
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
 
+      // Önceki mesajları gizle
       errorEl.style.display = 'none';
       successEl.style.display = 'none';
 
+      // Boş alan kontrolü
       if (!newPass || !confirmPass) {
         errorEl.textContent = 'Tüm alanları doldurun.';
         errorEl.style.display = 'block';
         return;
       }
 
+      // Minimum şifre uzunluğu kontrolü
       if (newPass.length < 6) {
         errorEl.textContent = 'Şifre en az 6 karakter olmalı.';
         errorEl.style.display = 'block';
         return;
       }
 
+      // İki şifrenin eşleşip eşleşmediğini kontrol et
       if (newPass !== confirmPass) {
         errorEl.textContent = 'Şifreler eşleşmiyor.';
         errorEl.style.display = 'block';
         return;
       }
 
+      // Butonu pasif yap ve yükleniyor metni göster
       btn.disabled = true;
       btn.textContent = 'Kaydediliyor...';
 
+      // Supabase Auth ile şifreyi güncelle
       const { error } = await sb.auth.updateUser({ password: newPass });
 
+      // Hata varsa İngilizce mesajları Türkçeye çevir ve göster
       if (error) {
         var msg = error.message;
-if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
-else if (msg.includes('at least 6')) msg = 'Şifre en az 6 karakter olmalı.';
-else if (msg.includes('weak')) msg = 'Şifre çok zayıf, daha güçlü bir şifre seç.';
-errorEl.textContent = msg;
+        // Eski şifreyle aynı şifre girildi
+        if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
+        // Şifre çok kısa
+        else if (msg.includes('at least 6')) msg = 'Şifre en az 6 karakter olmalı.';
+        // Şifre çok zayıf
+        else if (msg.includes('weak')) msg = 'Şifre çok zayıf, daha güçlü bir şifre seç.';
+        errorEl.textContent = msg;
         errorEl.style.display = 'block';
+        // Butonu tekrar aktif yap
         btn.disabled = false;
         btn.textContent = 'Şifreyi Kaydet';
         return;
       }
 
+      // Başarılı güncelleme: mesaj göster
       successEl.textContent = '✓ Şifren güncellendi! Giriş sayfasına yönlendiriliyorsun...';
       successEl.style.display = 'block';
+
+      // 2.5 saniye sonra login sayfasına yönlendir
       setTimeout(() => { window.location.href = 'login.html'; }, 2500);
     }
   </script>
