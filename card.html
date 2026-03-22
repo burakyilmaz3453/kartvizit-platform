@@ -355,13 +355,12 @@
 
     /* ── ACTION BUTTONS ── */
     .action-row {
-      display:flex;
-      justify-content:center;
-      gap:8px;
-      padding:0 20px 28px;
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      gap:6px;
+      padding:0 16px 28px;
       max-width:480px;
       margin:0 auto;
-      flex-wrap:wrap;
     }
 
     .act-btn {
@@ -369,21 +368,22 @@
       flex-direction:column;
       align-items:center;
       gap:5px;
-      padding:12px 10px;
-      min-width:68px;
+      padding:11px 4px;
       background:var(--surface2);
       border:1px solid var(--border-subtle);
       border-radius:8px;
       cursor:pointer;
       text-decoration:none;
       transition:0.2s;
+      min-width:0;
     }
     .act-btn:hover { border-color:var(--border); background:var(--surface); }
     .act-btn span {
-      font-size:0.6rem;
-      letter-spacing:0.08em;
+      font-size:0.55rem;
+      letter-spacing:0.05em;
       text-transform:uppercase;
       color:var(--text-secondary);
+      white-space:nowrap;
     }
     .act-btn svg { width:18px; height:18px; }
 
