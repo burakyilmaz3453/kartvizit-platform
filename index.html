@@ -539,10 +539,17 @@
     .nfc-inner {
       background: var(--surface);
       border: 1px solid var(--border);
+      border-radius: 4px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0;
       overflow: hidden;
+    }
+
+    @media (max-width: 700px) {
+      .nfc-inner { grid-template-columns: 1fr; }
+      .nfc-text { padding: 36px 28px; }
+      .nfc-visual { min-height: 220px; padding: 40px; }
     }
 
     .nfc-text {
@@ -557,6 +564,7 @@
       padding: 48px;
       position: relative;
       overflow: hidden;
+      min-height: 260px;
     }
 
     .nfc-visual::before {
@@ -565,8 +573,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 280px;
-      height: 280px;
+      width: 260px;
+      height: 260px;
       border-radius: 50%;
       border: 1px solid rgba(201,168,76,0.08);
       animation: ringPulse 3s ease-in-out infinite;
@@ -578,8 +586,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 200px;
-      height: 200px;
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
       border: 1px solid rgba(201,168,76,0.12);
       animation: ringPulse 3s ease-in-out infinite 0.5s;
@@ -616,7 +624,7 @@
 
     .nfc-card-name {
       font-size: 0.65rem;
-      color: var(--platinum);
+      color: #D4D4D4;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       line-height: 1.4;
@@ -894,9 +902,8 @@
 
     /* ── SCROLL REVEAL ── */
     .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      opacity: 1;
+      transform: translateY(0);
     }
     .reveal.visible {
       opacity: 1;
@@ -912,7 +919,6 @@
     <ul class="nav-links">
       <li><a href="#features">Özellikler</a></li>
       <li><a href="#nfc">NFC Kart</a></li>
-      <li><a href="#pricing">Fiyatlar</a></li>
       <li><a href="iletisim.html">İletişim</a></li>
       <li><a href="login.html" class="nav-cta">Giriş Yap</a></li>
     </ul>
@@ -965,7 +971,7 @@
             <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M2 4l6 4 6-4M2 4h12v9H2z" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe9f96939b8abe959f8c9f9d9fd09d9193">[email&#160;protected]</a></span>
+            <span>ahmet&#64;karaca.com</span>
           </div>
           <div class="mock-row">
             <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1107,47 +1113,6 @@
     </div>
   </section>
 
-  <!-- PRICING -->
-  <section class="pricing-section reveal" id="pricing">
-    <div class="section-header">
-      <span class="section-tag">Fiyatlandırma</span>
-      <h2 class="section-title">Basit, <em>şeffaf</em> fiyatlar.</h2>
-    </div>
-
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <span class="pricing-plan">Ücretsiz</span>
-        <div class="pricing-price">₺0 <span>/ ay</span></div>
-        <p class="pricing-desc">Başlamak için ihtiyacın olan her şey.</p>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features">
-          <li>Dijital kartvizit sayfası</li>
-          <li>QR kod paylaşımı</li>
-          <li>VCF ile kişilere ekleme</li>
-          <li>Profil & banner fotoğrafı</li>
-          <li>Koyu / açık tema</li>
-        </ul>
-        <a href="register.html" class="pricing-btn pricing-btn-outline">Ücretsiz Başla</a>
-      </div>
-
-      <div class="pricing-card featured">
-        <span class="pricing-plan">Pro</span>
-        <div class="pricing-price">₺99 <span>/ ay</span></div>
-        <p class="pricing-desc">Profesyonel görünüm, gelişmiş özellikler.</p>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features">
-          <li>Ücretsiz plandaki her şey</li>
-          <li>Özel aksan rengi</li>
-          <li>Profil görüntülenme istatistiği</li>
-          <li>Bağlantı tıklama analitikleri</li>
-          <li>Öncelikli destek</li>
-          <li>NFC kart entegrasyonu</li>
-        </ul>
-        <a href="register.html" class="pricing-btn pricing-btn-gold">Pro'ya Geç</a>
-      </div>
-    </div>
-  </section>
-
   <!-- FOOTER -->
   <footer>
     <span class="footer-logo">Kartvizit</span>
@@ -1163,4 +1128,3 @@
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(el => {
-        
