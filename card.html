@@ -1,132 +1,228 @@
 <!DOCTYPE html>
+<!-- Türkçe dil tanımı, varsayılan tema koyu -->
 <html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <!-- Mobil uyumlu görünüm, kullanıcı zoom yapamaz -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dijital Kartvizit</title>
+  <!-- Favicon: kullanıcının profil fotosu JS tarafından dinamik olarak atanır -->
   <link rel="icon" id="favicon" type="image/x-icon" href="https://burakyilmaz3453.github.io/kartvizit-platform/favicon.ico">
+  <!-- Tarayıcı önbelleğini devre dışı bırak: her açılışta taze veri gelsin -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <style>
+    /* ===== CSS DEĞİŞKENLERİ: KOYU TEMA (varsayılan) ===== */
     :root {
-      --bg: #000;
-      --card-bg: #181a1e;
-      --card-bg2: #1e2125;
-      --text: #ffffff;
-      --text-secondary: #8b9bb4;
-      --border: #2a2d35;
-      --btn-bg: #23262b;
-      --btn-hover: #2c3036;
-      --copy-bg: #2a2d35;
-      --accent: #0e8c6f;
-      --site-width: 450px;
+      --bg: #000;              /* Sayfa arka planı */
+      --card-bg: #181a1e;      /* Kart arka planı */
+      --card-bg2: #1e2125;     /* İkincil kart arka planı (bilgi satırları) */
+      --text: #ffffff;         /* Ana yazı rengi */
+      --text-secondary: #8b9bb4; /* İkincil yazı rengi (etiketler) */
+      --border: #2a2d35;       /* Kenarlık rengi */
+      --btn-bg: #23262b;       /* Buton arka planı */
+      --btn-hover: #2c3036;    /* Buton hover arka planı */
+      --copy-bg: #2a2d35;      /* Kopyala buton arka planı */
+      --accent: #0e8c6f;       /* Vurgu rengi (yeşil, değiştirilebilir) */
+      --site-width: 450px;     /* Maksimum içerik genişliği */
     }
+
+    /* ===== CSS DEĞİŞKENLERİ: AYDINLIK TEMA ===== */
     [data-theme="light"] {
-      --bg: #e8eaed;
-      --card-bg: #ffffff;
-      --card-bg2: #f5f7fa;
-      --text: #1a1a1a;
-      --text-secondary: #666666;
-      --border: #e0e0e0;
-      --btn-bg: #f0f2f5;
-      --btn-hover: #e4e6ea;
-      --copy-bg: #e8eaed;
-      --accent: #0e8c6f;
+      --bg: #e8eaed;           /* Açık gri sayfa arka planı */
+      --card-bg: #ffffff;      /* Beyaz kart */
+      --card-bg2: #f5f7fa;     /* Çok açık gri bilgi satırları */
+      --text: #1a1a1a;         /* Koyu yazı */
+      --text-secondary: #666666; /* Orta gri ikincil yazı */
+      --border: #e0e0e0;       /* Açık kenarlık */
+      --btn-bg: #f0f2f5;       /* Açık buton */
+      --btn-hover: #e4e6ea;    /* Buton hover */
+      --copy-bg: #e8eaed;      /* Kopyala buton */
+      --accent: #0e8c6f;       /* Vurgu rengi (tema değişse de accent korunur) */
     }
+
+    /* Tüm elementlerin sıfırlanması */
     * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+
+    /* Sayfa gövdesi: arka plan ve renk CSS değişkenlerinden, tema geçişi animasyonlu */
     body { background-color:var(--bg); color:var(--text); overflow-x:hidden; transition: background-color 0.3s, color 0.3s; }
+
+    /* ===== SABİT HEADER: Banner + profil fotosu + isim + butonlar ===== */
+    /* Ekranın üstüne sabitlenmiş, ortalanmış, maksimum site genişliğinde */
     .fixed-header { position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:var(--site-width); height:425px; z-index:1; background-color:var(--bg); display:flex; flex-direction:column; align-items:center; }
+
+    /* Banner alanı: alt köşeleri yuvarlatılmış, taşan içerik gizlenir */
+    /* Fotoğraf yoksa gradient arka plan gösterilir */
     .banner-container { width:100%; height:160px; flex-shrink:0; overflow:hidden; border-radius:0 0 20px 20px; z-index:1; background:linear-gradient(135deg,#0e2a22,var(--accent)); }
+    /* Banner fotoğrafı: alanı kaplar, oran korunur */
     .banner-container img { width:100%; height:100%; object-fit:cover; }
+
+    /* Kart bölümü: banner'ın 40px üstüne çıkar (overlap efekti) */
     .fixed-card-part { width:100%; background-color:var(--card-bg); margin-top:-40px; padding-top:105px; padding-bottom:25px; border-radius:25px; border:1px solid var(--border); display:flex; flex-direction:column; align-items:center; flex-grow:1; z-index:0; box-shadow:0 10px 30px rgba(0,0,0,0.15); }
+
+    /* Profil fotoğrafı kabı: yuvarlak, banner ile kart arasında konumlanmış */
+    /* position:absolute ile banner üstünde asılı durur */
     .profile-container { width:110px; height:110px; border-radius:50%; border:4px solid var(--card-bg); overflow:hidden; background:#222; z-index:2; box-shadow:0 5px 15px rgba(0,0,0,0.3); position:absolute; top:105px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+    /* Profil fotoğrafı: yuvarlak alanı kaplar */
     .profile-container img { width:100%; height:100%; object-fit:cover; }
+    /* Fotoğraf yoksa baş harfler gösterilir */
     .profile-initials { font-size:2.5rem; font-weight:700; color:var(--accent); }
+
+    /* İsim, şirket, unvan alanı */
     .header-info { margin-bottom:5px; text-align:center; z-index:5; position:relative; }
     .name { font-size:1.5rem; font-weight:700; margin-bottom:4px; color:var(--text); }
     .company { color:var(--text-secondary); font-size:0.8rem; letter-spacing:0.5px; }
+    /* Unvan: accent rengi ile vurgulanır */
     .job-title { font-size:0.85rem; font-weight:500; margin-top:2px; color:var(--accent); }
+
+    /* ===== AKSİYON BUTONLARI: Ara, E-mail, QR, WhatsApp, Kişilere Ekle ===== */
     .action-buttons { display:flex; justify-content:space-between; gap:8px; width:90%; margin-top:25px; }
+    /* Her buton eşit genişlikte, dikey içerik */
     .action-btn { background:var(--btn-bg); border:1px solid var(--border); border-radius:10px; padding:10px 2px; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; cursor:pointer; transition:0.2s; min-width:0; }
     .action-btn:hover { background:var(--btn-hover); }
+    /* Buton altındaki etiket metni */
     .action-btn span { font-size:0.65rem; margin-top:6px; color:var(--text-secondary); font-weight:500; white-space:nowrap; }
+    /* Kişilere Ekle butonu: accent rengi ile vurgulanmış */
     .highlight-btn { background:var(--accent); border-color:var(--accent); }
     .highlight-btn:hover { filter:brightness(0.9); }
     .highlight-btn span { color:#fff; }
+    /* Buton ikonu boyutu */
     .btn-icon { width:20px; height:20px; }
+
+    /* ===== KAYDIRILAN İÇERİK: Sabit header'ın altından başlar ===== */
     .scroll-content { margin-top:445px; width:100%; max-width:var(--site-width); margin-left:auto; margin-right:auto; position:relative; z-index:100; padding-bottom:40px; }
+
+    /* Kart gövdesi: bilgi satırlarını içerir */
     .card-body { background-color:var(--card-bg); border-radius:25px; padding:20px; min-height:60vh; border:1px solid var(--border); box-shadow:0 -5px 20px rgba(0,0,0,0.1); }
+    /* Kart üstündeki küçük gri çizgi (tutma yeri göstergesi) */
     .card-body::before { content:''; display:block; width:40px; height:4px; background-color:var(--border); margin:0 auto 15px auto; border-radius:2px; }
+
+    /* Bilgi listesi ve şirket listesi: dikey sıralı */
     .info-list,.company-list { display:flex; flex-direction:column; gap:12px; }
+
+    /* Her bilgi satırı: ikon + metin + kopyala butonu yan yana */
     .info-item { display:flex; align-items:center; justify-content:space-between; background:var(--card-bg2); padding:12px 15px; border-radius:10px; border:1px solid var(--border); gap:10px; }
+
+    /* Bilgi satırı ikonu */
     .list-icon { width:20px; height:20px; fill:var(--text-secondary); flex-shrink:0; }
+
+    /* Metin alanı: etiket + değer dikey sıralı */
     .list-text { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    /* Küçük etiket (Cep Telefonu, E-posta vb.) */
     .label { font-size:0.7rem; color:var(--text-secondary); margin-bottom:2px; }
+    /* Değer metni */
     .value { font-size:0.9rem; color:var(--text); word-wrap:break-word; }
+    /* Tıklanabilir değer (web sitesi) */
     .value-link { text-decoration:none; color:var(--text); }
     .value-link:hover { color:var(--accent); }
+
+    /* Kopyala butonu: küçük kare */
     .copy-btn-box { background:var(--copy-bg); border:1px solid var(--border); color:var(--text-secondary); width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.2s; flex-shrink:0; }
     .copy-btn-box:hover { background:var(--btn-hover); color:var(--text); }
+    /* Kopyala ikonu */
     .icon-sm { width:16px; height:16px; fill:currentColor; }
+
+    /* Adres / harita bölümü */
     .map-section { margin-top:20px; padding:15px; background:var(--card-bg2); border-radius:12px; border:1px solid var(--border); }
+    /* Bölüm başlığı: altında ince çizgi */
     .section-title { font-size:0.9rem; margin-bottom:12px; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px; }
+    /* Yol tarifi butonu: tam genişlik, accent rengi */
     .directions-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:var(--accent); color:white; padding:10px; border-radius:8px; text-decoration:none; font-weight:600; font-size:0.85rem; width:100%; }
+
+    /* Sosyal medya bölümü */
     .social-section { margin-top:20px; }
+    /* Sosyal medya butonları: yatay sıralı, gerekirse alt satıra geçer */
     .social-buttons { display:flex; gap:10px; flex-wrap:wrap; }
+    /* Her sosyal medya butonu: kare şekil */
     .social-btn { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:0.2s; }
     .social-btn:hover { opacity:0.8; transform:scale(0.95); }
+    /* Sosyal medya ikonları */
     .social-btn svg { width:30px; height:30px; }
+
+    /* Şirket bilgileri bölümü */
     .company-section { margin-top:20px; }
+
+    /* ===== MODAL PENCERELERİ ===== */
+    /* QR ve profil fotoğrafı için tam ekran overlay */
     .modal { display:none; position:fixed; z-index:100; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.85); align-items:center; justify-content:center; backdrop-filter:blur(5px); }
+    /* Modal içeriği: ortalanmış, kenarlıklı kutu */
     .modal-content { background-color:var(--card-bg); padding:30px; border-radius:20px; text-align:center; width:90%; max-width:320px; position:relative; border:1px solid var(--border); }
     .modal-content h3 { margin-bottom:15px; color:var(--text); }
+    /* Modal kapat butonu */
     .close-modal { background:var(--copy-bg); border:none; color:var(--text); padding:8px 20px; border-radius:8px; cursor:pointer; font-size:0.85rem; }
+
+    /* Footer: telif hakkı yazısı */
     footer { text-align:center; padding:30px 0 10px; color:var(--text-secondary); font-size:11px; }
+
+    /* Gizli elementler için yardımcı sınıf */
     .hidden { display:none !important; }
+
+    /* ===== TOAST BİLDİRİMİ ===== */
+    /* Ekranın alt ortasında beliren geçici mesaj */
     #toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--accent); color:#fff; padding:10px 22px; border-radius:25px; font-size:0.85rem; font-weight:600; opacity:0; transition:0.3s; z-index:9999; pointer-events:none; }
+    /* Gösterilince yukarı kayar ve görünür olur */
     #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* Profil fotoğrafı zoom animasyonu */
     @keyframes zoomIn { from { transform:scale(0.5); opacity:0; } to { transform:scale(1); opacity:1; } }
+
+    /* ===== KALEM (DÜZENLE) BUTONU ===== */
+    /* Sağ üst köşede sabit, yarı şeffaf yuvarlak buton */
     .edit-btn { position:fixed; top:12px; right:12px; z-index:200; background:rgba(0,0,0,0.45); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.15); color:#fff; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:0.2s; cursor:pointer; }
+    /* Hover: accent rengiyle dolar */
     .edit-btn:hover { background:var(--accent); }
+    /* Aydınlık temada kalem butonu beyazlaşır */
     [data-theme="light"] .edit-btn { background:rgba(255,255,255,0.7); border-color:rgba(0,0,0,0.15); }
     [data-theme="light"] .edit-btn svg { fill:#333; }
     [data-theme="light"] .edit-btn:hover { background:var(--accent); }
     [data-theme="light"] .edit-btn:hover svg { fill:#fff; }
-    /* Customizer panel */
+
+    /* ===== DEMO CUSTOMIZER PANELİ ===== */
+    /* Sağ alt köşede açılan tema/renk seçici panel (sadece demo modunda) */
     #customizer { display:none; position:fixed; bottom:70px; right:12px; z-index:201; background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:18px; width:230px; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+    /* Renk dairesi: tıklanabilir yuvarlak */
     .pre-color { width:28px; height:28px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:0.15s; display:inline-block; }
     .pre-color:hover { transform:scale(1.15); }
+    /* Seçili renk: beyaz kenarlık */
     .pre-color.active { border-color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,0.3); }
   </style>
 </head>
 <body>
 
+  <!-- Veri yüklenirken gösterilen spinner -->
   <div id="loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
     <div style="color:#8b9bb4;">Yükleniyor...</div>
   </div>
 
+  <!-- Username bulunamazsa gösterilen hata mesajı -->
   <div id="not-found" class="hidden" style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;">
     <div><h2 style="margin-bottom:8px;">Profil bulunamadı</h2><p style="color:#8b9bb4;">Bu kullanıcı adına ait kartvizit yok.</p></div>
   </div>
 
+  <!-- Ana kartvizit içeriği: veri yüklenince gizlilik kaldırılır -->
   <div id="card-content" class="hidden">
 
-    <!-- Kalem butonu -->
+    <!-- Kalem butonu: demo'da customizer açar, diğerlerinde login'e yönlendirir -->
     <a href="#" onclick="handleEdit()" class="edit-btn" title="Düzenle">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
     </a>
 
-    <!-- Demo Customizer Panel -->
+    <!-- Demo modu özelleştirme paneli: sadece username=demo'da görünür -->
     <div id="customizer">
       <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:12px;font-weight:600;">🎨 Kartvizitini özelleştir</p>
 
+      <!-- Tema seçici: Koyu / Aydınlık -->
       <p style="font-size:0.72rem;color:var(--text-secondary);margin-bottom:7px;">Tema</p>
       <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <!-- Koyu tema butonu: seçiliyse accent rengi kenarlık -->
         <div onclick="previewTheme('dark')" id="pre-dark" style="flex:1;padding:8px;background:#000;border:2px solid var(--accent);border-radius:8px;cursor:pointer;text-align:center;font-size:0.72rem;color:#fff;">🌙 Koyu</div>
+        <!-- Aydınlık tema butonu -->
         <div onclick="previewTheme('light')" id="pre-light" style="flex:1;padding:8px;background:#f0f2f5;border:2px solid transparent;border-radius:8px;cursor:pointer;text-align:center;font-size:0.72rem;color:#333;">☀️ Aydınlık</div>
       </div>
 
+      <!-- Accent renk seçici: hazır renkler -->
       <p style="font-size:0.72rem;color:var(--text-secondary);margin-bottom:7px;">Accent Rengi</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+        <!-- Her daire bir renk seçeneği, active sınıfı seçili olanı belirtir -->
         <div onclick="previewColor('#0e8c6f')" style="background:#0e8c6f" class="pre-color active"></div>
         <div onclick="previewColor('#2563eb')" style="background:#2563eb" class="pre-color"></div>
         <div onclick="previewColor('#7c3aed')" style="background:#7c3aed" class="pre-color"></div>
@@ -137,34 +233,49 @@
         <div onclick="previewColor('#0891b2')" style="background:#0891b2" class="pre-color"></div>
       </div>
 
+      <!-- Kayıt ol butonu: seçilen accent rengi ile dinamik renklendirilir -->
       <a id="register-btn" href="https://burakyilmaz3453.github.io/kartvizit-platform/register.html" style="display:block;background:var(--accent);color:#fff;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-size:0.82rem;font-weight:600;margin-bottom:8px;">✨ Beğendim, kayıt ol!</a>
+      <!-- Paneli kapat -->
       <button onclick="document.getElementById('customizer').style.display='none'" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:8px;border-radius:8px;cursor:pointer;font-size:0.78rem;">Kapat</button>
     </div>
 
+    <!-- ===== SABİT HEADER ALANI ===== -->
     <div class="fixed-header">
+      <!-- Banner: fotoğraf varsa img, yoksa gradient arka plan -->
       <div class="banner-container" id="banner-container"></div>
+
+      <!-- Profil fotoğrafı: tıklayınca büyük görünüm açılır -->
       <div class="profile-container" id="profile-container" onclick="openProfile()">
+        <!-- Fotoğraf yoksa baş harfler buraya yazılır -->
         <div class="profile-initials" id="initials">?</div>
       </div>
+
+      <!-- Kart üst kısmı: isim, şirket, unvan, butonlar -->
       <div class="fixed-card-part">
         <div class="header-info">
           <h1 class="name" id="p-name">-</h1>
           <p class="company" id="p-company"></p>
           <p class="job-title" id="p-title"></p>
         </div>
+
+        <!-- Aksiyon butonları satırı -->
         <div class="action-buttons">
+          <!-- Ara butonu: tel: protokolü ile telefon uygulamasını açar -->
           <a href="#" id="btn-call" class="action-btn">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.12 15.12 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1.01A11.36 11.36 0 018.59 3.99C8.59 3.45 8.14 3 7.6 3H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
             <span>Ara</span>
           </a>
+          <!-- E-mail butonu: mailto: protokolü ile mail uygulamasını açar -->
           <a href="#" id="btn-email" class="action-btn">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             <span>E-mail</span>
           </a>
+          <!-- QR butonu: modal pencereyi açar -->
           <button onclick="openQR()" class="action-btn">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="#8b9bb4"><path d="M3 3h7v7H3V3zm2 2v3h3V5H5zm8-2h7v7h-7V3zm2 2v3h3V5h-3zM3 14h7v7H3v-7zm2 2v3h3v-3H5zm11 1h2v2h-2v-2zm-3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm3-3h2v2h-2v-2zm0 6h2v2h-2v-2zm3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm-3-6h2v2h-2v-2z"/></svg>
             <span>QR</span>
           </button>
+          <!-- WhatsApp butonu: wa.me linki ile WhatsApp'ı açar -->
           <a href="#" id="btn-whatsapp" target="_blank" class="action-btn">
             <svg class="btn-icon" viewBox="0 0 24 24">
               <path fill="#fff" stroke="#fff" stroke-width="2" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
@@ -173,6 +284,7 @@
             </svg>
             <span>WhatsApp</span>
           </a>
+          <!-- Kişilere Ekle butonu: VCF dosyası indirir -->
           <a id="btn-vcf" href="#" download class="action-btn highlight-btn">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="#fff"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             <span>Kişilere Ekle</span>
@@ -181,24 +293,35 @@
       </div>
     </div>
 
+    <!-- ===== KAYDIRILAN İÇERİK ALANI ===== -->
     <div class="scroll-content">
       <div class="card-body">
+
+        <!-- İletişim bilgileri listesi -->
         <div class="info-list">
+          <!-- Cep telefonu satırı: veri yoksa hidden sınıfı eklenir -->
           <div class="info-item" id="row-mobile">
             <svg class="list-icon" viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
             <div class="list-text"><span class="label">Cep Telefonu</span><span class="value" id="p-mobile"></span></div>
+            <!-- Kopyala butonu: p-mobile elementinin metnini kopyalar -->
             <button class="copy-btn-box" onclick="copyText('p-mobile')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
           </div>
+
+          <!-- İş telefonu satırı -->
           <div class="info-item" id="row-work">
             <svg class="list-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
             <div class="list-text"><span class="label">İş Telefonu</span><span class="value" id="p-work"></span></div>
             <button class="copy-btn-box" onclick="copyText('p-work')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
           </div>
+
+          <!-- E-posta satırı -->
           <div class="info-item" id="row-email">
             <svg class="list-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             <div class="list-text"><span class="label">E-posta</span><span class="value" id="p-email"></span></div>
             <button class="copy-btn-box" onclick="copyText('p-email')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
           </div>
+
+          <!-- Web sitesi satırı: tıklanabilir link -->
           <div class="info-item" id="row-web">
             <svg class="list-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.91-4.33-3.56zm2.95-8H5.08c.96-1.65 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
             <div class="list-text"><span class="label">Web Sitesi</span><a class="value value-link" id="p-web" href="#" target="_blank"></a></div>
@@ -206,51 +329,64 @@
           </div>
         </div>
 
+        <!-- Adres bilgileri: harita iframe + yol tarifi butonu -->
         <div class="map-section" id="row-address">
           <p class="section-title">Adres Bilgileri</p>
+          <!-- Google Maps embed: src JS tarafından adrese göre doldurulur -->
           <iframe id="map-iframe" src="" width="100%" height="180" style="border:0;border-radius:10px;margin-bottom:10px;" allowfullscreen="" loading="lazy"></iframe>
+          <!-- Yol tarifi: Google Maps arama URL'sine yönlendirir -->
           <a id="btn-direction" href="#" target="_blank" class="directions-btn">
             <svg style="width:16px;height:16px;fill:white;" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
             Yol Tarifi Al
           </a>
         </div>
 
+        <!-- Sosyal medya butonları: veri olmayan butonlar gizlenir -->
         <div class="social-section" id="row-social">
           <p class="section-title">Sosyal Medya</p>
           <div class="social-buttons">
+            <!-- LinkedIn butonu: varsayılan hidden, veri varsa gösterilir -->
             <a id="btn-linkedin" href="#" target="_blank" class="social-btn hidden">
               <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" style="fill:#0077b5"/><circle cx="6.5" cy="6.5" r="1.8" style="fill:#fff"/><rect x="5" y="9.5" width="3" height="9" style="fill:#fff"/><path style="fill:#fff" d="M10.5 9.5h2.9v1.23h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.6v5.23h-3v-4.64c0-1.1-.02-2.52-1.53-2.52-1.54 0-1.77 1.2-1.77 2.44v4.72h-3V9.5z"/></svg>
             </a>
+            <!-- Instagram butonu -->
             <a id="btn-instagram" href="#" target="_blank" class="social-btn hidden">
               <svg viewBox="0 0 24 24"><defs><radialGradient id="ig" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect width="24" height="24" rx="5" fill="url(#ig)"/><rect x="6" y="6" width="12" height="12" rx="3.5" fill="none" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="none" stroke="white" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="white"/></svg>
             </a>
+            <!-- Twitter/X butonu -->
             <a id="btn-twitter" href="#" target="_blank" class="social-btn hidden">
               <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000"/><path fill="white" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.166 2.25H8.07l4.259 5.631 5.915-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>
+            <!-- Facebook butonu -->
             <a id="btn-facebook" href="#" target="_blank" class="social-btn hidden">
               <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#1877f2"/><path fill="white" d="M16 8h-2c-.55 0-1 .45-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9c0-2.21 1.79-4 4-4h2v3z"/></svg>
             </a>
           </div>
         </div>
 
+        <!-- Şirket bilgileri: şirket adı, adres, vergi bilgileri -->
         <div class="company-section" id="row-company-info">
           <p class="section-title">Şirket Bilgileri</p>
           <div class="company-list">
+            <!-- Şirket adı satırı -->
             <div class="info-item" id="row-comp-name">
               <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
               <div class="list-text"><span class="label">Şirket Adı</span><span class="value" id="p-comp-name"></span></div>
               <button class="copy-btn-box" onclick="copyText('p-comp-name')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
             </div>
+            <!-- Adres satırı (şirket bilgileri altında kopyalanabilir) -->
             <div class="info-item" id="row-comp-address">
               <svg class="list-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               <div class="list-text"><span class="label">Adres</span><span class="value" id="p-address2"></span></div>
               <button class="copy-btn-box" onclick="copyText('p-address2')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
             </div>
+            <!-- Vergi dairesi satırı -->
             <div class="info-item" id="row-tax-office">
               <svg class="list-icon" viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
               <div class="list-text"><span class="label">Vergi Dairesi</span><span class="value" id="p-tax-office"></span></div>
               <button class="copy-btn-box" onclick="copyText('p-tax-office')"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
             </div>
+            <!-- Vergi numarası satırı -->
             <div class="info-item" id="row-tax-no">
               <svg class="list-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2.01.89-2.01 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-1 14H5v-2h14v2zm0-6H5V8h14v4z"/></svg>
               <div class="list-text"><span class="label">Vergi No</span><span class="value" id="p-tax-no"></span></div>
@@ -259,181 +395,295 @@
           </div>
         </div>
 
+        <!-- Sayfa altı: telif hakkı ve isim -->
         <footer>&copy; <span id="footer-year"></span> <span id="footer-name"></span></footer>
       </div>
     </div>
 
+    <!-- QR Kod modal penceresi -->
+    <!-- Dışına tıklayınca kapanır -->
     <div id="qrModal" class="modal" onclick="this.style.display='none'">
+      <!-- İçine tıklayınca kapanmasın diye propagation durdurulur -->
       <div class="modal-content" onclick="event.stopPropagation()">
         <h3>QR Kod</h3>
+        <!-- QR kod bu div'in içine JS tarafından çizilir -->
         <div id="qr-container" style="width:200px;height:200px;margin:0 auto 15px;background:#fff;border-radius:10px;padding:8px;"></div>
         <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:15px;">Taratarak bu kartvizite ulaşın</p>
         <button class="close-modal" onclick="document.getElementById('qrModal').style.display='none'">Kapat</button>
       </div>
     </div>
 
+    <!-- Profil fotoğrafı büyütme modal penceresi -->
     <div id="profileModal" class="modal" onclick="this.style.display='none'">
       <div class="modal-content" style="background:transparent;border:none;box-shadow:none;" onclick="event.stopPropagation()">
+        <!-- Büyütülen profil fotoğrafı: zoomIn animasyonuyla açılır -->
         <img id="profile-modal-img" src="" style="width:250px;height:250px;border-radius:50%;object-fit:cover;border:4px solid var(--card-bg);box-shadow:0 0 30px rgba(0,0,0,0.3);animation:zoomIn 0.3s ease;">
       </div>
     </div>
 
   </div>
 
+  <!-- Toast bildirimi elementi -->
   <div id="toast"></div>
 
+  <!-- Supabase JS kütüphanesi: veritabanı sorguları için -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- QR kod oluşturma kütüphanesi -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Supabase bağlantı bilgileri (URL + anon key) -->
   <script src="supabase.js"></script>
+
   <script>
+    // Footer yıl bilgisini otomatik güncelle
     document.getElementById('footer-year').textContent = new Date().getFullYear();
 
+    // URL'den username parametresini oku (?username=demo gibi)
     var params = new URLSearchParams(window.location.search);
     var username = params.get('username');
 
+    // Username yoksa profil bulunamadı ekranını göster
     if (!username) {
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('not-found').classList.remove('hidden');
     } else {
+      // Username varsa kartvizit verilerini yükle
       loadCard(username);
     }
 
+    // Supabase'den profil verisini çekip sayfayı doldurur
     async function loadCard(username) {
+      // profiles tablosundan username'e göre tek satır çek
       var result = await sb.from('profiles').select('*').eq('username', username).single();
       var data = result.data;
+
+      // Yükleniyor ekranını gizle
       document.getElementById('loading').classList.add('hidden');
+
+      // Veri bulunamazsa hata ekranını göster
       if (!data) { document.getElementById('not-found').classList.remove('hidden'); return; }
+
+      // Kartvizit içeriğini görünür yap
       document.getElementById('card-content').classList.remove('hidden');
 
+      // Aydınlık tema seçildiyse html elementine data-theme="light" ekle
       if (data.theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
+      // Accent rengi seçildiyse CSS değişkenini güncelle
       if (data.theme_color) {
         document.documentElement.style.setProperty('--accent', data.theme_color);
         document.documentElement.style.setProperty('--accent-color', data.theme_color);
       }
 
+      // İsim: full_name yoksa username göster
       var name = data.full_name || data.username;
       document.getElementById('p-name').textContent = name;
       document.getElementById('footer-name').textContent = name;
+      // Sayfa başlığını kişi ismiyle güncelle
       document.title = name + ' | Dijital Kartvizit';
 
+      // Şirket ve unvan bilgilerini doldur
       if (data.company) document.getElementById('p-company').textContent = data.company;
       if (data.title) document.getElementById('p-title').textContent = data.title;
 
+      // Profil fotoğrafı: varsa img elementi oluştur, yoksa baş harfleri göster
       if (data.avatar_url) {
         document.getElementById('profile-container').innerHTML = '<img src="' + data.avatar_url + '" alt="' + name + '">';
+        // Favicon'u profil fotoğrafına ayarla
         document.getElementById('favicon').href = data.avatar_url;
       } else {
+        // İsmin baş harflerini al (max 2 karakter, büyük harf)
         var initials = name.split(' ').map(function(w){ return w[0]; }).join('').substring(0,2).toUpperCase();
         document.getElementById('initials').textContent = initials;
       }
 
+      // Banner fotoğrafı: varsa img elementi oluştur
       if (data.banner_url) document.getElementById('banner-container').innerHTML = '<img src="' + data.banner_url + '" alt="Banner">';
 
+      // Cep telefonu: varsa tel: ve wa.me linklerini oluştur
       if (data.mobile) {
         document.getElementById('btn-call').href = 'tel:' + data.mobile;
+        // WhatsApp için sadece rakamlar kalacak şekilde temizle
         document.getElementById('btn-whatsapp').href = 'https://wa.me/' + data.mobile.replace(/[^0-9]/g, '');
         document.getElementById('p-mobile').textContent = data.mobile;
       } else { document.getElementById('row-mobile').classList.add('hidden'); }
 
+      // İş telefonu: yoksa satırı gizle
       if (data.work_phone) document.getElementById('p-work').textContent = data.work_phone;
       else document.getElementById('row-work').classList.add('hidden');
 
+      // E-posta: varsa mailto: linki oluştur
       if (data.email) {
         document.getElementById('btn-email').href = 'mailto:' + data.email;
         document.getElementById('p-email').textContent = data.email;
       } else { document.getElementById('row-email').classList.add('hidden'); }
 
+      // Web sitesi: http/https önekini temizleyerek göster, tıklanınca tam URL ile aç
       if (data.website) {
         var cleanWeb = data.website.replace(/^https?:\/\//, '');
         var webEl = document.getElementById('p-web');
         webEl.textContent = cleanWeb;
+        // https yoksa ekle
         webEl.href = data.website.startsWith('http') ? data.website : 'https://' + data.website;
       } else { document.getElementById('row-web').classList.add('hidden'); }
 
+      // Adres: Google Maps embed URL'si ve yol tarifi linki oluştur
       if (data.address) {
+        // iframe'e Google Maps embed URL'si yükle
         document.getElementById('map-iframe').src = 'https://maps.google.com/maps?q=' + encodeURIComponent(data.address) + '&output=embed&z=15';
+        // Yol tarifi butonu Google Maps arama URL'sine yönlendirir
         document.getElementById('btn-direction').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.address);
+        // Şirket bilgileri altında kopyalanabilir adres
         document.getElementById('p-address2').textContent = data.address;
       } else {
+        // Adres yoksa hem harita bölümünü hem adres satırını gizle
         document.getElementById('row-address').classList.add('hidden');
         document.getElementById('row-comp-address').classList.add('hidden');
       }
 
+      // Sosyal medya butonları: her platform için link varsa butonu göster
       var hasSocial = false;
-      if (data.linkedin) { var l = document.getElementById('btn-linkedin'); l.href = data.linkedin.startsWith('http') ? data.linkedin : 'https://' + data.linkedin; l.classList.remove('hidden'); hasSocial = true; }
-      if (data.instagram) { var ig = document.getElementById('btn-instagram'); ig.href = data.instagram.startsWith('http') ? data.instagram : 'https://' + data.instagram; ig.classList.remove('hidden'); hasSocial = true; }
-      if (data.twitter) { var tw = document.getElementById('btn-twitter'); tw.href = data.twitter.startsWith('http') ? data.twitter : 'https://' + data.twitter; tw.classList.remove('hidden'); hasSocial = true; }
-      if (data.facebook) { var fb = document.getElementById('btn-facebook'); fb.href = data.facebook.startsWith('http') ? data.facebook : 'https://' + data.facebook; fb.classList.remove('hidden'); hasSocial = true; }
+      if (data.linkedin) {
+        var l = document.getElementById('btn-linkedin');
+        // http yoksa ekle
+        l.href = data.linkedin.startsWith('http') ? data.linkedin : 'https://' + data.linkedin;
+        l.classList.remove('hidden');
+        hasSocial = true;
+      }
+      if (data.instagram) {
+        var ig = document.getElementById('btn-instagram');
+        ig.href = data.instagram.startsWith('http') ? data.instagram : 'https://' + data.instagram;
+        ig.classList.remove('hidden');
+        hasSocial = true;
+      }
+      if (data.twitter) {
+        var tw = document.getElementById('btn-twitter');
+        tw.href = data.twitter.startsWith('http') ? data.twitter : 'https://' + data.twitter;
+        tw.classList.remove('hidden');
+        hasSocial = true;
+      }
+      if (data.facebook) {
+        var fb = document.getElementById('btn-facebook');
+        fb.href = data.facebook.startsWith('http') ? data.facebook : 'https://' + data.facebook;
+        fb.classList.remove('hidden');
+        hasSocial = true;
+      }
+      // Hiç sosyal medya yoksa bölümü gizle
       if (!hasSocial) document.getElementById('row-social').classList.add('hidden');
 
+      // Şirket bilgileri: her alan yoksa satırı gizle
       if (data.company) document.getElementById('p-comp-name').textContent = data.company;
       else document.getElementById('row-comp-name').classList.add('hidden');
       if (data.tax_office) document.getElementById('p-tax-office').textContent = data.tax_office;
       else document.getElementById('row-tax-office').classList.add('hidden');
       if (data.tax_no) document.getElementById('p-tax-no').textContent = data.tax_no;
       else document.getElementById('row-tax-no').classList.add('hidden');
+      // Hiçbir şirket bilgisi yoksa tüm bölümü gizle
       if (!data.company && !data.tax_office && !data.tax_no && !data.address) document.getElementById('row-company-info').classList.add('hidden');
 
+      // VCF dosyasını oluştur
       generateVCF(data);
     }
 
+    // VCF (vCard) dosyası oluşturur ve indirme linki atar
+    // VCF formatı: telefon rehberine ekleme için standart format
     function generateVCF(d) {
-      var vcf = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + (d.full_name||d.username) + '\nORG:' + (d.company||'') + '\nTITLE:' + (d.title||'') + '\nTEL;TYPE=CELL:' + (d.mobile||'') + '\nTEL;TYPE=WORK:' + (d.work_phone||'') + '\nEMAIL:' + (d.email||'') + '\nURL:' + (d.website||'') + '\nADR;TYPE=WORK:;;' + (d.address||'') + ';;;;\nX-TAX-OFFICE:' + (d.tax_office||'') + '\nX-TAX-NUMBER:' + (d.tax_no||'') + '\nEND:VCARD';
+      var vcf = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + (d.full_name||d.username) +
+                '\nORG:' + (d.company||'') +
+                '\nTITLE:' + (d.title||'') +
+                '\nTEL;TYPE=CELL:' + (d.mobile||'') +
+                '\nTEL;TYPE=WORK:' + (d.work_phone||'') +
+                '\nEMAIL:' + (d.email||'') +
+                '\nURL:' + (d.website||'') +
+                '\nADR;TYPE=WORK:;;' + (d.address||'') + ';;;;\n' +
+                'X-TAX-OFFICE:' + (d.tax_office||'') +
+                '\nX-TAX-NUMBER:' + (d.tax_no||'') +
+                '\nEND:VCARD';
+      // VCF içeriğini Blob'a dönüştür
       var blob = new Blob([vcf], { type: 'text/vcard' });
+      // Blob URL'sini indirme linkine ata
       document.getElementById('btn-vcf').href = URL.createObjectURL(blob);
+      // İndirilecek dosyanın adı: kişi adı + .vcf
       document.getElementById('btn-vcf').download = (d.full_name || d.username) + '.vcf';
     }
 
-    // Demo: customizer paneli aç, diğerleri: login'e git
+    // Kalem butonuna tıklayınca ne yapılacağını belirler
+    // Demo: customizer panelini aç/kapat
+    // Diğer kullanıcılar: login sayfasına yönlendir
     function handleEdit() {
       if (username === 'demo') {
         var c = document.getElementById('customizer');
+        // Panel açıksa kapat, kapalıysa aç
         c.style.display = c.style.display === 'none' ? 'block' : 'none';
       } else {
         window.location.href = 'https://burakyilmaz3453.github.io/kartvizit-platform/login.html';
       }
     }
 
+    // Demo customizer: temayı anlık önizler (veritabanına yazmaz)
     function previewTheme(theme) {
+      // html elementinin data-theme özelliğini güncelle
       document.documentElement.setAttribute('data-theme', theme);
+      // Seçili temanın kenarlığını accent rengiyle vurgula
       document.getElementById('pre-dark').style.borderColor = theme === 'dark' ? 'var(--accent)' : 'transparent';
       document.getElementById('pre-light').style.borderColor = theme === 'light' ? 'var(--accent)' : 'transparent';
     }
 
+    // Demo customizer: accent rengini anlık önizler (veritabanına yazmaz)
     function previewColor(color) {
+      // CSS değişkenlerini güncelle: tüm accent renkleri değişir
       document.documentElement.style.setProperty('--accent', color);
       document.documentElement.style.setProperty('--accent-color', color);
+      // Kayıt ol butonunun rengini de güncelle
       document.getElementById('register-btn').style.background = color;
+      // Seçili renk dairesini active yap, diğerlerini pasif yap
       document.querySelectorAll('.pre-color').forEach(function(el) {
         el.classList.toggle('active', el.style.background === color);
       });
     }
 
+    // Profil fotoğrafına tıklayınca büyük boyutta modal açar
     function openProfile() {
       var img = document.getElementById('profile-container').querySelector('img');
+      // Fotoğraf yoksa modal açma
       if (!img) return;
+      // Modal içindeki img'ye kaynağı ata
       document.getElementById('profile-modal-img').src = img.src;
+      // Modalı göster
       document.getElementById('profileModal').style.display = 'flex';
     }
 
+    // QR kod modalını açar ve QR kodu oluşturur
     function openQR() {
       document.getElementById('qrModal').style.display = 'flex';
       var container = document.getElementById('qr-container');
+      // Önceki QR varsa temizle (tekrar açılınca iki QR oluşmaması için)
       container.innerHTML = '';
-      new QRCode(container, { text: window.location.href, width: 184, height: 184, colorDark: '#000000', colorLight: '#ffffff' });
+      // QRCode kütüphanesi ile mevcut sayfanın URL'sini QR'a dönüştür
+      new QRCode(container, {
+        text: window.location.href,
+        width: 184,
+        height: 184,
+        colorDark: '#000000',
+        colorLight: '#ffffff'
+      });
     }
 
+    // Belirtilen elementin metnini panoya kopyalar
     function copyText(id) {
       var el = document.getElementById(id);
       var text = el.textContent || el.innerText;
       if (!text) return;
+      // Clipboard API ile kopyala, başarılı olunca toast göster
       navigator.clipboard.writeText(text.trim()).then(function() { showToast('Kopyalandı!'); });
     }
 
+    // Toast bildirimi gösterir: 2 saniye görünür kalır sonra kaybolur
     function showToast(msg) {
       var t = document.getElementById('toast');
       t.textContent = msg;
+      // show sınıfı ekleyerek görünür yap
       t.classList.add('show');
+      // 2 saniye sonra show sınıfını kaldırarak gizle
       setTimeout(function() { t.classList.remove('show'); }, 2000);
     }
   </script>
