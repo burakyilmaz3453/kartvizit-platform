@@ -161,15 +161,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
   <script>
-    // URL'den doğrulama token'ını yakala
     const hash = window.location.hash;
     if (hash && hash.includes('access_token') && hash.includes('type=signup')) {
       const params = new URLSearchParams(hash.substring(1));
       const accessToken = params.get('access_token');
       const refreshToken = params.get('refresh_token');
       const type = params.get('type');
+
       if (accessToken && type === 'signup') {
-        // access_token + refresh_token ile oturumu doğrudan başlat
         sb.auth.setSession({
           access_token: accessToken,
           refresh_token: refreshToken || ''
@@ -187,47 +186,88 @@
         });
       }
     } else {
-      sb.auth.getSession().then(({ data }) => {
-        if (data.session) window.location.href = 'dashboard.html';
+      sb.auth.getSession().then(async ({ data }) => {
+        if (!data.session) return;
+
+        if (data.session.user && data.session.user.email_confirmed_at) {
+          window.location.href = 'dashboard.html';
+        } else {
+          await sb.auth.signOut();
+        }
       });
     }
+
     async function login() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const btn = document.getElementById('login-btn');
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
-      errorEl.style.display = 'none'; successEl.style.display = 'none';
-      if (!email || !password) { errorEl.textContent = 'E-posta ve şifreyi girin.'; errorEl.style.display = 'block'; return; }
-      btn.disabled = true; btn.textContent = 'Giriş yapılıyor...';
+
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      if (!email || !password) {
+        errorEl.textContent = 'E-posta ve şifreyi girin.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Giriş yapılıyor...';
+
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
       if (error) {
         errorEl.textContent = 'E-posta veya şifre hatalı.';
         errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Giriş Yap'; return;
+        btn.disabled = false;
+        btn.textContent = 'Giriş Yap';
+        return;
       }
-      // E-posta doğrulama kontrolü
+
       if (!data.user.email_confirmed_at) {
         await sb.auth.signOut();
         errorEl.textContent = '⚠ Hesabın henüz doğrulanmamış. Kayıt olurken gönderilen doğrulama mailini kontrol et ve linke tıkla.';
         errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Giriş Yap'; return;
+        btn.disabled = false;
+        btn.textContent = 'Giriş Yap';
+        return;
       }
+
       window.location.href = 'dashboard.html';
     }
+
     async function resetPassword() {
       const email = document.getElementById('email').value.trim();
       const errorEl = document.getElementById('error-msg');
       const successEl = document.getElementById('success-msg');
-      errorEl.style.display = 'none'; successEl.style.display = 'none';
-      if (!email) { errorEl.textContent = 'Önce e-posta adresinizi girin.'; errorEl.style.display = 'block'; return; }
+
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      if (!email) {
+        errorEl.textContent = 'Önce e-posta adresinizi girin.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
       const { error } = await sb.auth.resetPasswordForEmail(email, {
         redirectTo: 'https://burakyilmaz3453.github.io/kartvizit-platform/reset.html'
       });
-      if (!error) { successEl.textContent = '✓ Şifre sıfırlama maili gönderildi.'; successEl.style.display = 'block'; }
-      else { errorEl.textContent = 'Hata: ' + error.message; errorEl.style.display = 'block'; }
+
+      if (!error) {
+        successEl.textContent = '✓ Şifre sıfırlama maili gönderildi.';
+        successEl.style.display = 'block';
+      } else {
+        errorEl.textContent = 'Hata: ' + error.message;
+        errorEl.style.display = 'block';
+      }
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') login();
+    });
   </script>
 </body>
 </html>
