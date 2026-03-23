@@ -43,18 +43,19 @@
     btn.disabled = true; 
     btn.textContent = 'Kayıt yapılıyor...';
 
-    const { data: existingUsername, error: usernameCheckError } = await sb
-      .from('profiles')
-      .select('id')
-      .eq('username', username)
-      .maybeSingle();
+    const { data: existing } = await sb.from('profiles').select('username').eq('username', username).single();
+if (existing) {
+  errorEl.textContent = 'Bu kullanıcı adı zaten alınmış.';
+  errorEl.style.display = 'block';
+  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
+}
 
-    if (usernameCheckError) {
-      errorEl.textContent = usernameCheckError.message;
-      errorEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Kayıt Ol';
-      return;
+const { data: existingEmail } = await sb.from('profiles').select('email').eq('email', email).single();
+if (existingEmail) {
+  errorEl.textContent = 'Bu e-posta adresi zaten kayıtlı.';
+  errorEl.style.display = 'block';
+  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
+}
     }
 
     if (existingUsername) {
