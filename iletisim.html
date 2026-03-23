@@ -220,6 +220,7 @@
       font-size:0.82rem; color:var(--text-secondary);
       line-height:1.4;
     }
+    .info-box-value a { color: inherit; text-decoration: none; }
 
     /* ORNAMENT */
     .ornament {
@@ -265,7 +266,6 @@
       footer { flex-direction:column; text-align:center; padding:28px 20px; }
     }
   </style>
-  <script src="https://www.google.com/recaptcha/api.js?render=6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr"></script>
 </head>
 <body>
 
@@ -289,7 +289,6 @@
 
   <div class="form-wrap">
 
-    <!-- İLETİŞİM FORMU -->
     <div class="form-card">
       <div class="form-card-head">
         <div class="form-card-head-line"></div>
@@ -326,14 +325,13 @@
       </div>
     </div>
 
-    <!-- İLETİŞİM BİLGİLERİ -->
     <div class="info-row">
       <div class="info-box">
         <div class="info-box-icon">
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         </div>
         <div class="info-box-label">E-posta</div>
-        <div class="info-box-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85e1e0f6f1e0eec5eee4f7f1f3ecffecf1abe6eae8">[email&#160;protected]</a></div>
+        <div class="info-box-value"><a href="mailto:destekkartvizit@gmail.com">destekkartvizit@gmail.com</a></div>
       </div>
       <div class="info-box">
         <div class="info-box-icon">
@@ -344,7 +342,6 @@
       </div>
     </div>
 
-    <!-- KAYIT YÖNLENDİRME -->
     <div class="ornament">
       <div class="orn-line"></div>
       <div class="orn-diamond"></div>
@@ -373,7 +370,7 @@
     <span class="footer-copy">© 2025 Kartvizit. Tüm hakları saklıdır.</span>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     async function sendMessage() {
       const name    = document.getElementById('f-name').value.trim();
       const email   = document.getElementById('f-email').value.trim();
@@ -395,18 +392,39 @@
         error.style.display = 'block'; return;
       }
 
-      btn.disabled = true; btn.textContent = 'Gönderiliyor...';
+      btn.disabled = true; 
+      btn.textContent = 'Gönderiliyor...';
 
       try {
-        const res = await fetch('https://formspree.io/f/mjgaddzz', {
+        // Formspree üzerinden kendi mailine yönlendirme
+        const res = await fetch('https://formspree.io/f/destekkartvizit@gmail.com', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ name, email, subject, message })
+          body: JSON.stringify({ 
+            ad_soyad: name, 
+            email: email, 
+            konu: subject, 
+            mesaj: message 
+          })
         });
-        if (res.ok) {
+
+        if (res.ok || res.status === 302) {
           success.style.display = 'block';
           document.getElementById('f-name').value    = '';
           document.getElementById('f-email').value   = '';
           document.getElementById('f-subject').value = '';
           document.getElementById('f-message').value = '';
-          btn.textContent = 
+        } else {
+          throw new Error();
+        }
+      } catch (e) {
+        error.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+        error.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Gönder';
+      }
+    }
+  </script>
+</body>
+</html>
