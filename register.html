@@ -174,36 +174,38 @@
       }
 
       btn.disabled = true; btn.textContent = 'Kayıt yapılıyor...';
+const { data: existing } = await sb.from('profiles').select('username').eq('username', username).single();
+if (existing) {
+  errorEl.textContent = 'Bu kullanıcı adı zaten alınmış.';
+  errorEl.style.display = 'block';
+  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
+}
 
-      const { data: existing } = await sb.from('profiles').select('username').eq('username', username).single();
-      if (existing) {
-        errorEl.textContent = 'Bu kullanıcı adı zaten alınmış.';
-        errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
-      }
+const { data: existingEmail } = await sb.from('profiles').select('email').eq('email', email).single();
+if (existingEmail) {
+  errorEl.textContent = 'Bu e-posta adresi zaten kayıtlı.';
+  errorEl.style.display = 'block';
+  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
+}
 
-      const { data, error } = await sb.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: 'https://burakyilmaz3453.github.io/kartvizit-platform/login.html'
-        }
-      });
-      if (error) {
-        errorEl.textContent = error.message;
-        errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
-      }
+const { data, error } = await sb.auth.signUp({
+  email,
+  password,
+  options: {
+    emailRedirectTo: 'https://burakyilmaz3453.github.io/kartvizit-platform/login.html'
+  }
+});
 
-      await sb.from('profiles').insert({ user_id: data.user.id, username, email });
+if (error) {
+  errorEl.textContent = error.message;
+  errorEl.style.display = 'block';
+  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
+}
 
-      successEl.textContent = '✓ Kayıt başarılı! E-postanı onaylayıp giriş yap.';
-      successEl.style.display = 'block';
-      btn.textContent = 'Kayıt Ol'; btn.disabled = false;
-      setTimeout(() => { window.location.href = 'login.html'; }, 2500);
-    }
+await sb.from('profiles').insert({ user_id: data.user.id, username, email });
 
-    document.addEventListener('keydown', e => { if (e.key === 'Enter') register(); });
-  </script>
-</body>
-</html>
+successEl.textContent = '✓ Kayıt başarılı! E-postanı onaylayıp giriş yap.';
+successEl.style.display = 'block';
+btn.textContent = 'Kayıt Ol'; btn.disabled = false;
+setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+  
