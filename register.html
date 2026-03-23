@@ -208,4 +208,10 @@ successEl.textContent = '✓ Kayıt başarılı! E-postanı onaylayıp giriş ya
 successEl.style.display = 'block';
 btn.textContent = 'Kayıt Ol'; btn.disabled = false;
 setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') register(); });
+</script>
+</body>
+</html>
   
