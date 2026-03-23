@@ -186,11 +186,11 @@
           }
         });
       }
-   /* } else {
+    } else {
       sb.auth.getSession().then(({ data }) => {
         if (data.session) window.location.href = 'dashboard.html';
       });
-    }*/
+    }
     async function login() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
