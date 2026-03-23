@@ -219,7 +219,7 @@
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
       if (error) {
-        errorEl.textContent = 'E-posta veya şifre hatalı.';
+        errorEl.textContent = 'Hesabınıza giriş yapılamadı. Lütfen e-posta adresinize gönderilen doğrulama bağlantısını onayladıktan sonra tekrar deneyin.';
         errorEl.style.display = 'block';
         btn.disabled = false;
         btn.textContent = 'Giriş Yap';
@@ -228,7 +228,7 @@
 
       if (!data.user.email_confirmed_at) {
         await sb.auth.signOut();
-        errorEl.textContent = '⚠ Hesabın henüz doğrulanmamış. Kayıt olurken gönderilen doğrulama mailini kontrol et ve linke tıkla.';
+        errorEl.textContent = 'Hesabınız henüz aktif değildir. Lütfen e-posta adresinize gönderilen doğrulama bağlantısını onaylayarak tekrar giriş yapın.';
         errorEl.style.display = 'block';
         btn.disabled = false;
         btn.textContent = 'Giriş Yap';
