@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kullanım Şartları | Kartvizit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --gold:#C9A84C; --gold-light:#E2C47A; --gold-dim:#7A6235;
+      --bg:#080808; --surface:#111111; --surface2:#161616;
+      --border:rgba(201,168,76,0.14); --border-subtle:rgba(255,255,255,0.06);
+      --text:#F0EBE1; --text-secondary:#7A7570; --text-muted:#4A4845;
+    }
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:'DM Sans',sans-serif; font-weight:300;
+      min-height:100vh; overflow-x:hidden; line-height:1.7;
+    }
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:900;
+      padding:22px 48px;
+      display:flex; align-items:center; justify-content:space-between;
+      background:linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
+    }
+    .nav-logo {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.2rem; letter-spacing:0.14em;
+      text-transform:uppercase; color:var(--gold); text-decoration:none;
+    }
+    .nav-back {
+      display:inline-flex; align-items:center; gap:6px;
+      color:var(--text-muted); text-decoration:none;
+      font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase;
+      transition:color 0.2s;
+    }
+    .nav-back:hover { color:var(--text-secondary); }
+    .nav-back svg { width:14px; height:14px; fill:currentColor; }
+
+    .page-wrap { max-width:680px; margin:0 auto; padding:140px 24px 100px; }
+
+    .page-eyebrow { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+    .eyebrow-line { width:28px; height:1px; background:var(--gold-dim); }
+    .eyebrow-text {
+      font-size:0.65rem; letter-spacing:0.2em;
+      text-transform:uppercase; color:var(--gold);
+    }
+
+    .page-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(2rem,5vw,3.2rem);
+      font-weight:300; line-height:1.1; color:var(--text); margin-bottom:8px;
+    }
+    .page-title em { font-style:italic; color:var(--gold-light); }
+    .page-date { font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:48px; }
+
+    .section { margin-bottom:40px; padding-bottom:40px; border-bottom:1px solid var(--border-subtle); }
+    .section:last-child { border-bottom:none; }
+
+    .section-num {
+      font-size:0.65rem; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--gold-dim); margin-bottom:10px; display:block;
+    }
+    h2 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.4rem; font-weight:300; color:var(--text); margin-bottom:14px;
+    }
+    p { font-size:0.88rem; color:var(--text-secondary); margin-bottom:12px; }
+    p:last-child { margin-bottom:0; }
+
+    ul { list-style:none; margin:12px 0; padding:0; display:flex; flex-direction:column; gap:8px; }
+    ul li {
+      font-size:0.88rem; color:var(--text-secondary);
+      display:flex; align-items:flex-start; gap:10px;
+    }
+    ul li::before {
+      content:''; display:block; width:14px; height:1px;
+      background:var(--gold-dim); flex-shrink:0; margin-top:11px;
+    }
+
+    .highlight-box {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:8px; padding:20px 24px; margin:16px 0;
+    }
+    .highlight-box p { color:var(--text-secondary); font-size:0.85rem; }
+
+    footer {
+      border-top:1px solid var(--border-subtle); padding:32px 48px;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:16px;
+    }
+    .footer-logo {
+      font-family:'Cormorant Garamond',serif; font-size:1rem;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--gold-dim); text-decoration:none;
+    }
+    .footer-links { display:flex; gap:20px; list-style:none; }
+    .footer-links a {
+      font-size:0.68rem; color:var(--text-muted);
+      text-decoration:none; letter-spacing:0.06em; transition:color 0.2s;
+    }
+    .footer-links a:hover { color:var(--text-secondary); }
+    .footer-copy { font-size:0.68rem; color:var(--text-muted); }
+
+    @media(max-width:600px) {
+      nav { padding:18px 20px; }
+      footer { flex-direction:column; text-align:center; padding:28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Kartvizit</a>
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Ana Sayfa
+    </a>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="page-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Yasal</span>
+    </div>
+    <h1 class="page-title">Kullanım <em>Şartları</em></h1>
+    <p class="page-date">Son güncelleme: Ocak 2025</p>
+
+    <div class="section">
+      <span class="section-num">01</span>
+      <h2>Kabul</h2>
+      <p>Kartvizit platformuna kayıt olarak veya platformu kullanarak aşağıdaki kullanım şartlarını kabul etmiş sayılırsınız. Şartları kabul etmiyorsanız platformu kullanmayınız.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">02</span>
+      <h2>Hizmetin Tanımı</h2>
+      <p>Kartvizit, kullanıcıların dijital kartvizit oluşturmasına, yönetmesine ve paylaşmasına olanak tanıyan bir web platformudur. Platform üzerinden oluşturulan kartvizitler herkese açık URL aracılığıyla paylaşılabilir.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">03</span>
+      <h2>Kullanıcı Yükümlülükleri</h2>
+      <p>Platform kullanıcıları aşağıdaki kurallara uymakla yükümlüdür:</p>
+      <ul>
+        <li>Gerçek ve doğru bilgiler sağlamak</li>
+        <li>Başkalarının haklarını ihlal edecek içerik yüklememek</li>
+        <li>Platformu spam, dolandırıcılık veya yasadışı amaçlarla kullanmamak</li>
+        <li>Hesap bilgilerini üçüncü şahıslarla paylaşmamak</li>
+        <li>Platformun teknik altyapısına zarar verebilecek eylemlerden kaçınmak</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <span class="section-num">04</span>
+      <h2>İçerik Sorumluluğu</h2>
+      <p>Kartvizitinize girdiğiniz tüm bilgilerin doğruluğundan ve yasal uygunluğundan yalnızca siz sorumlusunuz. Kartvizit platformu, kullanıcıların paylaştığı içeriklerden sorumlu tutulamaz.</p>
+      <div class="highlight-box">
+        <p>Telif hakkı ihlali, hakaret veya yasadışı içerik içerdiği tespit edilen hesaplar önceden bildirim yapılmaksızın askıya alınabilir.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="section-num">05</span>
+      <h2>Hizmet Sürekliliği</h2>
+      <p>Platforma kesintisiz erişim garanti edilmez. Bakım, güncelleme veya öngörülemeyen teknik nedenlerle hizmet geçici olarak kesilebilir. Bu durumlarda herhangi bir tazminat yükümlülüğü doğmaz.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">06</span>
+      <h2>Hesap Sonlandırma</h2>
+      <p>Kullanım şartlarını ihlal eden hesaplar önceden uyarı yapılmaksızın kapatılabilir. Hesabınızı kendiniz de istediğiniz zaman silebilirsiniz. Hesap silindiğinde tüm verileriniz kalıcı olarak kaldırılır.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">07</span>
+      <h2>Değişiklikler</h2>
+      <p>Kullanım şartları zaman zaman güncellenebilir. Önemli değişiklikler kayıtlı e-posta adresinize bildirilir. Güncel şartlara her zaman bu sayfadan ulaşabilirsiniz.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">08</span>
+      <h2>İletişim</h2>
+      <p>Kullanım şartlarına ilişkin sorularınız için <a href="iletisim.html" style="color:var(--gold);text-decoration:none">iletişim sayfamızdan</a> bize ulaşabilirsiniz.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    <a href="index.html" class="footer-logo">Kartvizit</a>
+    <ul class="footer-links">
+      <li><a href="gizlilik.html">Gizlilik</a></li>
+      <li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li>
+      <li><a href="iletisim.html">İletişim</a></li>
+    </ul>
+    <span class="footer-copy">© 2025 Kartvizit. Tüm hakları saklıdır.</span>
+  </footer>
+
+</body>
+</html>
