@@ -953,6 +953,7 @@
 
   <div id="toast"></div>
 
+  <script src="https://www.google.com/recaptcha/api.js?render=6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="supabase.js"></script>
@@ -1191,13 +1192,25 @@
         errEl.style.display = 'block'; return;
       }
 
-      btn.disabled = true; btn.textContent = 'Gönderiliyor...';
+      btn.disabled = true; btn.textContent = 'Doğrulanıyor...';
+
+      // reCAPTCHA v3 token al
+      var captchaToken = '';
+      try {
+        captchaToken = await grecaptcha.execute('6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr', { action: 'contact' });
+      } catch(e) {
+        errEl.textContent = 'reCAPTCHA doğrulaması başarısız. Sayfayı yenileyip tekrar dene.';
+        errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Gönder'; return;
+      }
+
+      btn.textContent = 'Gönderiliyor...';
 
       try {
         var res = await fetch('https://formspree.io/f/mjgaddzz', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ name, email, message })
+          body: JSON.stringify({ name, email, message, captchaToken })
         });
         if (res.ok) {
           document.getElementById('contact-form').style.display = 'none';

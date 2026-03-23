@@ -265,6 +265,7 @@
       footer { flex-direction:column; text-align:center; padding:28px 20px; }
     }
   </style>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr"></script>
 </head>
 <body>
 
@@ -332,7 +333,7 @@
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         </div>
         <div class="info-box-label">E-posta</div>
-        <div class="info-box-value">burakyilmaz3453@gmail.com</div>
+        <div class="info-box-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85e1e0f6f1e0eec5eee4f7f1f3ecffecf1abe6eae8">[email&#160;protected]</a></div>
       </div>
       <div class="info-box">
         <div class="info-box-icon">
@@ -372,7 +373,7 @@
     <span class="footer-copy">© 2025 Kartvizit. Tüm hakları saklıdır.</span>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     async function sendMessage() {
       const name    = document.getElementById('f-name').value.trim();
       const email   = document.getElementById('f-email').value.trim();
@@ -408,15 +409,4 @@
           document.getElementById('f-email').value   = '';
           document.getElementById('f-subject').value = '';
           document.getElementById('f-message').value = '';
-          btn.textContent = 'Gönderildi ✓';
-        } else {
-          throw new Error();
-        }
-      } catch {
-        error.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Gönder';
-      }
-    }
-  </script>
-</body>
-</html>
+          btn.textContent = 
