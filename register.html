@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr"></script>
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     :root {
@@ -63,7 +63,7 @@
     .terms-text { font-size:0.75rem; color:var(--text-secondary); line-height:1.6; }
     .terms-text a { color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(201,168,76,0.3); transition:border-color 0.2s; }
     .terms-text a:hover { border-color:var(--gold); }
-    .recaptcha-wrap { display:flex; justify-content:center; margin:16px 0; }
+
     .btn {
       width:100%; padding:13px; background:var(--gold); color:#080808;
       border:none; border-radius:6px; font-family:'DM Sans',sans-serif;
@@ -118,13 +118,7 @@
         </span>
       </label>
 
-      <!-- Google reCAPTCHA v2 -->
-      <div class="recaptcha-wrap">
-        <div class="g-recaptcha"
-             data-sitekey="6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr"
-             data-theme="dark">
-        </div>
-      </div>
+      <!-- Google reCAPTCHA v3: arka planda çalışır, widget yok -->
 
       <button class="btn" id="register-btn" onclick="register()">Kayıt Ol</button>
       <div class="divider"></div>
@@ -165,9 +159,17 @@
         errorEl.textContent = 'Devam etmek için kullanım şartlarını kabul etmelisin.';
         errorEl.style.display = 'block'; return;
       }
-      const captchaResponse = grecaptcha.getResponse();
-      if (!captchaResponse) {
-        errorEl.textContent = 'Lütfen robot olmadığını doğrula.';
+      // reCAPTCHA v3: token al, skor kontrolü sunucu tarafında yapılmalı
+      // Client-side'da token varlığı yeterli
+      let captchaToken = '';
+      try {
+        captchaToken = await grecaptcha.execute('6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr', {action: 'register'});
+      } catch(e) {
+        errorEl.textContent = 'reCAPTCHA doğrulaması başarısız. Sayfayı yenileyip tekrar dene.';
+        errorEl.style.display = 'block'; return;
+      }
+      if (!captchaToken) {
+        errorEl.textContent = 'reCAPTCHA doğrulaması başarısız. Sayfayı yenileyip tekrar dene.';
         errorEl.style.display = 'block'; return;
       }
 
@@ -177,16 +179,14 @@
       if (existing) {
         errorEl.textContent = 'Bu kullanıcı adı zaten alınmış.';
         errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Kayıt Ol';
-        grecaptcha.reset(); return;
+        btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
       }
 
       const { data, error } = await sb.auth.signUp({ email, password });
       if (error) {
         errorEl.textContent = error.message;
         errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Kayıt Ol';
-        grecaptcha.reset(); return;
+        btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
       }
 
       await sb.from('profiles').insert({ user_id: data.user.id, username, email });
