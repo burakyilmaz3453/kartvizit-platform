@@ -398,7 +398,6 @@
       btn.textContent = 'Gönderiliyor...';
 
       try {
-        // Formspree ID'niz: mjgaddzz
         const response = await fetch('https://formspree.io/f/mjgaddzz', {
           method: 'POST',
           headers: { 
@@ -406,10 +405,10 @@
             'Accept': 'application/json' 
           },
           body: JSON.stringify({ 
-            ad_soyad: name, 
+            name: name,         // 'ad_soyad' yerine 'name' kullanın
             email: email, 
-            konu: subject, 
-            mesaj: message 
+            _subject: subject,  // Konunun doğru işlenmesi için '_subject' kullanın
+            message: message 
           })
         });
 
