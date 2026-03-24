@@ -165,24 +165,6 @@
       cursor:pointer; transition:0.2s; margin-top:20px;
     }
     .submit-btn:hover { background:var(--gold-light); }
-    .submit-btn:disabled { background:var(--surface2); color:var(--text-muted); cursor:not-allowed; }
-
-    /* MESSAGES */
-    .msg {
-      padding:12px 16px; border-radius:6px;
-      font-size:0.8rem; line-height:1.5;
-      margin-top:16px; display:none;
-    }
-    .msg-success {
-      background:rgba(201,168,76,0.06);
-      border:1px solid var(--border);
-      color:var(--gold);
-    }
-    .msg-error {
-      background:rgba(139,42,42,0.12);
-      border:1px solid rgba(139,42,42,0.3);
-      color:#FF8080;
-    }
 
     /* INFO BOXES */
     .info-row {
@@ -295,33 +277,28 @@
         <span class="form-card-head-title">Mesaj Gönder</span>
       </div>
       <div class="form-body">
-        <div class="two-col">
-          <div class="form-group">
-            <label>Ad Soyad</label>
-            <input type="text" id="f-name" placeholder="Ahmet Karaca">
+        <form action="https://formspree.io/f/mjgaddzz" method="POST">
+          <div class="two-col">
+            <div class="form-group">
+              <label>Ad Soyad</label>
+              <input type="text" name="name" required placeholder="Ahmet Karaca">
+            </div>
+            <div class="form-group">
+              <label>E-posta</label>
+              <input type="email" name="email" required placeholder="ahmet@sirket.com">
+            </div>
           </div>
           <div class="form-group">
-            <label>E-posta</label>
-            <input type="email" id="f-email" placeholder="ahmet@sirket.com">
+            <label>Konu</label>
+            <input type="text" name="_subject" placeholder="NFC kart siparişi, destek, iş birliği...">
           </div>
-        </div>
-        <div class="form-group">
-          <label>Konu</label>
-          <input type="text" id="f-subject" placeholder="NFC kart siparişi, destek, iş birliği...">
-        </div>
-        <div class="form-group">
-          <label>Mesajınız</label>
-          <textarea id="f-message" placeholder="Merak ettiğiniz her şeyi yazabilirsiniz..."></textarea>
-        </div>
+          <div class="form-group">
+            <label>Mesajınız</label>
+            <textarea name="message" required placeholder="Merak ettiğiniz her şeyi yazabilirsiniz..."></textarea>
+          </div>
 
-        <button class="submit-btn" id="submit-btn" onclick="sendMessage()">Gönder</button>
-
-        <div class="msg msg-success" id="msg-success">
-          ✓ Mesajınız iletildi. En kısa sürede size dönüş yapacağız.
-        </div>
-        <div class="msg msg-error" id="msg-error">
-          Bir hata oluştu. Lütfen tekrar deneyin.
-        </div>
+          <button type="submit" class="submit-btn">Gönder</button>
+        </form>
       </div>
     </div>
 
@@ -370,65 +347,5 @@
     <span class="footer-copy">© 2025 Kartvizit. Tüm hakları saklıdır.</span>
   </footer>
 
-  <script>
-    async function sendMessage() {
-      const name    = document.getElementById('f-name').value.trim();
-      const email   = document.getElementById('f-email').value.trim();
-      const subject = document.getElementById('f-subject').value.trim();
-      const message = document.getElementById('f-message').value.trim();
-      const btn     = document.getElementById('submit-btn');
-      const success = document.getElementById('msg-success');
-      const error   = document.getElementById('msg-error');
-
-      success.style.display = 'none';
-      error.style.display   = 'none';
-
-      if (!name || !email || !message) {
-        error.textContent = 'Lütfen ad, e-posta ve mesaj alanlarını doldurun.';
-        error.style.display = 'block'; return;
-      }
-      
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email)) {
-        error.textContent = 'Geçerli bir e-posta adresi girin.';
-        error.style.display = 'block'; return;
-      }
-
-      btn.disabled = true; 
-      btn.textContent = 'Gönderiliyor...';
-
-      try {
-        const response = await fetch('https://formspree.io/f/mjgaddzz', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json' 
-          },
-          body: JSON.stringify({ 
-            name: name,         // 'ad_soyad' yerine 'name' kullanın
-            email: email, 
-            _subject: subject,  // Konunun doğru işlenmesi için '_subject' kullanın
-            message: message 
-          })
-        });
-
-        if (response.ok) {
-          success.style.display = 'block';
-          document.getElementById('f-name').value    = '';
-          document.getElementById('f-email').value   = '';
-          document.getElementById('f-subject').value = '';
-          document.getElementById('f-message').value = '';
-        } else {
-          throw new Error('Sunucu hatası');
-        }
-      } catch (e) {
-        error.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
-        error.style.display = 'block';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Gönder';
-      }
-    }
-  </script>
 </body>
 </html>
