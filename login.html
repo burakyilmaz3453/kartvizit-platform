@@ -253,7 +253,7 @@
       }
 
       const { error } = await sb.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://burakyilmaz3453.github.io/kartvizit-platform/reset.html'
+        redirectTo: window.location.origin + '/reset.html'
       });
 
       if (!error) {

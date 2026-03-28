@@ -333,7 +333,7 @@
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         </div>
         <div class="info-box-label">E-posta</div>
-        <div class="info-box-value"><a href="mailto:destekkartvizit@gmail.com">destekkartvizit@gmail.com</a></div>
+        <div class="info-box-value"><a href="/cdn-cgi/l/email-protection#f99d9c8a8d9c9292988b8d8f9083908db99e94989095d79a9694"><span class="__cf_email__" data-cfemail="4f2b2a3c3b2a24242e3d3b392635263b0f28222e2623612c2022">[email&#160;protected]</span></a></div>
       </div>
       <div class="info-box">
         <div class="info-box-icon">
@@ -372,7 +372,7 @@
     <span class="footer-copy">© 2025 Kartvizit. Tüm hakları saklıdır.</span>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const contactForm = document.getElementById('contact-form');
     
     contactForm.addEventListener('submit', async function(event) {
@@ -412,16 +412,4 @@
         if (response.ok) {
           success.style.display = 'block';
           contactForm.reset(); // Formu temizle
-        } else {
-          throw new Error('Bir hata oluştu.');
-        }
-      } catch (err) {
-        error.style.display = 'block';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Gönder';
-      }
-    });
-  </script>
-</body>
-</html>
+        } 

@@ -198,7 +198,7 @@ const { data, error } = await sb.auth.signUp({
   email,
   password,
   options: {
-    emailRedirectTo: 'https://burakyilmaz3453.github.io/kartvizit-platform/login.html'
+    emailRedirectTo: window.location.origin + '/login.html'
   }
 });
 
