@@ -641,7 +641,7 @@
       if (!data) return;
       currentUsername = data.username;
 
-      const link = `${window.location.origin}/kartvizit-platform/card.html?username=${data.username}`;
+      const link = `${window.location.origin}/card.html?username=${data.username}`;
       document.getElementById('card-link').href = link;
       document.getElementById('card-link').textContent = link;
       document.getElementById('preview-link').href = link;
