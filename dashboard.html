@@ -769,13 +769,13 @@
       const fields = ['full_name','company','title','mobile','work_phone','email','website','address','tax_office','tax_no'];
       fields.forEach(f => { if (data[f]) document.getElementById(f).value = data[f]; });
 
-      // Sosyal linkler
+      // Önce inputları oluştur, sonra değerleri doldur
+      renderSocialOrder();
+
       socialOrder.forEach(s => {
         const inp = document.getElementById(s);
         if (inp && data[s]) inp.value = data[s];
       });
-
-      renderSocialOrder();
     }
 
     function renderSocialOrder() {
