@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFC Kurulum Rehberi | Noshutdown</title>
+  <meta name="description" content="Noshutdown dijital kartvizitini NFC kartına yükle. Adım adım kurulum rehberi.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://noshutdown.netlify.app/nfc.html">
+  <meta property="og:title" content="NFC Kurulum Rehberi | Noshutdown">
+  <meta property="og:description" content="Noshutdown dijital kartvizitini NFC kartına yükle. Adım adım kurulum rehberi.">
+  <meta property="og:site_name" content="Noshutdown">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E2C47A;
+      --gold-dim: #7A6235;
+      --bg: #080808;
+      --bg2: #0D0D0D;
+      --surface: #111111;
+      --surface2: #161616;
+      --border: rgba(201,168,76,0.12);
+      --border-subtle: rgba(255,255,255,0.06);
+      --text: #F0EBE1;
+      --text-secondary: #7A7570;
+      --text-muted: #4A4845;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content:'';
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events:none;
+      z-index:0;
+      opacity:0.3;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:sticky; top:0; z-index:100;
+      background:rgba(8,8,8,0.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border-subtle);
+      padding:0 32px;
+      height:60px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .logo {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.1rem;
+      letter-spacing:0.15em;
+      text-transform:uppercase;
+      color:var(--gold);
+      text-decoration:none;
+    }
+    .nav-links { display:flex; gap:20px; align-items:center; }
+    .nav-link {
+      font-size:0.72rem;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      color:var(--text-muted);
+      text-decoration:none;
+      transition:color 0.2s;
+    }
+    .nav-link:hover { color:var(--text-secondary); }
+
+    /* ── PAGE ── */
+    .page { max-width:720px; margin:0 auto; padding:60px 24px 100px; position:relative; z-index:1; }
+
+    /* ── HERO ── */
+    .hero {
+      text-align:center;
+      margin-bottom:64px;
+    }
+    .hero-tag {
+      display:inline-block;
+      font-size:0.65rem;
+      letter-spacing:0.2em;
+      text-transform:uppercase;
+      color:var(--gold-dim);
+      border:1px solid var(--border);
+      padding:5px 14px;
+      border-radius:100px;
+      margin-bottom:20px;
+    }
+    .hero-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(2rem,6vw,3rem);
+      font-weight:300;
+      line-height:1.1;
+      margin-bottom:16px;
+      letter-spacing:-0.01em;
+    }
+    .hero-title em { color:var(--gold); font-style:italic; }
+    .hero-sub {
+      font-size:0.92rem;
+      color:var(--text-secondary);
+      max-width:480px;
+      margin:0 auto;
+      line-height:1.7;
+    }
+
+    /* ── WHAT IS NFC ── */
+    .info-box {
+      background:var(--surface);
+      border:1px solid var(--border-subtle);
+      border-radius:12px;
+      padding:28px 32px;
+      margin-bottom:48px;
+    }
+    .info-box h2 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.3rem;
+      font-weight:400;
+      color:var(--gold);
+      margin-bottom:12px;
+      letter-spacing:0.04em;
+    }
+    .info-box p { font-size:0.88rem; color:var(--text-secondary); margin-bottom:10px; }
+    .info-box p:last-child { margin-bottom:0; }
+
+    /* ── STEPS ── */
+    .steps-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.6rem;
+      font-weight:300;
+      margin-bottom:32px;
+      letter-spacing:0.02em;
+    }
+    .steps-title span { color:var(--gold); }
+
+    .step {
+      display:flex;
+      gap:24px;
+      margin-bottom:32px;
+      position:relative;
+    }
+    .step:not(:last-child)::after {
+      content:'';
+      position:absolute;
+      left:19px;
+      top:44px;
+      bottom:-32px;
+      width:1px;
+      background:var(--border-subtle);
+    }
+
+    .step-num {
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:var(--surface);
+      border:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.1rem;
+      color:var(--gold);
+      position:relative;
+      z-index:1;
+    }
+
+    .step-body { flex:1; padding-top:8px; }
+    .step-title {
+      font-size:0.92rem;
+      font-weight:500;
+      color:var(--text);
+      margin-bottom:6px;
+      letter-spacing:0.02em;
+    }
+    .step-desc { font-size:0.83rem; color:var(--text-secondary); line-height:1.65; }
+    .step-desc a { color:var(--gold); text-decoration:none; }
+    .step-desc a:hover { color:var(--gold-light); }
+
+    .step-tip {
+      margin-top:10px;
+      background:rgba(201,168,76,0.06);
+      border:1px solid var(--border);
+      border-radius:6px;
+      padding:10px 14px;
+      font-size:0.78rem;
+      color:var(--text-muted);
+      line-height:1.55;
+    }
+    .step-tip strong { color:var(--gold-dim); }
+
+    /* ── APP CARDS ── */
+    .apps-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:10px;
+    }
+    @media(max-width:480px) { .apps-grid { grid-template-columns:1fr; } }
+
+    .app-card {
+      background:var(--surface2);
+      border:1px solid var(--border-subtle);
+      border-radius:8px;
+      padding:14px 16px;
+    }
+    .app-name { font-size:0.82rem; color:var(--text); font-weight:400; margin-bottom:3px; }
+    .app-platform { font-size:0.7rem; color:var(--text-muted); letter-spacing:0.06em; }
+
+    /* ── SEPARATOR ── */
+    .sep {
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin:48px 0;
+    }
+    .sep-line { flex:1; height:1px; background:var(--border-subtle); }
+    .sep-diamond { width:5px; height:5px; background:var(--gold-dim); transform:rotate(45deg); flex-shrink:0; }
+
+    /* ── FAQ ── */
+    .faq-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.6rem;
+      font-weight:300;
+      margin-bottom:24px;
+      letter-spacing:0.02em;
+    }
+    .faq-item {
+      border-bottom:1px solid var(--border-subtle);
+      padding:18px 0;
+    }
+    .faq-q { font-size:0.88rem; color:var(--text); margin-bottom:8px; font-weight:400; }
+    .faq-a { font-size:0.82rem; color:var(--text-secondary); line-height:1.65; }
+
+    /* ── CTA ── */
+    .cta-box {
+      text-align:center;
+      margin-top:64px;
+      padding:40px 32px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:12px;
+    }
+    .cta-box h2 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.8rem;
+      font-weight:300;
+      margin-bottom:10px;
+    }
+    .cta-box p { font-size:0.85rem; color:var(--text-secondary); margin-bottom:24px; }
+    .cta-btn {
+      display:inline-block;
+      padding:12px 32px;
+      background:var(--gold);
+      color:#080808;
+      text-decoration:none;
+      font-size:0.78rem;
+      font-weight:500;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      border-radius:4px;
+      transition:background 0.2s;
+    }
+    .cta-btn:hover { background:var(--gold-light); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Noshutdown</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Ana Sayfa</a>
+      <a href="dashboard.html" class="nav-link">Panel</a>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">NFC Rehberi</div>
+      <h1 class="hero-title">Kartvizitini bir<br><em>dokunuşa</em> indir.</h1>
+      <p class="hero-sub">Noshutdown linkini NFC kartına yükle. Telefonu yaklaştıran herkes anında profiline ulaşır — uygulama yok, bağlantı yok, sürtünme yok.</p>
+    </div>
+
+    <!-- NFC NEDİR -->
+    <div class="info-box">
+      <h2>NFC Nedir?</h2>
+      <p>NFC (Near Field Communication), iki cihaz birbirine yaklaştırıldığında kablosuz veri aktarımı sağlayan teknolojidir. Kredi kartı temassız ödemeleri aynı teknolojiyi kullanır.</p>
+      <p>Yazılabilir NFC etiketleri veya kartları, içine bir URL kaydedildiğinde akıllı telefon bu kartı okuyunca otomatik olarak o bağlantıyı açar. iPhone 7 ve üzeri ile tüm modern Android telefonlar NFC okuyabilir.</p>
+    </div>
+
+    <!-- ADIMLAR -->
+    <div class="steps-title">Adım adım <span>kurulum</span></div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Kısa linkini kopyala</div>
+        <div class="step-desc">
+          Dashboard'a giriş yap. En üstteki link kutusunda <strong>noshutdown.netlify.app/u/kullaniciadin</strong> formatında kısa linkini göreceksin. "Kopyala" butonuna bas.
+        </div>
+        <div class="step-tip"><strong>İpucu:</strong> Kısa link her zaman güncel profilini açar. NFC kartını değiştirmene gerek kalmaz — dashboard'dan bilgilerini güncellemen yeterli.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">NFC etiketi veya kartı satın al</div>
+        <div class="step-desc">
+          Yazılabilir NFC etiketi veya kartı Türkiye'de Trendyol, Hepsiburada ve Amazon'da bulabilirsin. <strong>NTAG213</strong> veya <strong>NTAG215</strong> çipli ürünler önerilir — tüm telefonlarla uyumludur. Fiyatı genellikle 5–30₺ arasındadır.
+        </div>
+        <div class="apps-grid">
+          <div class="app-card">
+            <div class="app-name">NFC Kartvizit Kartı</div>
+            <div class="app-platform">Plastik kart formatı · Cüzdana sığar</div>
+          </div>
+          <div class="app-card">
+            <div class="app-name">NFC Etiketi (Sticker)</div>
+            <div class="app-platform">Mevcut kartına yapıştırılabilir</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">NFC yazma uygulamasını indir</div>
+        <div class="step-desc">
+          Telefona NFC yazma uygulaması kur:
+        </div>
+        <div class="apps-grid" style="margin-top:10px">
+          <div class="app-card">
+            <div class="app-name">NFC Tools</div>
+            <div class="app-platform">iOS & Android · Ücretsiz</div>
+          </div>
+          <div class="app-card">
+            <div class="app-name">NFC TagWriter by NXP</div>
+            <div class="app-platform">Android · Ücretsiz</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Linki NFC kartına yaz</div>
+        <div class="step-desc">
+          Uygulamayı aç → <strong>Yaz</strong> veya <strong>Write</strong> seç → <strong>URL / URI</strong> ekle → Kopyaladığın linki yapıştır → Telefonu NFC kartına yaklaştır → Yazma tamamlandı.
+        </div>
+        <div class="step-tip"><strong>Not:</strong> Yazma işlemi 1–2 saniye sürer. Telefon "Başarılı" bildirimini gösterince kart hazır demektir.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Test et</div>
+        <div class="step-desc">
+          Başka bir telefonu NFC kartına yaklaştır. Profilin otomatik açılmalı. iPhone'da bildirimin üstten geldiğine, Android'de ise tarayıcının doğrudan açıldığına dikkat et — ikisi de doğru çalışıyor demektir.
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"><div class="sep-line"></div><div class="sep-diamond"></div><div class="sep-line"></div></div>
+
+    <!-- SSS -->
+    <div class="faq-title">Sık sorulan sorular</div>
+
+    <div class="faq-item">
+      <div class="faq-q">iPhone NFC kartı okuyabilir mi?</div>
+      <div class="faq-a">Evet. iPhone 7 ve üzeri tüm modeller NFC okuyabilir. iPhone XS ve sonrasında arka kameraya yaklaştırmak yeterli; eski modellerde Kontrol Merkezi'nden NFC tarayıcısını açman gerekebilir.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Bilgilerimi güncelledikten sonra NFC kartını yeniden programlamam gerekiyor mu?</div>
+      <div class="faq-a">Hayır. Noshutdown kısa linki her zaman güncel profilini açar. Dashboard'dan istediğin zaman bilgilerini değiştir — kart aynı linki açmaya devam eder.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">NFC etiketine kaç kez yazılabilir?</div>
+      <div class="faq-a">NTAG213/215 çipli etiketler genellikle 100.000 kez yeniden yazılabilir. Pratikte sınırsız sayılır.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">NFC kartı internetsiz çalışır mı?</div>
+      <div class="faq-a">NFC kartı sadece URL'yi açar; profilin internet bağlantısı gerektirir. Ancak bu, QR kod ile de aynı şekildedir.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Plastik kart yerine ne kullanabilirim?</div>
+      <div class="faq-a">Yaka kartı, anahtarlık etiketi, masa standı veya telefon kasasının arkasına yapıştırılabilir NFC sticker gibi seçenekler mevcuttur.</div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-box">
+      <h2>Hazır mısın?</h2>
+      <p>Dashboard'a git, kısa linkini kopyala ve NFC kartını programla.</p>
+      <a href="dashboard.html" class="cta-btn">Dashboard'a Git</a>
+    </div>
+
+  </div><!-- end page -->
+
+</body>
+</html>

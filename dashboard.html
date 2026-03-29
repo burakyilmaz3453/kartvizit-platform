@@ -453,6 +453,73 @@
 
     /* ── SECTION SPACER ── */
     .spacer { height:8px; }
+
+    /* ── TEXTAREA ── */
+    textarea {
+      width:100%;
+      background:var(--surface2);
+      border:1px solid var(--border-subtle);
+      border-radius:6px;
+      padding:10px 14px;
+      color:var(--text);
+      font-size:0.85rem;
+      font-weight:300;
+      font-family:'DM Sans',sans-serif;
+      outline:none;
+      transition:border-color 0.2s;
+      resize:none;
+      line-height:1.6;
+    }
+    textarea:focus { border-color:var(--gold-dim); }
+    textarea::placeholder { color:var(--text-muted); }
+    .char-count { font-size:0.68rem; color:var(--text-muted); text-align:right; margin-top:4px; }
+    .char-count.warn { color:var(--gold); }
+
+    /* ── ANALYTICS ── */
+    .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    .stat-card {
+      background:var(--surface);
+      border:1px solid var(--border-subtle);
+      border-radius:10px;
+      padding:16px 20px;
+      text-align:center;
+    }
+    .stat-number { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--gold); line-height:1; }
+    .stat-label { font-size:0.63rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted); margin-top:4px; }
+    .click-list { display:flex; flex-direction:column; gap:6px; }
+    .click-row { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:var(--surface2); border-radius:5px; }
+    .click-name { font-size:0.75rem; color:var(--text-secondary); text-transform:capitalize; }
+    .click-count { font-size:0.78rem; color:var(--gold); font-weight:500; }
+
+    /* ── SOCIAL ORDER ── */
+    .social-order-list { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+    .social-order-item { display:flex; align-items:center; gap:10px; background:var(--surface2); border:1px solid var(--border-subtle); border-radius:6px; padding:9px 12px; }
+    .social-order-label { flex:1; font-size:0.8rem; color:var(--text-secondary); }
+    .order-btn {
+      width:26px; height:26px;
+      background:transparent;
+      border:1px solid var(--border-subtle);
+      border-radius:4px;
+      color:var(--text-muted);
+      cursor:pointer;
+      font-size:0.75rem;
+      transition:0.15s;
+      line-height:1;
+    }
+    .order-btn:hover { border-color:var(--border); color:var(--text); }
+    .order-btn:disabled { opacity:0.2; cursor:not-allowed; }
+
+    /* ── SHORT LINK BADGE ── */
+    .short-link-badge {
+      font-size:0.68rem;
+      color:var(--text-muted);
+      background:rgba(201,168,76,0.06);
+      border:1px solid var(--border);
+      border-radius:3px;
+      padding:3px 8px;
+      white-space:nowrap;
+      flex-shrink:0;
+    }
   </style>
 </head>
 <body>
@@ -480,7 +547,26 @@
     <div class="link-box">
       <div class="link-dot"></div>
       <a id="card-link" href="#" target="_blank" class="link-url">Yükleniyor...</a>
+      <span class="short-link-badge" id="short-link-badge">/u/…</span>
       <button class="copy-link-btn" onclick="copyLink()">Kopyala</button>
+    </div>
+
+    <!-- Analitik -->
+    <div class="analytics-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-views">—</div>
+        <div class="stat-label">Profil Görüntüleme</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-clicks">—</div>
+        <div class="stat-label">Toplam Tıklama</div>
+      </div>
+    </div>
+    <div class="section" id="clicks-section" style="display:none">
+      <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Tıklama Dağılımı</span></div>
+      <div class="section-body">
+        <div class="click-list" id="click-list"></div>
+      </div>
     </div>
 
     <!-- Fotoğraflar -->
@@ -555,6 +641,11 @@
           <div class="form-group"><label>Şirket</label><input type="text" id="company" placeholder="Ahmet Holding"></div>
           <div class="form-group"><label>Unvan</label><input type="text" id="title" placeholder="Kurucu Ortak"></div>
         </div>
+        <div class="form-group">
+          <label>Hakkımda <span style="color:var(--text-muted);font-size:0.6rem;text-transform:none;letter-spacing:0">(maks. 160 karakter)</span></label>
+          <textarea id="bio" rows="3" maxlength="160" placeholder="Kısa bir tanıtım cümlesi…" oninput="updateCharCount()"></textarea>
+          <div class="char-count" id="bio-char">0 / 160</div>
+        </div>
       </div>
     </div>
 
@@ -583,10 +674,9 @@
     <div class="section">
       <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">Sosyal Medya</span></div>
       <div class="section-body">
-        <div class="form-group"><label>LinkedIn</label><input type="text" id="linkedin" placeholder="https://linkedin.com/in/kullanici"></div>
-        <div class="form-group"><label>Instagram</label><input type="text" id="instagram" placeholder="https://instagram.com/kullanici"></div>
-        <div class="form-group"><label>Twitter / X</label><input type="text" id="twitter" placeholder="https://twitter.com/kullanici"></div>
-        <div class="form-group"><label>Facebook</label><input type="text" id="facebook" placeholder="https://facebook.com/kullanici"></div>
+        <div class="social-order-list" id="social-order-list"></div>
+        <p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:14px">Sırayı değiştirmek için ↑ ↓ kullan. Kartvizitte bu sırayla görünür.</p>
+        <div id="social-inputs"></div>
       </div>
     </div>
 
@@ -629,11 +719,21 @@
     let currentUsername = null;
     let selectedColor = '#C9A84C';
     let selectedTheme = 'dark';
+    let socialOrder = ['linkedin','instagram','twitter','facebook'];
+
+    const SOCIAL_LABELS = { linkedin:'LinkedIn', instagram:'Instagram', twitter:'Twitter / X', facebook:'Facebook' };
+    const SOCIAL_PLACEHOLDERS = {
+      linkedin:'https://linkedin.com/in/kullanici',
+      instagram:'https://instagram.com/kullanici',
+      twitter:'https://twitter.com/kullanici',
+      facebook:'https://facebook.com/kullanici'
+    };
 
     sb.auth.getSession().then(async ({ data }) => {
       if (!data.session) { window.location.href = 'login.html'; return; }
       currentUser = data.session.user;
-      loadProfile();
+      await loadProfile();
+      loadAnalytics();
     });
 
     async function loadProfile() {
@@ -641,10 +741,12 @@
       if (!data) return;
       currentUsername = data.username;
 
-      const link = `${window.location.origin}/card.html?username=${data.username}`;
-      document.getElementById('card-link').href = link;
-      document.getElementById('card-link').textContent = link;
-      document.getElementById('preview-link').href = link;
+      const shortLink = `${window.location.origin}/u/${data.username}`;
+      const fullLink  = `${window.location.origin}/card.html?username=${data.username}`;
+      document.getElementById('card-link').href = shortLink;
+      document.getElementById('card-link').textContent = shortLink;
+      document.getElementById('short-link-badge').textContent = `/u/${data.username}`;
+      document.getElementById('preview-link').href = fullLink;
 
       if (data.avatar_url) {
         document.getElementById('avatar-preview').innerHTML = `<img src="${data.avatar_url}" alt="Profil">`;
@@ -656,9 +758,86 @@
       }
       if (data.theme_color) { selectColor(data.theme_color); document.getElementById('custom-color').value = data.theme_color; }
       if (data.theme) selectTheme(data.theme);
+      if (data.bio) {
+        document.getElementById('bio').value = data.bio;
+        updateCharCount();
+      }
 
-      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','instagram','twitter','facebook','tax_office','tax_no'];
+      if (data.social_order) {
+        try { socialOrder = data.social_order.split(',').filter(s => ['linkedin','instagram','twitter','facebook'].includes(s)); }
+        catch(e) {}
+      }
+
+      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','tax_office','tax_no'];
       fields.forEach(f => { if (data[f]) document.getElementById(f).value = data[f]; });
+
+      // Sosyal linkler
+      socialOrder.forEach(s => {
+        const inp = document.getElementById(s);
+        if (inp && data[s]) inp.value = data[s];
+      });
+
+      renderSocialOrder();
+    }
+
+    function renderSocialOrder() {
+      // Sıralama gösterimi
+      const list = document.getElementById('social-order-list');
+      list.innerHTML = socialOrder.map((s, i) => `
+        <div class="social-order-item">
+          <span class="social-order-label">${SOCIAL_LABELS[s]}</span>
+          <button class="order-btn" onclick="moveItem(${i}, -1)" ${i===0?'disabled':''}>↑</button>
+          <button class="order-btn" onclick="moveItem(${i}, 1)" ${i===socialOrder.length-1?'disabled':''}>↓</button>
+        </div>`).join('');
+
+      // Input alanları
+      const inp = document.getElementById('social-inputs');
+      inp.innerHTML = socialOrder.map(s => `
+        <div class="form-group">
+          <label>${SOCIAL_LABELS[s]}</label>
+          <input type="text" id="${s}" placeholder="${SOCIAL_PLACEHOLDERS[s]}">
+        </div>`).join('');
+    }
+
+    function moveItem(idx, dir) {
+      const newIdx = idx + dir;
+      if (newIdx < 0 || newIdx >= socialOrder.length) return;
+      // Input değerlerini sakla
+      const vals = {};
+      socialOrder.forEach(s => { const el = document.getElementById(s); if(el) vals[s] = el.value; });
+      [socialOrder[idx], socialOrder[newIdx]] = [socialOrder[newIdx], socialOrder[idx]];
+      renderSocialOrder();
+      // Değerleri geri yükle
+      socialOrder.forEach(s => { const el = document.getElementById(s); if(el && vals[s]) el.value = vals[s]; });
+    }
+
+    async function loadAnalytics() {
+      if (!currentUsername) return;
+      const { data: viewData } = await sb.from('profile_views').select('count').eq('username', currentUsername).single();
+      const views = viewData?.count || 0;
+      document.getElementById('stat-views').textContent = views.toLocaleString('tr-TR');
+
+      const { data: clickData } = await sb.from('link_clicks').select('link_type').eq('username', currentUsername);
+      const total = clickData?.length || 0;
+      document.getElementById('stat-clicks').textContent = total.toLocaleString('tr-TR');
+
+      if (total > 0) {
+        const counts = {};
+        clickData.forEach(r => { counts[r.link_type] = (counts[r.link_type] || 0) + 1; });
+        const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+        document.getElementById('click-list').innerHTML = sorted.map(([type, cnt]) =>
+          `<div class="click-row"><span class="click-name">${type}</span><span class="click-count">${cnt}</span></div>`
+        ).join('');
+        document.getElementById('clicks-section').style.display = 'block';
+      }
+    }
+
+    function updateCharCount() {
+      const bio = document.getElementById('bio');
+      const count = bio.value.length;
+      const el = document.getElementById('bio-char');
+      el.textContent = `${count} / 160`;
+      el.classList.toggle('warn', count > 130);
     }
 
     function selectTheme(theme) {
@@ -727,11 +906,14 @@
     async function saveProfile() {
       const btn = document.getElementById('save-btn');
       btn.disabled = true; btn.textContent = 'Kaydediliyor...';
-      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','linkedin','instagram','twitter','facebook','tax_office','tax_no'];
+      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','tax_office','tax_no'];
       const updates = {};
-      fields.forEach(f => { updates[f] = document.getElementById(f).value.trim(); });
+      fields.forEach(f => { const el = document.getElementById(f); if(el) updates[f] = el.value.trim(); });
+      socialOrder.forEach(s => { const el = document.getElementById(s); if(el) updates[s] = el.value.trim(); });
       updates.theme_color = selectedColor;
       updates.theme = selectedTheme;
+      updates.bio = document.getElementById('bio').value.trim().substring(0, 160);
+      updates.social_order = socialOrder.join(',');
       const { error } = await sb.from('profiles').upsert({
         user_id: currentUser.id,
         username: currentUsername || currentUser.email.split('@')[0],
@@ -739,7 +921,7 @@
       }, { onConflict:'user_id' });
       btn.disabled = false; btn.textContent = 'Değişiklikleri Kaydet';
       if (error) showToast('Hata: ' + error.message, true);
-      else { showToast('✓ Kaydedildi'); loadProfile(); }
+      else { showToast('✓ Kaydedildi'); await loadProfile(); loadAnalytics(); }
     }
 
     async function changePassword() {
