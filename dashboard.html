@@ -491,6 +491,24 @@
     .click-name { font-size:0.75rem; color:var(--text-secondary); text-transform:capitalize; }
     .click-count { font-size:0.78rem; color:var(--gold); font-weight:500; }
 
+    /* ── PHONE INPUT ── */
+    .phone-wrap { display:flex; gap:8px; align-items:stretch; }
+    .phone-country {
+      flex-shrink:0;
+      background:var(--surface2);
+      border:1px solid var(--border-subtle);
+      border-radius:8px;
+      color:var(--text);
+      font-size:0.8rem;
+      padding:0 10px;
+      cursor:pointer;
+      appearance:none;
+      -webkit-appearance:none;
+      min-width:90px;
+    }
+    .phone-country:focus { outline:none; border-color:var(--gold); }
+    .phone-number { flex:1; }
+
     /* ── SOCIAL ORDER ── */
     .social-order-list { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
     .social-order-item { display:flex; align-items:center; gap:10px; background:var(--surface2); border:1px solid var(--border-subtle); border-radius:6px; padding:9px 12px; }
@@ -653,8 +671,42 @@
       <div class="section-head"><div class="section-head-line"></div><span class="section-head-title">İletişim</span></div>
       <div class="section-body">
         <div class="two-col">
-          <div class="form-group"><label>Cep Telefonu</label><input type="text" id="mobile" placeholder="+90 555 000 00 00"></div>
-          <div class="form-group"><label>İş Telefonu</label><input type="text" id="work_phone" placeholder="+90 212 000 00 00"></div>
+          <div class="form-group">
+            <label>Cep Telefonu</label>
+            <div class="phone-wrap">
+              <select class="phone-country" id="mobile_cc" onchange="formatPhone('mobile')">
+                <option value="+90|TR">🇹🇷 +90</option>
+                <option value="+1|US">🇺🇸 +1</option>
+                <option value="+44|GB">🇬🇧 +44</option>
+                <option value="+49|DE">🇩🇪 +49</option>
+                <option value="+33|FR">🇫🇷 +33</option>
+                <option value="+31|NL">🇳🇱 +31</option>
+                <option value="+7|RU">🇷🇺 +7</option>
+                <option value="+971|AE">🇦🇪 +971</option>
+                <option value="+966|SA">🇸🇦 +966</option>
+                <option value="+994|AZ">🇦🇿 +994</option>
+              </select>
+              <input type="text" id="mobile" class="phone-number" placeholder="555 000 00 00" oninput="formatPhone('mobile')" inputmode="numeric">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>İş Telefonu</label>
+            <div class="phone-wrap">
+              <select class="phone-country" id="work_phone_cc" onchange="formatPhone('work_phone')">
+                <option value="+90|TR">🇹🇷 +90</option>
+                <option value="+1|US">🇺🇸 +1</option>
+                <option value="+44|GB">🇬🇧 +44</option>
+                <option value="+49|DE">🇩🇪 +49</option>
+                <option value="+33|FR">🇫🇷 +33</option>
+                <option value="+31|NL">🇳🇱 +31</option>
+                <option value="+7|RU">🇷🇺 +7</option>
+                <option value="+971|AE">🇦🇪 +971</option>
+                <option value="+966|SA">🇸🇦 +966</option>
+                <option value="+994|AZ">🇦🇿 +994</option>
+              </select>
+              <input type="text" id="work_phone" class="phone-number" placeholder="212 000 00 00" oninput="formatPhone('work_phone')" inputmode="numeric">
+            </div>
+          </div>
         </div>
         <div class="form-group"><label>E-posta</label><input type="email" id="email" placeholder="ahmet@domain.com"></div>
         <div class="form-group"><label>Web Sitesi</label><input type="text" id="website" placeholder="www.domain.com"></div>
@@ -718,6 +770,78 @@
     let currentUsername = null;
     let selectedColor = '#C9A84C';
     let selectedTheme = 'dark';
+    // ── PHONE FORMAT ──
+    const PHONE_FORMATS = {
+      TR: d => { // 5XX XXX XX XX veya 2XX XXX XX XX
+        d = d.slice(0,10);
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return d.slice(0,3)+' '+d.slice(3);
+        if (d.length <= 8) return d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6);
+        return d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6,8)+' '+d.slice(8,10);
+      },
+      US: d => { // (XXX) XXX-XXXX
+        d = d.slice(0,10);
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return '('+d.slice(0,3)+') '+d.slice(3);
+        return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+      },
+      GB: d => { // XXXX XXXXXX
+        d = d.slice(0,10);
+        if (d.length <= 4) return d;
+        return d.slice(0,4)+' '+d.slice(4);
+      },
+      DEFAULT: d => { // XXX XXX XXXX
+        d = d.slice(0,12);
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return d.slice(0,3)+' '+d.slice(3);
+        return d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6);
+      }
+    };
+
+    function formatPhone(field) {
+      const input = document.getElementById(field);
+      const cc = document.getElementById(field+'_cc');
+      const country = cc ? cc.value.split('|')[1] : 'TR';
+      const digits = input.value.replace(/\D/g,'');
+      const fmt = PHONE_FORMATS[country] || PHONE_FORMATS.DEFAULT;
+      input.value = fmt(digits);
+    }
+
+    function setPhoneValue(field, fullNumber) {
+      if (!fullNumber) return;
+      // Alan kodunu bul ve seç
+      const cc = document.getElementById(field+'_cc');
+      const input = document.getElementById(field);
+      if (!cc || !input) return;
+      const options = Array.from(cc.options);
+      let matched = null;
+      // En uzun eşleşen alan kodunu bul
+      options.sort((a,b) => b.value.length - a.value.length).forEach(opt => {
+        const code = opt.value.split('|')[0];
+        if (!matched && fullNumber.startsWith(code)) matched = opt;
+      });
+      if (matched) {
+        cc.value = matched.value;
+        const code = matched.value.split('|')[0];
+        const country = matched.value.split('|')[1];
+        const digits = fullNumber.replace(code,'').replace(/\D/g,'');
+        const fmt = PHONE_FORMATS[country] || PHONE_FORMATS.DEFAULT;
+        input.value = fmt(digits);
+      } else {
+        input.value = fullNumber;
+      }
+    }
+
+    function getPhoneValue(field) {
+      const cc = document.getElementById(field+'_cc');
+      const input = document.getElementById(field);
+      if (!input || !input.value.trim()) return '';
+      const code = cc ? cc.value.split('|')[0] : '+90';
+      const digits = input.value.replace(/\D/g,'');
+      if (!digits) return '';
+      return code + ' ' + input.value.trim();
+    }
+
     let socialOrder = ['linkedin','instagram','twitter','facebook'];
 
     const SOCIAL_LABELS = { linkedin:'LinkedIn', instagram:'Instagram', twitter:'Twitter / X', facebook:'Facebook' };
@@ -766,8 +890,11 @@
         catch(e) {}
       }
 
-      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','tax_office','tax_no'];
+      const fields = ['full_name','company','title','email','website','address','tax_office','tax_no'];
       fields.forEach(f => { if (data[f]) document.getElementById(f).value = data[f]; });
+      // Telefon alanları özel yükleme
+      if (data.mobile) setPhoneValue('mobile', data.mobile);
+      if (data.work_phone) setPhoneValue('work_phone', data.work_phone);
 
       // Önce inputları oluştur, sonra değerleri doldur
       renderSocialOrder();
@@ -904,9 +1031,12 @@
     async function saveProfile() {
       const btn = document.getElementById('save-btn');
       btn.disabled = true; btn.textContent = 'Kaydediliyor...';
-      const fields = ['full_name','company','title','mobile','work_phone','email','website','address','tax_office','tax_no'];
+      const fields = ['full_name','company','title','email','website','address','tax_office','tax_no'];
       const updates = {};
       fields.forEach(f => { const el = document.getElementById(f); if(el) updates[f] = el.value.trim(); });
+      // Telefon alanları özel kaydetme
+      updates.mobile = getPhoneValue('mobile');
+      updates.work_phone = getPhoneValue('work_phone');
       socialOrder.forEach(s => { const el = document.getElementById(s); if(el) updates[s] = el.value.trim(); });
       updates.theme_color = selectedColor;
       updates.theme = selectedTheme;
