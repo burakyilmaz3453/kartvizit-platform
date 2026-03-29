@@ -744,7 +744,6 @@
       const fullLink  = `${window.location.origin}/card.html?username=${data.username}`;
       document.getElementById('card-link').href = shortLink;
       document.getElementById('card-link').textContent = shortLink;
-      document.getElementById('short-link-badge').textContent = `/u/${data.username}`;
       document.getElementById('preview-link').href = fullLink;
 
       if (data.avatar_url) {
