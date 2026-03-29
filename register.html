@@ -85,6 +85,7 @@
     .divider { height:1px; background:var(--border-subtle); margin:20px 0; }
     .grecaptcha-badge { visibility: hidden !important; }
   </style>
+  <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -215,7 +216,7 @@ if (error) {
 
 await sb.from('profiles').insert({ user_id: data.user.id, username, email });
 
-successEl.textContent = '✓ Kayıt başarılı! E-postanı onaylayıp giriş yap.';
+successEl.textContent = '��� Kayıt başarılı! E-postanı onaylayıp giriş yap.';
 successEl.style.display = 'block';
 btn.textContent = 'Kayıt Ol'; btn.disabled = false;
 setTimeout(() => { window.location.href = 'login.html'; }, 2500);
