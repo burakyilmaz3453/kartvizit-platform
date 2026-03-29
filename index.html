@@ -890,9 +890,50 @@
     }
 
     /* ── RESPONSIVE ── */
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1001;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--gold);
+      transition: 0.3s;
+    }
+
     @media (max-width: 700px) {
       nav { padding: 20px 20px; }
-      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(8,8,8,0.97);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        z-index: 1000;
+      }
+      .nav-links.open {
+        display: flex;
+      }
+      .nav-links a {
+        font-size: 1.1rem;
+        letter-spacing: 0.12em;
+      }
+      .nav-links .nav-cta {
+        padding: 12px 32px;
+        font-size: 0.9rem !important;
+      }
       .nfc-inner { grid-template-columns: 1fr; }
       .nfc-visual { min-height: 240px; }
       .pricing-grid { grid-template-columns: 1fr; }
@@ -922,6 +963,9 @@
       <li><a href="iletisim.html">İletişim</a></li>
       <li><a href="login.html" class="nav-cta">Giriş Yap</a></li>
     </ul>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menü">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -1128,4 +1172,20 @@
   <script>
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(el => {
-        
+        if (el.isIntersecting) {
+          el.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Mobil menü: link tıklanınca menüyü kapat
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelector('.nav-links').classList.remove('open');
+      });
+    });
+  </script>
+</body>
+</html>
