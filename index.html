@@ -386,23 +386,38 @@
       color: var(--text-muted);
     }
 
+    .mock-bio {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+
     .mock-buttons {
-      display: flex;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
       margin-top: 14px;
     }
 
     .mock-btn {
-      flex: 1;
-      padding: 9px;
+      padding: 8px 4px;
       background: rgba(201,168,76,0.08);
       border: 1px solid var(--border);
       border-radius: 6px;
-      font-size: 0.68rem;
+      font-size: 0.6rem;
       color: var(--gold-dim);
       text-align: center;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
     }
+
+    .mock-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; }
 
     .mock-btn-primary {
       background: var(--gold);
@@ -410,6 +425,28 @@
       border-color: var(--gold);
       font-weight: 500;
     }
+
+    .mock-btn-primary svg { stroke: #080808; }
+
+    .mock-social {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .mock-social-icon {
+      width: 28px; height: 28px;
+      background: rgba(201,168,76,0.07);
+      border: 1px solid var(--border-subtle);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .mock-social-icon svg { width: 12px; height: 12px; fill: currentColor; }
 
     /* ── DIVIDER ── */
     .ornament-divider {
@@ -1172,12 +1209,13 @@
         <div class="mock-name">Ahmet Yılmaz</div>
         <div class="mock-title">Kurucu Ortak & CEO</div>
         <div class="mock-divider"></div>
+        <div class="mock-bio">Teknoloji girişimcisi. Dijital dönüşüm ve ürün geliştirme üzerine çalışıyor.</div>
         <div class="mock-info">
           <div class="mock-row">
             <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M2 4l6 4 6-4M2 4h12v9H2z" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>ahmet&#64;yilmaz.com</span>
+            <span>ahmet&#64;domain.com</span>
           </div>
           <div class="mock-row">
             <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1185,11 +1223,45 @@
             </svg>
             <span>+90 532 000 0000</span>
           </div>
+          <div class="mock-row">
+            <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a10 10 0 010 12M8 2a10 10 0 000 12" stroke-linecap="round"/>
+            </svg>
+            <span>www.domain.com</span>
+          </div>
         </div>
         <div class="mock-buttons">
-          <div class="mock-btn">Ara</div>
-          <div class="mock-btn">E-posta</div>
-          <div class="mock-btn mock-btn-primary">Kaydet</div>
+          <div class="mock-btn">
+            <svg viewBox="0 0 16 16" stroke-width="1.5"><path d="M2 3h3l1.5 3.5-1.75 1C5.5 9.5 6.5 10.5 8.5 11.25l1-1.75L13 11v3c-7 .5-11.5-4.5-11-11z" stroke-linecap="round"/></svg>
+            Ara
+          </div>
+          <div class="mock-btn">
+            <svg viewBox="0 0 16 16" stroke-width="1.5"><path d="M2 4l6 4 6-4M2 4h12v9H2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            E-posta
+          </div>
+          <div class="mock-btn">
+            <svg viewBox="0 0 16 16" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 5h2v2H5zM9 5h2v2H9zM5 9h2v2H5zM9 9h1v1" stroke-linecap="round"/></svg>
+            QR
+          </div>
+          <div class="mock-btn">
+            <svg viewBox="0 0 16 16" stroke-width="1.5"><path d="M13 10.5c-.8-.1-1.6-.3-2.3-.7l-3 1.7-.1-2c-2.2-1-3.6-3-3.6-5.2C4 1.9 6.7 0 10 0s6 1.9 6 4.3c0 2-1.3 3.7-3 4.4v1.8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            WhatsApp
+          </div>
+          <div class="mock-btn mock-btn-primary">
+            <svg viewBox="0 0 16 16" stroke-width="1.5"><path d="M8 1v9M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13h12" stroke-linecap="round"/></svg>
+            Kaydet
+          </div>
+        </div>
+        <div class="mock-social">
+          <div class="mock-social-icon">
+            <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <div class="mock-social-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="mock-social-icon">
+            <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </div>
         </div>
       </div>
     </div>
