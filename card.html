@@ -1037,6 +1037,10 @@
 
     var params = new URLSearchParams(window.location.search);
     var username = params.get('username');
+    if (!username) {
+      var pathMatch = window.location.pathname.match(/^\/u\/([^\/]+)$/);
+      if (pathMatch) username = pathMatch[1];
+    }
     var currentLang = localStorage.getItem('ns_lang') || 'tr';
     var cardData = null;
 
