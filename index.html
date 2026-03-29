@@ -899,7 +899,8 @@
       border: none;
       cursor: pointer;
       padding: 8px;
-      z-index: 1001;
+      z-index: 1100;
+      position: relative;
     }
     .hamburger span {
       display: block;
@@ -908,32 +909,54 @@
       background: var(--gold);
       transition: 0.3s;
     }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(4px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(4px, -5px);
+    }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 1050;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+    }
+    .mobile-overlay.open {
+      display: flex;
+    }
+    .mobile-overlay a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 1rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .mobile-overlay a:hover { color: var(--text); }
+    .mobile-overlay .mob-cta {
+      background: var(--gold);
+      color: #080808;
+      padding: 14px 40px;
+      border-radius: 2px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      margin-top: 8px;
+    }
 
     @media (max-width: 700px) {
       nav { padding: 20px 20px; }
+      .nav-links { display: none !important; }
       .hamburger { display: flex; }
-      .nav-links {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(8,8,8,0.97);
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 32px;
-        z-index: 1000;
-      }
-      .nav-links.open {
-        display: flex;
-      }
-      .nav-links a {
-        font-size: 1.1rem;
-        letter-spacing: 0.12em;
-      }
-      .nav-links .nav-cta {
-        padding: 12px 32px;
-        font-size: 0.9rem !important;
-      }
       .nfc-inner { grid-template-columns: 1fr; }
       .nfc-visual { min-height: 240px; }
       .pricing-grid { grid-template-columns: 1fr; }
@@ -963,10 +986,18 @@
       <li><a href="iletisim.html">İletişim</a></li>
       <li><a href="login.html" class="nav-cta">Giriş Yap</a></li>
     </ul>
-    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menü">
+    <button class="hamburger" id="hamburger-btn" aria-label="Menü">
       <span></span><span></span><span></span>
     </button>
   </nav>
+
+  <!-- MOBİL MENÜ -->
+  <div class="mobile-overlay" id="mobile-menu">
+    <a href="#features">Özellikler</a>
+    <a href="#nfc">NFC Kart</a>
+    <a href="iletisim.html">İletişim</a>
+    <a href="login.html" class="mob-cta">Giriş Yap</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -1180,10 +1211,21 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Mobil menü: link tıklanınca menüyü kapat
-    document.querySelectorAll('.nav-links a').forEach(link => {
+    // Mobil menü toggle
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
       link.addEventListener('click', () => {
-        document.querySelector('.nav-links').classList.remove('open');
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
       });
     });
   </script>
