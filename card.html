@@ -360,18 +360,13 @@
       margin:0 auto;
     }
 
-    /* ── PDF + SHARE BUTTONS ── */
-    .pdf-share-row {
-      display:flex;
-      gap:8px;
-      margin-bottom:12px;
-    }
-    .pdf-btn, .share-btn {
+    /* ── SHARE BUTTON ── */
+    .share-btn {
       display:flex;
       align-items:center;
       justify-content:center;
       gap:8px;
-      flex:1;
+      width:100%;
       padding:14px;
       background:transparent;
       border:1px dashed rgba(201,168,76,0.25);
@@ -384,9 +379,10 @@
       text-transform:uppercase;
       cursor:pointer;
       transition:0.2s;
+      margin-bottom:12px;
     }
-    .pdf-btn:hover, .share-btn:hover { border-color:var(--gold-dim); color:var(--gold-dim); }
-    .pdf-btn svg, .share-btn svg { width:16px; height:16px; fill:currentColor; flex-shrink:0; }
+    .share-btn:hover { border-color:var(--gold-dim); color:var(--gold-dim); }
+    .share-btn svg { width:16px; height:16px; fill:currentColor; flex-shrink:0; }
 
     .act-btn {
       display:flex;
@@ -960,17 +956,11 @@
         </div>
       </div>
 
-      <!-- PDF + Paylaş -->
-      <div class="pdf-share-row">
-        <button onclick="downloadPDF()" class="pdf-btn" id="pdf-btn">
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zm-8 2V5h2v6h1.17L12 13.17 9.83 11H11zm-6 7h14v2H5v-2z"/></svg>
-          <span id="lbl-pdf">PDF</span>
-        </button>
-        <button onclick="shareProfile()" class="share-btn" id="share-btn">
-          <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-          <span id="lbl-share">Paylaş</span>
-        </button>
-      </div>
+      <!-- Paylaş -->
+      <button onclick="shareProfile()" class="share-btn" id="share-btn">
+        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+        <span id="lbl-share">Profili Paylaş</span>
+      </button>
 
       <!-- Footer -->
       <div class="card-footer">
@@ -1044,8 +1034,6 @@
   <script src="https://www.google.com/recaptcha/api.js?render=6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="/supabase.js"></script>
 
   <script>
@@ -1061,12 +1049,12 @@
     var cardData = null;
 
     var LABELS = {
-      tr: { call:'Ara', email:'E-posta', qr:'QR', whatsapp:'WhatsApp', save:'Kaydet', pdf:'PDF', share:'Paylaş',
+      tr: { call:'Ara', email:'E-posta', qr:'QR', whatsapp:'WhatsApp', save:'Kaydet', share:'Profili Paylaş',
             contact:'İletişim', social:'Sosyal Medya', company:'Şirket Bilgileri', location:'Konum',
             mobile:'Cep Telefonu', work:'İş Telefonu', web:'Web Sitesi', address:'Adres',
             companyName:'Şirket Adı', taxOffice:'Vergi Dairesi', taxNo:'Vergi No',
             direction:'Yol Tarifi Al', lang:'EN' },
-      en: { call:'Call', email:'Email', qr:'QR', whatsapp:'WhatsApp', save:'Save', pdf:'PDF', share:'Share',
+      en: { call:'Call', email:'Email', qr:'QR', whatsapp:'WhatsApp', save:'Save', share:'Share Profile',
             contact:'Contact', social:'Social Media', company:'Company Info', location:'Location',
             mobile:'Mobile', work:'Work Phone', web:'Website', address:'Address',
             companyName:'Company Name', taxOffice:'Tax Office', taxNo:'Tax No',
@@ -1222,7 +1210,7 @@
       var L = LABELS[lang];
       document.getElementById('lang-btn').textContent = L.lang;
       var ids = { 'lbl-call':L.call, 'lbl-email':L.email, 'lbl-qr':L.qr,
-                  'lbl-whatsapp':L.whatsapp, 'lbl-save':L.save, 'lbl-pdf':L.pdf, 'lbl-share':L.share };
+                  'lbl-whatsapp':L.whatsapp, 'lbl-save':L.save, 'lbl-share':L.share };
       Object.keys(ids).forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = ids[id]; });
       var labels = document.querySelectorAll('.row-label');
       var sectionLabels = document.querySelectorAll('.section-label');
@@ -1269,41 +1257,6 @@
       }
     }
 
-    function downloadPDF() {
-      if (!cardData) return;
-      var name = cardData.full_name || cardData.username || 'kartvizit';
-      var btn = document.getElementById('pdf-btn');
-      var lbl = document.getElementById('lbl-pdf');
-      var origText = lbl ? lbl.textContent : 'PDF';
-      if (lbl) lbl.textContent = 'Hazırlanıyor...';
-      if (btn) btn.disabled = true;
-
-      var el = document.getElementById('card-content');
-      html2canvas(el, {
-        backgroundColor: '#080808',
-        scale: 2,
-        useCORS: true,
-        logging: false
-      }).then(function(canvas) {
-        var { jsPDF } = window.jspdf;
-        var imgData = canvas.toDataURL('image/png');
-        var pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-        var pageW = 210;
-        var imgW = pageW;
-        var imgH = canvas.height * imgW / canvas.width;
-        // Sayfaya sığdır
-        if (imgH > 297) { imgH = 297; imgW = canvas.width * 297 / canvas.height; }
-        var offsetX = (pageW - imgW) / 2;
-        pdf.addImage(imgData, 'PNG', offsetX, 0, imgW, imgH);
-        pdf.save(name + '.pdf');
-        if (lbl) lbl.textContent = origText;
-        if (btn) btn.disabled = false;
-      }).catch(function(err) {
-        console.error('PDF hatası:', err);
-        if (lbl) lbl.textContent = origText;
-        if (btn) btn.disabled = false;
-      });
-    }
 
     function generateVCF(d) {
       var vcf = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + (d.full_name||d.username) +
