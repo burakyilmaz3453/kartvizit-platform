@@ -315,7 +315,7 @@
             <textarea id="f-message" name="message" required placeholder="Merak ettiğiniz her şeyi yazabilirsiniz..."></textarea>
           </div>
 
-          <button type="submit" class="submit-btn" id="submit-btn">Gönder</button>
+          <button type="button" class="submit-btn" id="submit-btn" onclick="sendForm()">Gönder</button>
         </form>
 
         <div class="msg msg-success" id="msg-success">
@@ -373,11 +373,7 @@
   </footer>
 
   <script>
-    const contactForm = document.getElementById('contact-form');
-    
-    contactForm.addEventListener('submit', async function(event) {
-      event.preventDefault(); // Sayfanın yönlenmesini engelle
-      
+    async function sendForm() {
       const btn = document.getElementById('submit-btn');
       const success = document.getElementById('msg-success');
       const error = document.getElementById('msg-error');
@@ -390,6 +386,12 @@
       // Temizlik
       success.style.display = 'none';
       error.style.display = 'none';
+
+      if (!name || !email || !message) {
+        error.textContent = 'Lütfen zorunlu alanları doldurun.';
+        error.style.display = 'block';
+        return;
+      }
       
       btn.disabled = true;
       btn.textContent = 'Gönderiliyor...';
@@ -399,7 +401,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json' // Formspree'nin kendi sayfasına yönlenmemesi için kritik başlık
+            'Accept': 'application/json'
           },
           body: JSON.stringify({
             name: name,
@@ -411,5 +413,17 @@
 
         if (response.ok) {
           success.style.display = 'block';
-          contactForm.reset(); // Formu temizle
-        } 
+          document.getElementById('contact-form').reset();
+        } else {
+          throw new Error('Bir hata oluştu.');
+        }
+      } catch (err) {
+        error.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Gönder';
+      }
+    }
+  </script>
+</body>
+</html>
