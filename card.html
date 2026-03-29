@@ -1199,15 +1199,19 @@
       // Görüntülenme sayacı (demo hariç)
       if (username !== 'demo') {
         sb.from('profile_views').select('count').eq('username', username).single().then(function(res) {
-          var cur = (res.data && res.data.count) ? res.data.count : 0;
-          sb.from('profile_views').upsert({ username: username, count: cur + 1, updated_at: new Date().toISOString() });
+          var cur = (res.data && res.data.count) ? parseInt(res.data.count) : 0;
+          sb.from('profile_views')
+            .upsert({ username: username, count: cur + 1, updated_at: new Date().toISOString() }, { onConflict: 'username' })
+            .then(function(r) { if (r.error) console.error('view upsert error:', r.error); });
         });
       }
     }
 
     function trackClick(type, href) {
       if (username && username !== 'demo') {
-        sb.from('link_clicks').insert({ username: username, link_type: type });
+        sb.from('link_clicks')
+          .insert({ username: username, link_type: type })
+          .then(function(r) { if (r.error) console.error('click insert error:', r.error); });
       }
     }
 
