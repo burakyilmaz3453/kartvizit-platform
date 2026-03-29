@@ -1045,6 +1045,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="/supabase.js"></script>
 
   <script>
@@ -1270,69 +1271,38 @@
 
     function downloadPDF() {
       if (!cardData) return;
-      var d = cardData;
-      var name = d.full_name || d.username;
-      var { jsPDF } = window.jspdf;
-      var doc = new jsPDF({ unit:'mm', format:'a4' });
-      var gold = [201, 168, 76];
-      var dark = [20, 20, 20];
-      var gray = [120, 115, 110];
+      var name = cardData.full_name || cardData.username || 'kartvizit';
+      var btn = document.getElementById('pdf-btn');
+      var lbl = document.getElementById('lbl-pdf');
+      var origText = lbl ? lbl.textContent : 'PDF';
+      if (lbl) lbl.textContent = 'Hazırlanıyor...';
+      if (btn) btn.disabled = true;
 
-      // Arka plan
-      doc.setFillColor(8, 8, 8);
-      doc.rect(0, 0, 210, 297, 'F');
-
-      // Başlık çizgisi
-      doc.setDrawColor(...gold);
-      doc.setLineWidth(0.5);
-      doc.line(20, 35, 190, 35);
-
-      // İsim
-      doc.setTextColor(...gold);
-      doc.setFontSize(26);
-      doc.setFont('helvetica', 'normal');
-      doc.text(name, 105, 25, { align:'center' });
-
-      // Unvan / şirket
-      doc.setTextColor(...gray);
-      doc.setFontSize(10);
-      if (d.title)   doc.text(d.title, 105, 42, { align:'center' });
-      if (d.company) doc.text(d.company, 105, 48, { align:'center' });
-
-      // İletişim bilgileri
-      var y = 65;
-      var rows = [
-        ['Cep Telefonu', d.mobile],
-        ['İş Telefonu',  d.work_phone],
-        ['E-posta',      d.email],
-        ['Web Sitesi',   d.website],
-        ['Adres',        d.address],
-        ['LinkedIn',     d.linkedin],
-        ['Instagram',    d.instagram],
-        ['Twitter/X',    d.twitter],
-        ['Facebook',     d.facebook],
-        ['Vergi Dairesi',d.tax_office],
-        ['Vergi No',     d.tax_no]
-      ];
-      rows.forEach(function(row) {
-        if (!row[1]) return;
-        doc.setTextColor(...gold);
-        doc.setFontSize(8);
-        doc.text(row[0], 20, y);
-        doc.setTextColor(240, 235, 225);
-        doc.setFontSize(10);
-        doc.text(row[1], 70, y);
-        y += 10;
+      var el = document.getElementById('card-content');
+      html2canvas(el, {
+        backgroundColor: '#080808',
+        scale: 2,
+        useCORS: true,
+        logging: false
+      }).then(function(canvas) {
+        var { jsPDF } = window.jspdf;
+        var imgData = canvas.toDataURL('image/png');
+        var pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+        var pageW = 210;
+        var imgW = pageW;
+        var imgH = canvas.height * imgW / canvas.width;
+        // Sayfaya sığdır
+        if (imgH > 297) { imgH = 297; imgW = canvas.width * 297 / canvas.height; }
+        var offsetX = (pageW - imgW) / 2;
+        pdf.addImage(imgData, 'PNG', offsetX, 0, imgW, imgH);
+        pdf.save(name + '.pdf');
+        if (lbl) lbl.textContent = origText;
+        if (btn) btn.disabled = false;
+      }).catch(function(err) {
+        console.error('PDF hatası:', err);
+        if (lbl) lbl.textContent = origText;
+        if (btn) btn.disabled = false;
       });
-
-      // Alt çizgi
-      doc.setDrawColor(...gold);
-      doc.line(20, 270, 190, 270);
-      doc.setTextColor(...gray);
-      doc.setFontSize(8);
-      doc.text('noshutdown.netlify.app/u/' + d.username, 105, 276, { align:'center' });
-
-      doc.save((name || 'kartvizit') + '.pdf');
     }
 
     function generateVCF(d) {
