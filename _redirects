@@ -1,0 +1,2 @@
+/u/:username   /card.html?username=:username   200
+/*             /404.html                        404
