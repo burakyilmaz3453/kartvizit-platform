@@ -540,6 +540,67 @@
       font-weight: 300;
     }
 
+    /* ── NFC GUIDE BANNER ── */
+    .nfc-guide-banner {
+      max-width: 1000px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+    .nfc-guide-inner {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.07) 0%, rgba(201,168,76,0.03) 100%);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 28px;
+    }
+    .nfc-guide-icon {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+    }
+    .nfc-guide-text { flex: 1; }
+    .nfc-guide-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .nfc-guide-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .nfc-guide-btn {
+      flex-shrink: 0;
+      display: inline-block;
+      padding: 9px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .nfc-guide-btn:hover {
+      background: rgba(201,168,76,0.1);
+      border-color: var(--gold);
+    }
+    @media (max-width: 600px) {
+      .nfc-guide-inner { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .nfc-guide-btn { width: 100%; text-align: center; }
+    }
+
     /* ── NFC SECTION ── */
     .nfc-section {
       padding: 0 24px 100px;
@@ -1219,6 +1280,25 @@
       </div>
     </div>
   </section>
+
+  <!-- NFC GUIDE BANNER -->
+  <div class="nfc-guide-banner reveal">
+    <div class="nfc-guide-inner">
+      <div class="nfc-guide-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          <path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4"/>
+          <path d="M10 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2"/>
+          <circle cx="12" cy="12" r="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="nfc-guide-text">
+        <div class="nfc-guide-title">NFC Kart Nasıl Programlanır?</div>
+        <div class="nfc-guide-desc">Elindeki NFC etiketini veya kartını profil linkinle programlamak için adım adım rehberimizi incele.</div>
+      </div>
+      <a href="nfc.html" class="nfc-guide-btn">Rehberi Görüntüle</a>
+    </div>
+  </div>
 
   <!-- NFC SECTION -->
   <section class="nfc-section reveal" id="nfc">
