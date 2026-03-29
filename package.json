@@ -1,0 +1,13 @@
+{
+  "name": "noshutdown",
+  "version": "1.0.0",
+  "description": "Noshutdown — Dijital Kimliğinin Altın Standardı",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "lint": "echo 'No linting configured'"
+  },
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
