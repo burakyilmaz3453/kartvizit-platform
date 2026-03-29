@@ -751,13 +751,13 @@
 
     /* ── LANG TOGGLE ── */
     .lang-toggle {
-      position:fixed;
-      top:14px;
-      right:58px;
-      z-index:500;
-      background:rgba(8,8,8,0.8);
-      border:1px solid var(--border-subtle);
-      color:var(--text);
+      position:absolute;
+      top:12px;
+      left:12px;
+      z-index:20;
+      background:rgba(8,8,8,0.75);
+      border:1px solid rgba(255,255,255,0.15);
+      color:#fff;
       padding:5px 11px;
       border-radius:100px;
       font-size:0.65rem;
@@ -768,16 +768,13 @@
       backdrop-filter:blur(8px);
       transition:0.2s;
     }
-    .lang-toggle:hover { border-color:var(--border); color:var(--text-secondary); }
-    [data-theme="light"] .lang-toggle { background:rgba(255,255,255,0.8); }
+    .lang-toggle:hover { background:var(--gold); border-color:var(--gold); color:#080808; }
+    [data-theme="light"] .lang-toggle { background:rgba(255,255,255,0.7); border-color:rgba(0,0,0,0.1); color:#333; }
   </style>
 </head>
 <body>
   <!-- Grain overlay -->
   <div style="position:fixed;inset:0;background-image:url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.04%22/%3E%3C/svg%3E');pointer-events:none;z-index:0;opacity:0.35;"></div>
-
-  <!-- LANG TOGGLE -->
-  <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
 
   <div id="page-wrap">
   <!-- LOADING -->
@@ -830,6 +827,8 @@
         <a href="javascript:void(0)" onclick="handleEdit()" class="edit-btn hidden" id="edit-btn" title="Düzenle">
           <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         </a>
+        <!-- Lang toggle: edit butonunun solunda -->
+        <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
       </div>
       <div class="profile-wrap">
         <div class="profile-ring" onclick="openProfile()">
