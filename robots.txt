@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /login.html
+Disallow: /register.html
+Disallow: /reset.html
+
+Sitemap: https://noshutdown.netlify.app/sitemap.xml
