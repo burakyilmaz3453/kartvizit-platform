@@ -1298,6 +1298,25 @@
     document.querySelectorAll('#mobile-menu a').forEach(link => {
       link.addEventListener('click', closeMenu);
     });
+
+    // Sayfa yenilenince en üstte başla
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    // Scroll to top butonu
+    const scrollTopBtn = document.getElementById('scroll-top-btn');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    });
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   </script>
 </body>
 </html>
