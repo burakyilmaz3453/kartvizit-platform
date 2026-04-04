@@ -215,7 +215,7 @@ if (error) {
 
 await sb.from('profiles').insert({ user_id: data.user.id, username, email });
 
-successEl.textContent = '✓ Kayıt başarılı! E-postanı onaylayıp giriş yap.';
+successEl.textContent = '��� Kayıt başarılı! E-postanı onaylayıp giriş yap.';
 successEl.style.display = 'block';
 btn.textContent = 'Kayıt Ol'; btn.disabled = false;
 setTimeout(() => { window.location.href = 'login.html'; }, 2500);
@@ -223,6 +223,9 @@ setTimeout(() => { window.location.href = 'login.html'; }, 2500);
 
 document.addEventListener('keydown', e => { if (e.key === 'Enter') register(); });
 </script>
+
+  <!-- Vercel Speed Insights -->
+  <script type="module" src="/speed-insights.js"></script>
 </body>
 </html>
-  
+
