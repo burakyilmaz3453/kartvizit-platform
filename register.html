@@ -7,13 +7,13 @@
   <title>Kayıt Ol | Noshutdown</title>
   <meta name="description" content="Noshutdown'a ücretsiz kaydol ve profesyonel dijital kartvizitini hemen oluştur.">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="canonical" href="https://noshutdown.netlify.app/register.html">
+  <link rel="canonical" href="https://noshutdown.vercel.app/register.html">
   <meta property="og:title" content="Kayıt Ol | Noshutdown">
   <meta property="og:site_name" content="Noshutdown">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <script src="https://www.google.com/recaptcha/api.js?render=6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr"></script>
+  <meta name="turnstile-site-key" content="">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     :root {
@@ -83,9 +83,8 @@
     .bottom-link a { color:var(--gold); text-decoration:none; }
     .bottom-link a:hover { color:var(--gold-light); }
     .divider { height:1px; background:var(--border-subtle); margin:20px 0; }
-    .grecaptcha-badge { visibility: hidden !important; }
   </style>
-  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/polish.css"><link rel="stylesheet" href="/assets/css/redesign.css">
 </head>
 <body data-auth-page="register">
   <div class="wrap">
@@ -106,7 +105,7 @@
       <div class="form-group">
         <label for="username">Kullanıcı Adı</label>
         <input type="text" id="username" placeholder="ornek: ahmet" autocomplete="username" minlength="3" maxlength="30" required>
-        <p class="hint">Noshutdown linkin: noshutdown.netlify.app/card.html?username=…</p>
+        <p class="hint">Noshutdown linkin: noshutdown.vercel.app/u/kullaniciadi</p>
       </div>
       <div class="form-group">
         <label for="email">E-posta</label>
@@ -126,7 +125,7 @@
         </span>
       </label>
 
-      <!-- Google reCAPTCHA v3: arka planda çalışır, widget yok -->
+      <div id="turnstile-widget" hidden></div>
 
       <button class="btn" id="register-btn" type="submit">Kayıt Ol</button>
       </form>
@@ -134,16 +133,13 @@
       <div class="bottom-link">
         Hesabın var mı? <a href="login.html">Giriş yap</a>
       </div>
-      <p style="font-size:0.62rem; color:var(--text-muted); text-align:center; margin-top:12px; line-height:1.6;">
-  Bu site reCAPTCHA tarafından korunmaktadır.
-  <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--gold-dim); text-decoration:none;">Gizlilik Politikası</a> ve
-  <a href="https://policies.google.com/terms" target="_blank" style="color:var(--gold-dim); text-decoration:none;">Hizmet Şartları</a> geçerlidir.
-      </p>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+  <script src="assets/js/captcha.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=noshutdownTurnstileReady&amp;render=explicit" async></script>
   <script src="assets/js/auth.js"></script>
 </body>
 </html>

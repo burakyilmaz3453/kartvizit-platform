@@ -39,15 +39,14 @@
 
     busy(button, true, 'Kayıt yapılıyor…', 'Kayıt Ol');
     try {
-      const captchaToken = await window.grecaptcha.execute('6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr', { action: 'register' });
-      if (!captchaToken) throw new Error('captcha');
+      const captchaToken = window.NoshutdownCaptcha.token();
       const { error } = await window.sb.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/login.html`,
           data: { username },
-          captchaToken
+          ...(captchaToken ? { captchaToken } : {})
         }
       });
       if (error) throw error;
@@ -63,9 +62,11 @@
     event.preventDefault();
     const button = $('login-btn');
     busy(button, true, 'Giriş yapılıyor…', 'Giriş Yap');
+    const captchaToken = window.NoshutdownCaptcha.token();
     const { data, error } = await window.sb.auth.signInWithPassword({
       email: $('email').value.trim(),
-      password: $('password').value
+      password: $('password').value,
+      options: captchaToken ? { captchaToken } : undefined
     });
     if (error || !data.user?.email_confirmed_at) {
       if (data.user && !data.user.email_confirmed_at) await window.sb.auth.signOut();
@@ -82,8 +83,10 @@
       show('error', 'Önce e-posta adresini gir.');
       return;
     }
+    const captchaToken = window.NoshutdownCaptcha.token();
     await window.sb.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset.html`
+      redirectTo: `${window.location.origin}/reset.html`,
+      ...(captchaToken ? { captchaToken } : {})
     });
     show('success', 'Eğer bu adresle eşleşen bir hesap varsa şifre yenileme bağlantısı gönderildi.');
   }

@@ -5,4 +5,4 @@ Disallow: /login.html
 Disallow: /register.html
 Disallow: /reset.html
 
-Sitemap: https://noshutdown.netlify.app/sitemap.xml
+Sitemap: https://noshutdown.vercel.app/sitemap.xml

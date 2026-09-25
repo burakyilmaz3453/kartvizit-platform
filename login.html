@@ -7,9 +7,10 @@
   <title>Giriş Yap | Noshutdown</title>
   <meta name="description" content="Noshutdown hesabına giriş yap ve dijital kartvizitini yönet.">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="canonical" href="https://noshutdown.netlify.app/login.html">
+  <link rel="canonical" href="https://noshutdown.vercel.app/login.html">
   <meta property="og:title" content="Giriş Yap | Noshutdown">
   <meta property="og:site_name" content="Noshutdown">
+  <meta name="turnstile-site-key" content="">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -128,7 +129,7 @@
       height:1px; background:var(--border-subtle); margin:20px 0;
     }
   </style>
-  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/polish.css"><link rel="stylesheet" href="/assets/css/redesign.css">
 </head>
 <body data-auth-page="login">
   <div class="wrap">
@@ -157,7 +158,7 @@
       <div class="forgot">
         <button type="button" id="forgot-password">Şifremi unuttum</button>
       </div>
-      <button class="btn" id="login-btn" type="submit">Giriş Yap</button>
+      <div id="turnstile-widget" hidden></div><button class="btn" id="login-btn" type="submit">Giriş Yap</button>
       </form>
       <div class="divider"></div>
       <div class="bottom-link">
@@ -168,6 +169,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+  <script src="assets/js/captcha.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=noshutdownTurnstileReady&amp;render=explicit" async></script>
   <script src="assets/js/auth.js"></script>
 </body>
 </html>

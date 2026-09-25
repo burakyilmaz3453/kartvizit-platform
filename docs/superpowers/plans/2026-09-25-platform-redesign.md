@@ -6,7 +6,7 @@
 
 **Architecture:** Shared CSS tokens/components and shared UI JavaScript replace duplicated presentation and inline event handlers while page-specific modules retain unique behavior. The redesign consumes the hardened Supabase APIs defined by the security plan.
 
-**Tech Stack:** Semantic HTML5, CSS custom properties, vanilla JavaScript modules, Supabase JS v2, Playwright browser tests, Vercel/Netlify static hosting.
+**Tech Stack:** Semantic HTML5, CSS custom properties, vanilla JavaScript modules, Supabase JS v2, Playwright browser tests, Vercel static hosting.
 
 **Spec:** `docs/superpowers/specs/2026-09-25-platform-redesign-design.md`
 
@@ -205,9 +205,9 @@ git commit -m "feat: redesign supporting pages"
 
 **Files:**
 - Modify: `vercel.json`
-- Modify: `netlify.toml`
-- Modify: `_headers`
-- Modify: `_redirects`
+- Delete: `netlify.toml`
+- Delete: `_headers`
+- Delete: `_redirects`
 - Modify: `README.md`
 - Create: `tests/security/deployment-contract.test.mjs`
 
@@ -221,7 +221,7 @@ Assert equivalent username rewrites, 404 behavior where supported, CSP, frame/co
 
 - [ ] **Step 2: Run tests and verify failure**
 
-- [ ] **Step 3: Align Vercel, Netlify, and static header configurations**
+- [ ] **Step 3: Make Vercel the sole deployment configuration**
 
 Only enable CSP directives compatible with the completed script extraction.
 
@@ -240,6 +240,6 @@ Check console errors, keyboard flow, horizontal overflow, loading/empty/error st
 - [ ] **Step 7: Commit**
 
 ```bash
-git add vercel.json netlify.toml _headers _redirects README.md tests/security/deployment-contract.test.mjs
+git add -A vercel.json netlify.toml _headers _redirects README.md tests/security/deployment-contract.test.mjs
 git commit -m "chore: finalize platform security and deployment"
 ```

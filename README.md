@@ -24,4 +24,9 @@ Kısa profil yolları (`/u/kullanici`) hosting rewrite gerektirir; yalın statik
 
 Migration'ları sırayla uygulayın. `202609250001_security_foundation.sql` yeni RPC/policy sözleşmelerini ekler. Yeni frontend canlıya alındıktan sonra `202609250002_security_finalize.sql` eski geniş politikaları ve doğrudan anon tablo erişimini kaldırır. Üretim öncesinde yedek ve staging denemesi önerilir.
 
-Supabase Dashboard > Authentication > Attack Protection bölümünde leaked-password protection özelliğini ayrıca etkinleştirin; bu ayar SQL migration kapsamı dışındadır.
+## Auth güvenlik ayarları
+
+- Supabase Dashboard > Authentication > Providers > Email altında minimum parola uzunluğunu en az 8 yapın.
+- `Prevent use of leaked passwords` yalnızca Supabase Pro plan ve üzerinde kullanılabilir; Free planda açılamaz.
+- CAPTCHA için Cloudflare Turnstile'da `noshutdown.vercel.app` alan adına bir widget oluşturun. Public **site key** değerini `login.html`, `register.html` ve `reset.html` içindeki `turnstile-site-key` meta etiketine yazın. Gizli **secret key** yalnızca Supabase Dashboard > Authentication > Attack Protection bölümüne girilmelidir; repoya veya frontend'e konulmamalıdır.
+- Site ve secret key birlikte hazır olmadan Supabase CAPTCHA anahtarını açmayın. Boş site key ile uygulama CAPTCHA olmadan, mevcut Supabase rate limitleriyle çalışmaya devam eder.

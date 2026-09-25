@@ -154,7 +154,7 @@ The redesign implements, rather than bypasses, the approved Supabase hardening d
 - All user-controlled text and URLs use safe DOM APIs and protocol allowlists.
 - Contact submissions retain server-side provider handling; reCAPTCHA is not presented as verified unless it is actually checked server-side.
 - External dependencies are version pinned.
-- Vercel and Netlify headers are aligned. CSP is introduced only after scripts and event handlers are compatible with it.
+- Vercel is the sole deployment target. CSP is introduced only after scripts and event handlers are compatible with it.
 
 ## Verification
 

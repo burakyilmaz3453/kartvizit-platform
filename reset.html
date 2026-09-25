@@ -4,6 +4,7 @@
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="turnstile-site-key" content="">
   <title>Şifre Sıfırla | Noshutdown</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,7 +86,7 @@
       font-size:0.78rem; margin-bottom:14px; display:none; line-height:1.4;
     }
   </style>
-  <link rel="stylesheet" href="assets/css/polish.css">
+  <link rel="stylesheet" href="assets/css/polish.css"><link rel="stylesheet" href="/assets/css/redesign.css">
 </head>
 <body data-auth-page="reset">
   <div class="wrap">
@@ -107,13 +108,15 @@
         <label for="confirm-password">Şifre Tekrar</label>
         <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir" autocomplete="new-password" minlength="8" required>
       </div>
-      <button class="btn" id="reset-btn" type="submit">Şifreyi Kaydet</button>
+      <div id="turnstile-widget" hidden></div><button class="btn" id="reset-btn" type="submit">Şifreyi Kaydet</button>
       </form>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+  <script src="assets/js/captcha.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=noshutdownTurnstileReady&amp;render=explicit" async></script>
   <script src="assets/js/auth.js"></script>
 </body>
 </html>

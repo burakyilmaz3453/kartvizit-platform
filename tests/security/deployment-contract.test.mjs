@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import test from 'node:test';
 const read=(path)=>readFile(new URL(`../../${path}`,import.meta.url),'utf8');
-test('Vercel and Netlify expose the same profile rewrite',async()=>{const [vercel,netlify,redirects]=await Promise.all([read('vercel.json'),read('netlify.toml'),read('_redirects')]);assert.match(vercel,/\/u\/:username/);assert.match(netlify,/\/u\/:username/);assert.match(redirects,/\/u\/:username/)});
-test('deployment targets set baseline browser protections',async()=>{const [vercel,netlify,headers]=await Promise.all([read('vercel.json'),read('netlify.toml'),read('_headers')]);for(const source of [vercel,netlify,headers]){assert.match(source,/Content-Security-Policy/i);assert.match(source,/X-Content-Type-Options/i);assert.match(source,/Referrer-Policy/i);assert.match(source,/Permissions-Policy/i)}});
+test('Vercel is the sole deployment target',async()=>{const vercel=await read('vercel.json');assert.match(vercel,/\/u\/:username/);for(const file of ['netlify.toml','_headers','_redirects'])await assert.rejects(access(new URL(`../../${file}`,import.meta.url)))});
+test('Vercel sets baseline browser protections',async()=>{const vercel=await read('vercel.json');for(const header of ['Content-Security-Policy','X-Content-Type-Options','Referrer-Policy','Permissions-Policy'])assert.match(vercel,new RegExp(header,'i'))});
+test('Vercel CSP permits Cloudflare Turnstile',async()=>{assert.match(await read('vercel.json'),/https:\/\/challenges\.cloudflare\.com/)});
+test('production files contain no Netlify references',async()=>{const files=['index.html','login.html','register.html','nfc.html','iletisim.html','gizlilik.html','kullanim-sartlari.html','sitemap.xml','robots.txt','README.md'];for(const file of files)assert.doesNotMatch(await read(file),/netlify/i,`${file} still references Netlify`)});

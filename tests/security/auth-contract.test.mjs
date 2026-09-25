@@ -37,3 +37,15 @@ test('password recovery uses a generic response and an explicit redirect', async
   assert.match(js, /Eğer bu adresle eşleşen bir hesap varsa/);
   assert.match(js, /password\.length\s*<\s*8/);
 });
+
+test('registration is prepared for Cloudflare Turnstile without hardcoded secrets', async () => {
+  const [register, js, captcha] = await Promise.all([
+    read('register.html'), read('assets/js/auth.js'), read('assets/js/captcha.js').catch(() => '')
+  ]);
+  assert.doesNotMatch(register, /google\.com\/recaptcha|grecaptcha/i);
+  assert.match(register, /challenges\.cloudflare\.com\/turnstile/);
+  assert.match(register, /turnstile-site-key/);
+  assert.match(captcha, /turnstile\.render/);
+  assert.doesNotMatch(captcha, /secret/i);
+  assert.match(js, /NoshutdownCaptcha\.token/);
+});
