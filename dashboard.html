@@ -764,6 +764,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+  <script src="assets/js/dashboard.js"></script>
 
   <script>
     let currentUser = null;
@@ -852,9 +853,9 @@
       facebook:'https://facebook.com/kullanici'
     };
 
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { window.location.href = 'login.html'; return; }
-      currentUser = data.session.user;
+    sb.auth.getUser().then(async ({ data }) => {
+      if (!data.user) { window.location.href = 'login.html'; return; }
+      currentUser = data.user;
       await loadProfile();
       loadAnalytics();
     });
@@ -871,11 +872,11 @@
       document.getElementById('preview-link').href = fullLink;
 
       if (data.avatar_url) {
-        document.getElementById('avatar-preview').innerHTML = `<img src="${data.avatar_url}" alt="Profil">`;
+        NoshutdownDashboard.showImage(document.getElementById('avatar-preview'), data.avatar_url, 'Profil');
         document.getElementById('avatar-remove-btn').style.display = 'block';
       }
       if (data.banner_url) {
-        document.getElementById('banner-preview').innerHTML = `<img src="${data.banner_url}" alt="Banner">`;
+        NoshutdownDashboard.showImage(document.getElementById('banner-preview'), data.banner_url, 'Banner');
         document.getElementById('banner-remove-btn').style.display = 'block';
       }
       if (data.theme_color) { selectColor(data.theme_color); document.getElementById('custom-color').value = data.theme_color; }
@@ -983,15 +984,18 @@
     async function uploadAvatar(input) {
       const file = input.files[0];
       if (!file) return;
+      const validationError = NoshutdownDashboard.validateImage(file);
+      if (validationError) { document.getElementById('avatar-status').textContent = validationError; input.value = ''; return; }
       document.getElementById('avatar-status').textContent = 'Yükleniyor...';
       const ext = file.name.split('.').pop();
-      const path = `${currentUser.id}/avatar_${Date.now()}.${ext}`;
+      const path = `${currentUser.id}/avatar.${ext}`;
+      await sb.storage.from('Avatars').remove([path]);
       const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert:true });
       if (error) { document.getElementById('avatar-status').textContent = 'Hata!'; return; }
       const { data } = sb.storage.from('Avatars').getPublicUrl(path);
       const url = data.publicUrl + '?t=' + Date.now();
       await sb.from('profiles').update({ avatar_url:url }).eq('user_id', currentUser.id);
-      document.getElementById('avatar-preview').innerHTML = `<img src="${url}" alt="Profil">`;
+      NoshutdownDashboard.showImage(document.getElementById('avatar-preview'), url, 'Profil');
       document.getElementById('avatar-remove-btn').style.display = 'block';
       document.getElementById('avatar-status').textContent = '✓ Yüklendi';
       setTimeout(() => document.getElementById('avatar-status').textContent = '', 2000);
@@ -1000,15 +1004,18 @@
     async function uploadBanner(input) {
       const file = input.files[0];
       if (!file) return;
+      const validationError = NoshutdownDashboard.validateImage(file);
+      if (validationError) { document.getElementById('banner-status').textContent = validationError; input.value = ''; return; }
       document.getElementById('banner-status').textContent = 'Yükleniyor...';
       const ext = file.name.split('.').pop();
-      const path = `${currentUser.id}/banner_${Date.now()}.${ext}`;
+      const path = `${currentUser.id}/banner.${ext}`;
+      await sb.storage.from('Avatars').remove([path]);
       const { error } = await sb.storage.from('Avatars').upload(path, file, { upsert:true });
       if (error) { document.getElementById('banner-status').textContent = 'Hata!'; return; }
       const { data } = sb.storage.from('Avatars').getPublicUrl(path);
       const url = data.publicUrl + '?t=' + Date.now();
       await sb.from('profiles').update({ banner_url:url }).eq('user_id', currentUser.id);
-      document.getElementById('banner-preview').innerHTML = `<img src="${url}" alt="Banner">`;
+      NoshutdownDashboard.showImage(document.getElementById('banner-preview'), url, 'Banner');
       document.getElementById('banner-remove-btn').style.display = 'block';
       document.getElementById('banner-status').textContent = '✓ Yüklendi';
       setTimeout(() => document.getElementById('banner-status').textContent = '', 2000);
@@ -1016,14 +1023,14 @@
 
     async function removeAvatar() {
       await sb.from('profiles').update({ avatar_url:null }).eq('user_id', currentUser.id);
-      document.getElementById('avatar-preview').innerHTML = '👤';
+      document.getElementById('avatar-preview').textContent = '👤';
       document.getElementById('avatar-remove-btn').style.display = 'none';
       showToast('Profil fotoğrafı kaldırıldı');
     }
 
     async function removeBanner() {
       await sb.from('profiles').update({ banner_url:null }).eq('user_id', currentUser.id);
-      document.getElementById('banner-preview').innerHTML = 'Banner yok';
+      document.getElementById('banner-preview').textContent = 'Banner yok';
       document.getElementById('banner-remove-btn').style.display = 'none';
       showToast('Banner kaldırıldı');
     }
