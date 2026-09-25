@@ -47,6 +47,6 @@ test('final migration removes legacy public access and duplicate index', async (
   assert.match(sql, /drop policy if exists link_clicks_public_insert/i);
   assert.match(sql, /revoke all on table public\.profiles from anon/i);
   assert.match(sql, /revoke all on table public\.profile_views from anon/i);
-  assert.match(sql, /drop index if exists public\.profile_views_username_key/i);
+  assert.match(sql, /drop constraint if exists profile_views_username_key/i);
   assert.match(sql, /revoke all on function public\.handle_new_user/i);
 });

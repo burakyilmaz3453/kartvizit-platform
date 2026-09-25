@@ -35,6 +35,7 @@ grant select, insert, update, delete on table public.profiles to authenticated;
 grant select on table public.profile_views to authenticated;
 grant select on table public.link_clicks to authenticated;
 
-drop index if exists public.profile_views_username_key;
+alter table public.profile_views
+  drop constraint if exists profile_views_username_key;
 
 commit;
