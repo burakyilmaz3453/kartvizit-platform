@@ -188,8 +188,6 @@
         refresh();
       }
     });
-    const { data } = await window.sb.auth.getSession();
-    passwordRecoveryReady = Boolean(data.session);
     refresh();
     if (!passwordRecoveryReady) show('error', 'Bağlantı geçersiz veya süresi dolmuş. Yeni bir şifre sıfırlama bağlantısı iste.');
   }

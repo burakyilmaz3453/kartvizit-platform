@@ -78,4 +78,5 @@ test('password reset uses themed application validation and a recovery session',
   assert.match(js, /validatePassword/);
   assert.match(js, /Bağlantı geçersiz veya süresi dolmuş/);
   assert.match(js, /if \(!passwordRecoveryReady\)[\s\S]{0,180}return/);
+  assert.doesNotMatch(js, /passwordRecoveryReady\s*=\s*Boolean\(data\.session\)/);
 });
