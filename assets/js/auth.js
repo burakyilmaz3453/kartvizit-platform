@@ -1,5 +1,6 @@
 (function () {
   const $ = (id) => document.getElementById(id);
+  let passwordRecoveryReady = false;
 
   function show(kind, message) {
     const error = $('error-msg');
@@ -131,6 +132,10 @@
 
   async function updatePassword(event) {
     event.preventDefault();
+    if (!passwordRecoveryReady) {
+      show('error', 'Bağlantı geçersiz veya süresi dolmuş. Yeni bir şifre sıfırlama bağlantısı iste.');
+      return;
+    }
     const password = $('new-password').value;
     const confirmation = $('confirm-password').value;
     const result = validatePassword(password, confirmation);
@@ -159,12 +164,10 @@
     const button = $('reset-btn');
     const password = $('new-password');
     const confirmation = $('confirm-password');
-    let recoveryReady = false;
-
     const refresh = () => {
       const result = validatePassword(password.value, confirmation.value);
       renderPasswordRequirements(result);
-      button.disabled = !(recoveryReady && result.valid);
+      button.disabled = !(passwordRecoveryReady && result.valid);
     };
 
     document.querySelectorAll('.password-toggle').forEach((toggle) => {
@@ -181,14 +184,14 @@
 
     window.sb.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY' && session) {
-        recoveryReady = true;
+        passwordRecoveryReady = true;
         refresh();
       }
     });
     const { data } = await window.sb.auth.getSession();
-    recoveryReady = Boolean(data.session);
+    passwordRecoveryReady = Boolean(data.session);
     refresh();
-    if (!recoveryReady) show('error', 'Bağlantı geçersiz veya süresi dolmuş. Yeni bir şifre sıfırlama bağlantısı iste.');
+    if (!passwordRecoveryReady) show('error', 'Bağlantı geçersiz veya süresi dolmuş. Yeni bir şifre sıfırlama bağlantısı iste.');
   }
 
   async function handleLoginCallback() {
