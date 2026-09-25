@@ -108,7 +108,9 @@
         <label for="confirm-password">Şifre Tekrar</label>
         <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir" autocomplete="new-password" minlength="8" required>
       </div>
-      <div id="turnstile-widget" hidden></div><button class="btn" id="reset-btn" type="submit">Şifreyi Kaydet</button>
+      <div id="turnstile-widget" hidden></div>
+      <p id="captcha-status" class="captcha-status" role="status" aria-live="polite">Güvenlik doğrulaması yükleniyor…</p>
+      <button class="btn" id="reset-btn" type="submit">Şifreyi Kaydet</button>
       </form>
     </div>
   </div>

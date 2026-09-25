@@ -47,5 +47,23 @@ test('registration is prepared for Cloudflare Turnstile without hardcoded secret
   assert.match(register, /turnstile-site-key/);
   assert.match(captcha, /turnstile\.render/);
   assert.doesNotMatch(captcha, /secret/i);
-  assert.match(js, /NoshutdownCaptcha\.token/);
+  assert.match(js, /requireCaptchaToken\(\)/);
+});
+
+test('browser auth client is exposed to the shared auth module', async () => {
+  const client = await read('supabase.js');
+  assert.match(client, /window\.sb\s*=\s*createClient/);
+});
+
+test('captcha lifecycle blocks tokenless requests and recovers after use', async () => {
+  const [js, captcha] = await Promise.all([
+    read('assets/js/auth.js'), read('assets/js/captcha.js')
+  ]);
+  assert.match(js, /requireToken\(\)/);
+  assert.match(js, /Güvenlik doğrulamasını tamamla/);
+  assert.match(js, /NoshutdownCaptcha\?\.reset\(\)/);
+  assert.match(captcha, /'error-callback'/);
+  assert.match(captcha, /'timeout-callback'/);
+  assert.match(captcha, /language:\s*'tr'/);
+  assert.match(captcha, /size:\s*'flexible'/);
 });

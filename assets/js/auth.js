@@ -17,6 +17,16 @@
     button.textContent = active ? workingLabel : idleLabel;
   }
 
+  function requireCaptchaToken() {
+    const captcha = window.NoshutdownCaptcha;
+    const captchaToken = captcha?.requireToken();
+    if (captcha?.enabled && !captchaToken) {
+      show('error', 'Güvenlik doğrulamasını tamamla ve tekrar dene.');
+      return null;
+    }
+    return captchaToken;
+  }
+
   async function registerUser(event) {
     event.preventDefault();
     const username = $('username').value.trim().toLowerCase();
@@ -37,9 +47,10 @@
       return;
     }
 
+    const captchaToken = requireCaptchaToken();
+    if (window.NoshutdownCaptcha?.enabled && !captchaToken) return;
     busy(button, true, 'Kayıt yapılıyor…', 'Kayıt Ol');
     try {
-      const captchaToken = window.NoshutdownCaptcha.token();
       const { error } = await window.sb.auth.signUp({
         email,
         password,
@@ -54,6 +65,7 @@
     } catch {
       show('error', 'Kayıt işlemi tamamlanamadı. Bilgilerini kontrol edip yeniden dene.');
     } finally {
+      window.NoshutdownCaptcha?.reset();
       busy(button, false, '', 'Kayıt Ol');
     }
   }
@@ -61,20 +73,27 @@
   async function loginUser(event) {
     event.preventDefault();
     const button = $('login-btn');
+    const captchaToken = requireCaptchaToken();
+    if (window.NoshutdownCaptcha?.enabled && !captchaToken) return;
     busy(button, true, 'Giriş yapılıyor…', 'Giriş Yap');
-    const captchaToken = window.NoshutdownCaptcha.token();
-    const { data, error } = await window.sb.auth.signInWithPassword({
-      email: $('email').value.trim(),
-      password: $('password').value,
-      options: captchaToken ? { captchaToken } : undefined
-    });
-    if (error || !data.user?.email_confirmed_at) {
-      if (data.user && !data.user.email_confirmed_at) await window.sb.auth.signOut();
+    try {
+      const { data, error } = await window.sb.auth.signInWithPassword({
+        email: $('email').value.trim(),
+        password: $('password').value,
+        options: { captchaToken }
+      });
+      if (error || !data.user?.email_confirmed_at) {
+        if (data.user && !data.user.email_confirmed_at) await window.sb.auth.signOut();
+        show('error', 'Giriş yapılamadı. Bilgilerini ve e-posta doğrulamanı kontrol et.');
+        return;
+      }
+      window.location.assign('dashboard.html');
+    } catch {
       show('error', 'Giriş yapılamadı. Bilgilerini ve e-posta doğrulamanı kontrol et.');
+    } finally {
+      window.NoshutdownCaptcha?.reset();
       busy(button, false, '', 'Giriş Yap');
-      return;
     }
-    window.location.assign('dashboard.html');
   }
 
   async function requestPasswordReset() {
@@ -83,12 +102,17 @@
       show('error', 'Önce e-posta adresini gir.');
       return;
     }
-    const captchaToken = window.NoshutdownCaptcha.token();
-    await window.sb.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset.html`,
-      ...(captchaToken ? { captchaToken } : {})
-    });
-    show('success', 'Eğer bu adresle eşleşen bir hesap varsa şifre yenileme bağlantısı gönderildi.');
+    const captchaToken = requireCaptchaToken();
+    if (window.NoshutdownCaptcha?.enabled && !captchaToken) return;
+    try {
+      await window.sb.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset.html`,
+        captchaToken
+      });
+      show('success', 'Eğer bu adresle eşleşen bir hesap varsa şifre yenileme bağlantısı gönderildi.');
+    } finally {
+      window.NoshutdownCaptcha?.reset();
+    }
   }
 
   async function updatePassword(event) {
