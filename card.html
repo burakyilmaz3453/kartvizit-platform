@@ -407,6 +407,12 @@
       white-space:nowrap;
     }
     .act-btn svg { width:18px; height:18px; }
+    .act-btn:not(.act-btn-gold) svg { color:var(--text-secondary); }
+    #btn-whatsapp svg { color:#25D366; }
+    #btn-linkedin svg { color:#0077b5; }
+    #btn-instagram svg { color:#d6249f; }
+    #btn-twitter svg { color:var(--text); }
+    #btn-facebook svg { color:#1877f2; }
 
     .act-btn-gold {
       background:rgba(201,168,76,0.08);
@@ -471,7 +477,7 @@
       justify-content:center;
       flex-shrink:0;
     }
-    .row-icon svg { width:14px; height:14px; fill:var(--gold-dim); }
+    .row-icon svg { width:14px; height:14px; fill:var(--gold-dim); color:var(--gold-dim); }
 
     .row-text { flex:1; overflow:hidden; }
     .row-label {
