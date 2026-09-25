@@ -86,7 +86,7 @@
     .grecaptcha-badge { visibility: hidden !important; }
   </style>
 </head>
-<body>
+<body data-auth-page="register">
   <div class="wrap">
     <div class="brand">
       <div class="brand-name">Noshutdown</div>
@@ -99,34 +99,36 @@
       </a>
       <h2>Kayıt Ol</h2>
       <p class="subtitle">Dijital kartvizitini oluşturmaya başla.</p>
-      <div class="error" id="error-msg"></div>
-      <div class="success" id="success-msg"></div>
+      <div class="error" id="error-msg" role="alert" aria-live="assertive"></div>
+      <div class="success" id="success-msg" role="status" aria-live="polite"></div>
+      <form id="register-form">
       <div class="form-group">
-        <label>Kullanıcı Adı</label>
-        <input type="text" id="username" placeholder="ornek: ahmet" autocomplete="off">
+        <label for="username">Kullanıcı Adı</label>
+        <input type="text" id="username" placeholder="ornek: ahmet" autocomplete="username" minlength="3" maxlength="30" required>
         <p class="hint">Noshutdown linkin: noshutdown.netlify.app/card.html?username=…</p>
       </div>
       <div class="form-group">
-        <label>E-posta</label>
-        <input type="email" id="email" placeholder="email@sirket.com">
+        <label for="email">E-posta</label>
+        <input type="email" id="email" placeholder="email@sirket.com" autocomplete="email" required>
       </div>
       <div class="form-group">
-        <label>Şifre</label>
-        <input type="password" id="password" placeholder="En az 6 karakter">
+        <label for="password">Şifre</label>
+        <input type="password" id="password" placeholder="En az 8 karakter" autocomplete="new-password" minlength="8" required>
       </div>
 
       <!-- Kullanım Şartları Onayı -->
       <label class="terms-row" for="terms-check">
         <input type="checkbox" id="terms-check">
         <span class="terms-text">
-          <a href="kullanim-sartlari.html" target="_blank" onclick="event.stopPropagation()">Kullanım Şartları</a>'nı ve
-          <a href="gizlilik.html" target="_blank" onclick="event.stopPropagation()">Gizlilik Politikası</a>'nı okudum, kabul ediyorum.
+          <a href="kullanim-sartlari.html" target="_blank" rel="noopener">Kullanım Şartları</a>'nı ve
+          <a href="gizlilik.html" target="_blank" rel="noopener">Gizlilik Politikası</a>'nı okudum, kabul ediyorum.
         </span>
       </label>
 
       <!-- Google reCAPTCHA v3: arka planda çalışır, widget yok -->
 
-      <button class="btn" id="register-btn" onclick="register()">Kayıt Ol</button>
+      <button class="btn" id="register-btn" type="submit">Kayıt Ol</button>
+      </form>
       <div class="divider"></div>
       <div class="bottom-link">
         Hesabın var mı? <a href="login.html">Giriş yap</a>
@@ -141,88 +143,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
-  <script>
-    async function register() {
-      const username  = document.getElementById('username').value.trim().toLowerCase();
-      const email     = document.getElementById('email').value.trim();
-      const password  = document.getElementById('password').value;
-      const terms     = document.getElementById('terms-check').checked;
-      const btn       = document.getElementById('register-btn');
-      const errorEl   = document.getElementById('error-msg');
-      const successEl = document.getElementById('success-msg');
-
-      errorEl.style.display = 'none';
-      successEl.style.display = 'none';
-
-      if (!username || !email || !password) {
-        errorEl.textContent = 'Tüm alanları doldurun.';
-        errorEl.style.display = 'block'; return;
-      }
-      if (username.length < 3) {
-        errorEl.textContent = 'Kullanıcı adı en az 3 karakter olmalı.';
-        errorEl.style.display = 'block'; return;
-      }
-      if (!/^[a-z0-9_]+$/.test(username)) {
-        errorEl.textContent = 'Kullanıcı adı sadece harf, rakam ve _ içerebilir.';
-        errorEl.style.display = 'block'; return;
-      }
-      if (!terms) {
-        errorEl.textContent = 'Devam etmek için kullanım şartlarını kabul etmelisin.';
-        errorEl.style.display = 'block'; return;
-      }
-      // reCAPTCHA v3: token al, skor kontrolü sunucu tarafında yapılmalı
-      // Client-side'da token varlığı yeterli
-      let captchaToken = '';
-      try {
-        captchaToken = await grecaptcha.execute('6LfAY5QsAAAAAOZMdB7bem83mt7e0K4iq3AVFzGr', {action: 'register'});
-      } catch(e) {
-        errorEl.textContent = 'reCAPTCHA doğrulaması başarısız. Sayfayı yenileyip tekrar dene.';
-        errorEl.style.display = 'block'; return;
-      }
-      if (!captchaToken) {
-        errorEl.textContent = 'reCAPTCHA doğrulaması başarısız. Sayfayı yenileyip tekrar dene.';
-        errorEl.style.display = 'block'; return;
-      }
-
-      btn.disabled = true; btn.textContent = 'Kayıt yapılıyor...';
-const { data: existing } = await sb.from('profiles').select('username').eq('username', username).single();
-if (existing) {
-  errorEl.textContent = 'Bu kullanıcı adı zaten alınmış.';
-  errorEl.style.display = 'block';
-  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
-}
-
-const { data: existingEmail } = await sb.from('profiles').select('email').eq('email', email).single();
-if (existingEmail) {
-  errorEl.textContent = 'Bu e-posta adresi zaten kayıtlı.';
-  errorEl.style.display = 'block';
-  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
-}
-
-const { data, error } = await sb.auth.signUp({
-  email,
-  password,
-  options: {
-    emailRedirectTo: window.location.origin + '/login.html'
-  }
-});
-
-if (error) {
-  errorEl.textContent = error.message;
-  errorEl.style.display = 'block';
-  btn.disabled = false; btn.textContent = 'Kayıt Ol'; return;
-}
-
-await sb.from('profiles').insert({ user_id: data.user.id, username, email });
-
-successEl.textContent = '✓ Kayıt başarılı! E-postanı onaylayıp giriş yap.';
-successEl.style.display = 'block';
-btn.textContent = 'Kayıt Ol'; btn.disabled = false;
-setTimeout(() => { window.location.href = 'login.html'; }, 2500);
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Enter') register(); });
-</script>
+  <script src="assets/js/auth.js"></script>
 </body>
 </html>
   

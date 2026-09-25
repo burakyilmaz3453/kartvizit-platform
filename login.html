@@ -129,7 +129,7 @@
     }
   </style>
 </head>
-<body>
+<body data-auth-page="login">
   <div class="wrap">
     <div class="brand">
       <div class="brand-name">Noshutdown</div>
@@ -142,20 +142,22 @@
       </a>
       <h2>Giriş Yap</h2>
       <p class="subtitle">Hesabına giriş yap ve kartvizitini yönet.</p>
-      <div class="error" id="error-msg"></div>
-      <div class="success" id="success-msg"></div>
+      <div class="error" id="error-msg" role="alert" aria-live="assertive"></div>
+      <div class="success" id="success-msg" role="status" aria-live="polite"></div>
+      <form id="login-form">
       <div class="form-group">
-        <label>E-posta</label>
-        <input type="email" id="email" placeholder="email@sirket.com">
+        <label for="email">E-posta</label>
+        <input type="email" id="email" placeholder="email@sirket.com" autocomplete="email" required>
       </div>
       <div class="form-group">
-        <label>Şifre</label>
-        <input type="password" id="password" placeholder="Şifreniz">
+        <label for="password">Şifre</label>
+        <input type="password" id="password" placeholder="Şifreniz" autocomplete="current-password" required>
       </div>
       <div class="forgot">
-        <a onclick="resetPassword()">Şifremi unuttum</a>
+        <button type="button" id="forgot-password">Şifremi unuttum</button>
       </div>
-      <button class="btn" id="login-btn" onclick="login()">Giriş Yap</button>
+      <button class="btn" id="login-btn" type="submit">Giriş Yap</button>
+      </form>
       <div class="divider"></div>
       <div class="bottom-link">
         Hesabın yok mu? <a href="register.html">Kayıt ol</a>
@@ -165,114 +167,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
-  <script>
-    const hash = window.location.hash;
-    if (hash && hash.includes('access_token') && hash.includes('type=signup')) {
-      const params = new URLSearchParams(hash.substring(1));
-      const accessToken = params.get('access_token');
-      const refreshToken = params.get('refresh_token');
-      const type = params.get('type');
-
-      if (accessToken && type === 'signup') {
-        sb.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken || ''
-        }).then(({ data, error }) => {
-          if (!error && data.session) {
-            document.getElementById('success-msg').textContent = '✓ E-posta adresiniz doğrulandı! Yönlendiriliyorsunuz...';
-            document.getElementById('success-msg').style.display = 'block';
-            history.replaceState(null, '', window.location.pathname);
-            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
-          } else {
-            document.getElementById('error-msg').textContent = 'Doğrulama bağlantısı geçersiz veya süresi dolmuş. Lütfen tekrar kayıt ol.';
-            document.getElementById('error-msg').style.display = 'block';
-            history.replaceState(null, '', window.location.pathname);
-          }
-        });
-      }
-    } else {
-      sb.auth.getSession().then(async ({ data }) => {
-        if (!data.session) return;
-
-        if (data.session.user && data.session.user.email_confirmed_at) {
-          window.location.href = 'dashboard.html';
-        } else {
-          await sb.auth.signOut();
-        }
-      });
-    }
-
-    async function login() {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const btn = document.getElementById('login-btn');
-      const errorEl = document.getElementById('error-msg');
-      const successEl = document.getElementById('success-msg');
-
-      errorEl.style.display = 'none';
-      successEl.style.display = 'none';
-
-      if (!email || !password) {
-        errorEl.textContent = 'E-posta ve şifreyi girin.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Giriş yapılıyor...';
-
-      const { data, error } = await sb.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        errorEl.textContent = 'Hesabınıza giriş yapılamadı. Lütfen e-posta adresinize gönderilen doğrulama bağlantısını onayladıktan sonra tekrar deneyin.';
-        errorEl.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = 'Giriş Yap';
-        return;
-      }
-
-      if (!data.user.email_confirmed_at) {
-        await sb.auth.signOut();
-        errorEl.textContent = 'Hesabınız henüz aktif değildir. Lütfen e-posta adresinize gönderilen doğrulama bağlantısını onaylayarak tekrar giriş yapın.';
-        errorEl.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = 'Giriş Yap';
-        return;
-      }
-
-      window.location.href = 'dashboard.html';
-    }
-
-    async function resetPassword() {
-      const email = document.getElementById('email').value.trim();
-      const errorEl = document.getElementById('error-msg');
-      const successEl = document.getElementById('success-msg');
-
-      errorEl.style.display = 'none';
-      successEl.style.display = 'none';
-
-      if (!email) {
-        errorEl.textContent = 'Önce e-posta adresinizi girin.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      const { error } = await sb.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/reset.html'
-      });
-
-      if (!error) {
-        successEl.textContent = '✓ Şifre sıfırlama maili gönderildi.';
-        successEl.style.display = 'block';
-      } else {
-        errorEl.textContent = 'Hata: ' + error.message;
-        errorEl.style.display = 'block';
-      }
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') login();
-    });
-  </script>
+  <script src="assets/js/auth.js"></script>
 </body>
 </html>

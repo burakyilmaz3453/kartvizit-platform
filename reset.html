@@ -86,7 +86,7 @@
     }
   </style>
 </head>
-<body>
+<body data-auth-page="reset">
   <div class="wrap">
     <div class="brand">
       <div class="brand-name">Noshutdown</div>
@@ -95,47 +95,24 @@
     <div class="card">
       <h2>Yeni Şifre</h2>
       <p class="subtitle">Yeni şifreni belirle ve hesabına geri dön.</p>
-      <div class="error" id="error-msg"></div>
-      <div class="success" id="success-msg"></div>
+      <div class="error" id="error-msg" role="alert" aria-live="assertive"></div>
+      <div class="success" id="success-msg" role="status" aria-live="polite"></div>
+      <form id="reset-form">
       <div class="form-group">
-        <label>Yeni Şifre</label>
-        <input type="password" id="new-password" placeholder="En az 6 karakter">
+        <label for="new-password">Yeni Şifre</label>
+        <input type="password" id="new-password" placeholder="En az 8 karakter" autocomplete="new-password" minlength="8" required>
       </div>
       <div class="form-group">
-        <label>Şifre Tekrar</label>
-        <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir">
+        <label for="confirm-password">Şifre Tekrar</label>
+        <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir" autocomplete="new-password" minlength="8" required>
       </div>
-      <button class="btn" id="reset-btn" onclick="updatePassword()">Şifreyi Kaydet</button>
+      <button class="btn" id="reset-btn" type="submit">Şifreyi Kaydet</button>
+      </form>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
-  <script>
-    async function updatePassword() {
-      const newPass = document.getElementById('new-password').value;
-      const confirmPass = document.getElementById('confirm-password').value;
-      const btn = document.getElementById('reset-btn');
-      const errorEl = document.getElementById('error-msg');
-      const successEl = document.getElementById('success-msg');
-      errorEl.style.display = 'none'; successEl.style.display = 'none';
-      if (!newPass || !confirmPass) { errorEl.textContent = 'Tüm alanları doldurun.'; errorEl.style.display = 'block'; return; }
-      if (newPass.length < 6) { errorEl.textContent = 'Şifre en az 6 karakter olmalı.'; errorEl.style.display = 'block'; return; }
-      if (newPass !== confirmPass) { errorEl.textContent = 'Şifreler eşleşmiyor.'; errorEl.style.display = 'block'; return; }
-      btn.disabled = true; btn.textContent = 'Kaydediliyor...';
-      const { error } = await sb.auth.updateUser({ password: newPass });
-      if (error) {
-        var msg = error.message;
-        if (msg.includes('different from the old password')) msg = 'Yeni şifre eski şifreden farklı olmalı.';
-        else if (msg.includes('at least 6')) msg = 'Şifre en az 6 karakter olmalı.';
-        else if (msg.includes('weak')) msg = 'Şifre çok zayıf, daha güçlü bir şifre seç.';
-        errorEl.textContent = msg; errorEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Şifreyi Kaydet'; return;
-      }
-      successEl.textContent = '✓ Şifren güncellendi! Giriş sayfasına yönlendiriliyorsun...';
-      successEl.style.display = 'block';
-      setTimeout(() => { window.location.href = 'login.html'; }, 2500);
-    }
-  </script>
+  <script src="assets/js/auth.js"></script>
 </body>
 </html>
