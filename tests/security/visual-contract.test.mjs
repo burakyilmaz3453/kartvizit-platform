@@ -6,3 +6,16 @@ const pages=['index.html','card.html','dashboard.html','login.html','register.ht
 test('every page loads the shared redesign layer',async()=>{for(const page of pages)assert.match(await read(page),/\/assets\/css\/redesign\.css/,`${page} lacks redesign.css`)});
 test('redesign defines premium responsive surfaces and page-specific layouts',async()=>{const css=await read('assets/css/redesign.css').catch(()=> '');for(const token of ['backdrop-filter','linear-gradient','@media','min-height:44px','.hero','.dashboard-container','.card-header','.auth-shell'])assert.match(css,new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')))});
 test('redesign preserves reduced motion and visible focus',async()=>{const css=await read('assets/css/redesign.css').catch(()=> '');assert.match(css,/prefers-reduced-motion/);assert.match(css,/:focus-visible/)});
+
+test('card header keeps the overlapping profile photo visible',async()=>{
+  const css=await read('assets/css/redesign.css');
+  assert.doesNotMatch(css,/\.card-header\s*\{[^}]*overflow\s*:\s*hidden/i);
+  assert.match(css,/\.card-header\s*\{[^}]*overflow\s*:\s*visible/i);
+});
+
+test('forgot-password control is styled as an accessible text link',async()=>{
+  const login=await read('login.html');
+  assert.match(login,/\.forgot button\s*\{/);
+  assert.match(login,/\.forgot button:focus-visible\s*\{/);
+  assert.match(login,/<button[^>]+id="forgot-password"[^>]+class="forgot-link"/);
+});

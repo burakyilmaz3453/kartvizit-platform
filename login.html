@@ -93,12 +93,18 @@
     .forgot {
       text-align:right; margin-top:-6px; margin-bottom:14px;
     }
-    .forgot a {
-      color:var(--text-muted); font-size:0.7rem;
+    .forgot button {
+      min-height:44px; padding:8px 0;
+      background:transparent; border:0; border-radius:6px;
+      color:var(--text-secondary); font-size:0.72rem;
+      font-family:'DM Sans',sans-serif; font-weight:400;
       letter-spacing:0.04em; cursor:pointer; text-decoration:none;
-      transition:color 0.2s;
+      transition:color 0.2s, background 0.2s;
     }
-    .forgot a:hover { color:var(--gold); }
+    .forgot button:hover { color:var(--gold); }
+    .forgot button:focus-visible {
+      color:var(--gold); outline:2px solid var(--gold-dim); outline-offset:3px;
+    }
     .btn {
       width:100%; padding:13px;
       background:var(--gold); color:#080808;
@@ -156,7 +162,7 @@
         <input type="password" id="password" placeholder="Şifreniz" autocomplete="current-password" required>
       </div>
       <div class="forgot">
-        <button type="button" id="forgot-password">Şifremi unuttum</button>
+        <button type="button" id="forgot-password" class="forgot-link">Şifremi unuttum</button>
       </div>
       <div id="turnstile-widget" hidden></div><button class="btn" id="login-btn" type="submit">Giriş Yap</button>
       </form>
