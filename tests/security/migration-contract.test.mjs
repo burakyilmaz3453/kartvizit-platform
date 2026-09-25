@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const foundationPath = new URL('../../supabase/migrations/202609250001_security_foundation.sql', import.meta.url);
+const finalizePath = new URL('../../supabase/migrations/202609250002_security_finalize.sql', import.meta.url);
 
 async function foundationSql() {
   return readFile(foundationPath, 'utf8');
@@ -35,4 +36,17 @@ test('foundation migration is non-destructive', async () => {
   assert.doesNotMatch(sql, /\bdrop\s+table\b/i);
   assert.doesNotMatch(sql, /\bdelete\s+from\b/i);
   assert.doesNotMatch(sql, /\btruncate\b/i);
+  assert.match(sql, /where username = 'demo'/i);
+  assert.match(sql, /profiles_owner_required_check/i);
+});
+
+test('final migration removes legacy public access and duplicate index', async () => {
+  const sql = await readFile(finalizePath, 'utf8');
+  assert.match(sql, /drop policy if exists "Enable read access for all users"/i);
+  assert.match(sql, /drop policy if exists profile_views_public_upsert/i);
+  assert.match(sql, /drop policy if exists link_clicks_public_insert/i);
+  assert.match(sql, /revoke all on table public\.profiles from anon/i);
+  assert.match(sql, /revoke all on table public\.profile_views from anon/i);
+  assert.match(sql, /drop index if exists public\.profile_views_username_key/i);
+  assert.match(sql, /revoke all on function public\.handle_new_user/i);
 });

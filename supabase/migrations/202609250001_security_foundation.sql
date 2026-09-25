@@ -2,8 +2,15 @@ begin;
 
 alter table public.profiles
   alter column user_id drop default,
-  alter column user_id set not null,
   alter column username set not null;
+
+-- The public demo is a system-owned profile, not an Auth identity. Preserve it
+-- with a null owner so the foreign key can protect every real user profile.
+update public.profiles
+set user_id = null
+where username = 'demo'
+  and user_id is not null
+  and not exists (select 1 from auth.users where id = profiles.user_id);
 
 do $$
 begin
@@ -15,6 +22,16 @@ begin
     alter table public.profiles
       add constraint profiles_user_id_fkey
       foreign key (user_id) references auth.users(id) on delete cascade;
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.profiles'::regclass
+      and conname = 'profiles_owner_required_check'
+  ) then
+    alter table public.profiles
+      add constraint profiles_owner_required_check
+      check ((username = 'demo' and user_id is null) or (username <> 'demo' and user_id is not null));
   end if;
 
   if not exists (
