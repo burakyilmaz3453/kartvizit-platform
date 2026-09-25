@@ -22,5 +22,5 @@ test('public card validates URLs and escapes vCard values', async () => {
 
 test('card page loads the hardened helper layer', async () => {
   const html = await read('card.html');
-  assert.match(html, /assets\/js\/card\.js/);
+  assert.match(html, /src=["']\/assets\/js\/card\.js["']/);
 });
