@@ -4,8 +4,7 @@
   <link rel="icon" type="image/x-icon" href="favicon-platform.ico">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="turnstile-site-key" content="0x4AAAAAAFDtqBA4wNTHj3DF">
-  <title>Şifre Sıfırla | Noshutdown</title>
+  <title>Şifre Sıfırlama | Noshutdown</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -86,39 +85,46 @@
       font-size:0.78rem; margin-bottom:14px; display:none; line-height:1.4;
     }
   </style>
-  <link rel="stylesheet" href="assets/css/polish.css"><link rel="stylesheet" href="/assets/css/redesign.css">
+  <link rel="stylesheet" href="assets/css/polish.css"><link rel="stylesheet" href="/assets/css/redesign.css"><link rel="stylesheet" href="/assets/css/auth.css">
 </head>
-<body data-auth-page="reset">
+<body class="auth-page" data-auth-page="reset">
   <div class="wrap">
     <div class="brand">
       <div class="brand-name">Noshutdown</div>
-      <div class="brand-tagline">Dijital Kimliğinin Altın Standardı</div>
+      <div class="brand-tagline">Hesap Güvenliği</div>
     </div>
-    <div class="card">
-      <h2>Yeni Şifre</h2>
-      <p class="subtitle">Yeni şifreni belirle ve hesabına geri dön.</p>
-      <div class="error" id="error-msg" role="alert" aria-live="assertive"></div>
-      <div class="success" id="success-msg" role="status" aria-live="polite"></div>
-      <form id="reset-form">
+    <div class="card auth-card">
+      <h2>Şifre Sıfırlama</h2>
+      <p class="subtitle">Hesabın için yeni bir şifre belirle.</p>
+      <div class="error auth-alert" id="error-msg" role="alert" aria-live="assertive"></div>
+      <div class="success auth-alert" id="success-msg" role="status" aria-live="polite"></div>
+      <form id="reset-form" novalidate>
       <div class="form-group">
         <label for="new-password">Yeni Şifre</label>
-        <input type="password" id="new-password" placeholder="En az 8 karakter" autocomplete="new-password" minlength="8" required>
+        <div class="password-field">
+          <input type="password" id="new-password" placeholder="En az 8 karakter" autocomplete="new-password" minlength="8" required>
+          <button class="password-toggle" type="button" data-target="new-password" aria-label="Şifreyi göster">Göster</button>
+        </div>
       </div>
       <div class="form-group">
         <label for="confirm-password">Şifre Tekrar</label>
-        <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir" autocomplete="new-password" minlength="8" required>
+        <div class="password-field">
+          <input type="password" id="confirm-password" placeholder="Şifreyi tekrar gir" autocomplete="new-password" minlength="8" required>
+          <button class="password-toggle" type="button" data-target="confirm-password" aria-label="Şifreyi göster">Göster</button>
+        </div>
       </div>
-      <div id="turnstile-widget" hidden></div>
-      <p id="captcha-status" class="captcha-status" role="status" aria-live="polite">Güvenlik doğrulaması yükleniyor…</p>
-      <button class="btn" id="reset-btn" type="submit">Şifreyi Kaydet</button>
+      <ul id="password-requirements" class="password-requirements" aria-live="polite">
+        <li data-requirement="length">En az 8 karakter</li>
+        <li data-requirement="match">Şifreler eşleşiyor</li>
+      </ul>
+      <button class="btn" id="reset-btn" type="submit" disabled>Şifreyi Güncelle</button>
       </form>
+      <p class="auth-note">Bu sayfa yalnızca e-postana gönderilen şifre sıfırlama bağlantısıyla kullanılabilir.</p>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
-  <script src="assets/js/captcha.js"></script>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=noshutdownTurnstileReady&amp;render=explicit" async></script>
   <script src="assets/js/auth.js"></script>
 </body>
 </html>

@@ -1,0 +1,82 @@
+:root {
+  --auth-gold: #c9a84c;
+  --auth-gold-soft: #e1c776;
+  --auth-bg: #080a09;
+  --auth-panel: rgba(18, 20, 18, 0.94);
+  --auth-border: rgba(255, 255, 255, 0.09);
+  --auth-text: #f2eee6;
+  --auth-muted: #918d85;
+}
+
+body.auth-page {
+  background:
+    radial-gradient(circle at 50% 12%, rgba(201, 168, 76, 0.09), transparent 34rem),
+    linear-gradient(145deg, #050606, var(--auth-bg));
+}
+
+.auth-page .wrap { max-width: 430px; }
+.auth-page .brand { margin-bottom: 28px; }
+.auth-page .brand-tagline { color: var(--auth-muted); }
+.auth-page .auth-card {
+  background: var(--auth-panel);
+  border-color: var(--auth-border);
+  border-radius: 20px;
+  padding: 38px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(18px);
+}
+
+.auth-page h2 { font-size: 2rem; }
+.auth-page .subtitle { color: var(--auth-muted); }
+.auth-page .auth-alert { border-radius: 10px; padding: 12px 14px; }
+.auth-page input { min-height: 48px; border-radius: 10px; }
+.auth-page input:focus { box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12); }
+
+.password-field { position: relative; }
+.password-field input { padding-right: 54px; }
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 40px;
+  min-height: 40px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--auth-muted);
+  cursor: pointer;
+}
+.password-toggle:hover,
+.password-toggle:focus-visible { color: var(--auth-gold-soft); outline: none; }
+
+.password-requirements {
+  display: grid;
+  gap: 8px;
+  margin: 2px 0 20px;
+  padding: 14px;
+  list-style: none;
+  border: 1px solid var(--auth-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+}
+.password-requirements li {
+  color: var(--auth-muted);
+  font-size: 0.73rem;
+}
+.password-requirements li::before { content: '○'; margin-right: 8px; }
+.password-requirements li.is-valid { color: #82c89a; }
+.password-requirements li.is-valid::before { content: '✓'; }
+
+.auth-note {
+  margin-top: 18px;
+  text-align: center;
+  color: var(--auth-muted);
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+  body.auth-page { padding: 18px; }
+  .auth-page .auth-card { padding: 28px 22px; border-radius: 16px; }
+}

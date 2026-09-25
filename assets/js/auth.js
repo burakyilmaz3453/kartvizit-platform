@@ -17,6 +17,20 @@
     button.textContent = active ? workingLabel : idleLabel;
   }
 
+  function validatePassword(password, confirmation) {
+    const length = password.length >= 8;
+    const match = Boolean(confirmation) && password === confirmation;
+    return { valid: length && match, length, match };
+  }
+
+  function renderPasswordRequirements(result) {
+    const list = $('password-requirements');
+    if (!list) return;
+    ['length', 'match'].forEach((requirement) => {
+      list.querySelector(`[data-requirement="${requirement}"]`)?.classList.toggle('is-valid', result[requirement]);
+    });
+  }
+
   function requireCaptchaToken() {
     const captcha = window.NoshutdownCaptcha;
     const captchaToken = captcha?.requireToken();
@@ -119,24 +133,62 @@
     event.preventDefault();
     const password = $('new-password').value;
     const confirmation = $('confirm-password').value;
-    if (password.length < 8) {
+    const result = validatePassword(password, confirmation);
+    renderPasswordRequirements(result);
+    if (!result.length) {
       show('error', 'Şifre en az 8 karakter olmalı.');
       return;
     }
-    if (password !== confirmation) {
+    if (!result.match) {
       show('error', 'Şifreler eşleşmiyor.');
       return;
     }
     const button = $('reset-btn');
-    busy(button, true, 'Kaydediliyor…', 'Şifreyi Kaydet');
+    busy(button, true, 'Güncelleniyor…', 'Şifreyi Güncelle');
     const { error } = await window.sb.auth.updateUser({ password });
     if (error) {
       show('error', 'Şifre güncellenemedi. Bağlantının süresi dolmuş olabilir.');
-      busy(button, false, '', 'Şifreyi Kaydet');
+      busy(button, false, '', 'Şifreyi Güncelle');
       return;
     }
     show('success', 'Şifren güncellendi. Giriş sayfasına yönlendiriliyorsun…');
     window.setTimeout(() => window.location.assign('login.html'), 1800);
+  }
+
+  async function initializePasswordReset() {
+    const button = $('reset-btn');
+    const password = $('new-password');
+    const confirmation = $('confirm-password');
+    let recoveryReady = false;
+
+    const refresh = () => {
+      const result = validatePassword(password.value, confirmation.value);
+      renderPasswordRequirements(result);
+      button.disabled = !(recoveryReady && result.valid);
+    };
+
+    document.querySelectorAll('.password-toggle').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const input = $(toggle.dataset.target);
+        const visible = input.type === 'text';
+        input.type = visible ? 'password' : 'text';
+        toggle.textContent = visible ? 'Göster' : 'Gizle';
+        toggle.setAttribute('aria-label', visible ? 'Şifreyi göster' : 'Şifreyi gizle');
+      });
+    });
+    password.addEventListener('input', refresh);
+    confirmation.addEventListener('input', refresh);
+
+    window.sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' && session) {
+        recoveryReady = true;
+        refresh();
+      }
+    });
+    const { data } = await window.sb.auth.getSession();
+    recoveryReady = Boolean(data.session);
+    refresh();
+    if (!recoveryReady) show('error', 'Bağlantı geçersiz veya süresi dolmuş. Yeni bir şifre sıfırlama bağlantısı iste.');
   }
 
   async function handleLoginCallback() {
@@ -166,5 +218,8 @@
     $('forgot-password').addEventListener('click', requestPasswordReset);
     handleLoginCallback();
   }
-  if (page === 'reset') $('reset-form').addEventListener('submit', updatePassword);
+  if (page === 'reset') {
+    $('reset-form').addEventListener('submit', updatePassword);
+    initializePasswordReset();
+  }
 })();

@@ -19,3 +19,8 @@ test('forgot-password control is styled as an accessible text link',async()=>{
   assert.match(login,/\.forgot button:focus-visible\s*\{/);
   assert.match(login,/<button[^>]+id="forgot-password"[^>]+class="forgot-link"/);
 });
+
+test('auth pages share the restrained auth design without marketing superlatives',async()=>{
+  for(const page of ['login.html','register.html','reset.html']) assert.match(await read(page),/assets\/css\/auth\.css/);
+  for(const page of pages) assert.doesNotMatch(await read(page),/premium|stüdyo|altın standardı/i,`${page} contains marketing copy`);
+});

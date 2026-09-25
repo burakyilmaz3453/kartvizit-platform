@@ -135,23 +135,23 @@
       height:1px; background:var(--border-subtle); margin:20px 0;
     }
   </style>
-  <link rel="stylesheet" href="assets/css/polish.css"><link rel="stylesheet" href="/assets/css/redesign.css">
+  <link rel="stylesheet" href="assets/css/polish.css"><link rel="stylesheet" href="/assets/css/redesign.css"><link rel="stylesheet" href="/assets/css/auth.css">
 </head>
-<body data-auth-page="login">
+<body class="auth-page" data-auth-page="login">
   <div class="wrap">
     <div class="brand">
       <div class="brand-name">Noshutdown</div>
-      <div class="brand-tagline">Dijital Kimliğinin Altın Standardı</div>
+      <div class="brand-tagline">Hesap Yönetimi</div>
     </div>
-    <div class="card">
+    <div class="card auth-card">
       <a href="index.html" class="back">
         <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         Geri
       </a>
       <h2>Giriş Yap</h2>
       <p class="subtitle">Hesabına giriş yap ve kartvizitini yönet.</p>
-      <div class="error" id="error-msg" role="alert" aria-live="assertive"></div>
-      <div class="success" id="success-msg" role="status" aria-live="polite"></div>
+      <div class="error auth-alert" id="error-msg" role="alert" aria-live="assertive"></div>
+      <div class="success auth-alert" id="success-msg" role="status" aria-live="polite"></div>
       <form id="login-form">
       <div class="form-group">
         <label for="email">E-posta</label>

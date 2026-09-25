@@ -67,3 +67,14 @@ test('captcha lifecycle blocks tokenless requests and recovers after use', async
   assert.match(captcha, /language:\s*'tr'/);
   assert.match(captcha, /size:\s*'flexible'/);
 });
+
+test('password reset uses themed application validation and a recovery session', async () => {
+  const [reset, js] = await Promise.all([read('reset.html'), read('assets/js/auth.js')]);
+  assert.match(reset, /<form[^>]+id="reset-form"[^>]+novalidate/);
+  assert.match(reset, /id="password-requirements"/);
+  assert.match(reset, /class="password-toggle"/);
+  assert.doesNotMatch(reset, /turnstile|captcha/i);
+  assert.match(js, /PASSWORD_RECOVERY/);
+  assert.match(js, /validatePassword/);
+  assert.match(js, /Bağlantı geçersiz veya süresi dolmuş/);
+});
