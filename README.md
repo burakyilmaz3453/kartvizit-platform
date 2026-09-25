@@ -28,5 +28,15 @@ Migration'ları sırayla uygulayın. `202609250001_security_foundation.sql` yeni
 
 - Supabase Dashboard > Authentication > Providers > Email altında minimum parola uzunluğunu en az 8 yapın.
 - `Prevent use of leaked passwords` yalnızca Supabase Pro plan ve üzerinde kullanılabilir; Free planda açılamaz.
-- CAPTCHA için Cloudflare Turnstile'da `noshutdown.vercel.app` alan adına bir widget oluşturun. Public **site key** değerini `login.html`, `register.html` ve `reset.html` içindeki `turnstile-site-key` meta etiketine yazın. Gizli **secret key** yalnızca Supabase Dashboard > Authentication > Attack Protection bölümüne girilmelidir; repoya veya frontend'e konulmamalıdır.
+- CAPTCHA için Cloudflare Turnstile'da `noshutdown.vercel.app` alan adına bir widget oluşturun. Public **site key** değerini `login.html` ve `register.html` içindeki `turnstile-site-key` meta etiketine yazın. Gizli **secret key** yalnızca Supabase Dashboard > Authentication > Attack Protection bölümüne girilmelidir; repoya veya frontend'e konulmamalıdır. Şifre yenileme sayfası Supabase recovery oturumuyla korunur ve ayrıca CAPTCHA istemez.
 - Site ve secret key birlikte hazır olmadan Supabase CAPTCHA anahtarını açmayın. Boş site key ile uygulama CAPTCHA olmadan, mevcut Supabase rate limitleriyle çalışmaya devam eder.
+
+## Arayüz doğrulama kontrol listesi
+
+Yerel sunucuyu başlattıktan sonra `dashboard.html` sayfasını 1440 px, 768 px ve 390 px genişliklerde kontrol edin.
+
+- Formdaki değişikliklerin kaydetmeden canlı kart önizlemesine yansıdığını doğrulayın.
+- Sosyal bağlantıları yukarı/aşağı taşıyın; sıra ve bağlantı değerlerinin birlikte korunduğunu kontrol edin.
+- Profil ve kapak görseli yüklerken JPG, PNG, WebP veya AVIF biçimi ve 5 MiB sınırını kontrol edin.
+- Mobil görünümde “Canlı önizlemeyi göster” düğmesini, yatay taşmayı ve klavye odağını kontrol edin.
+- `reset.html` sayfasını yalnızca Supabase şifre sıfırlama e-postasındaki bağlantıyla açın; geçersiz bağlantıda formun kapalı kaldığını doğrulayın.

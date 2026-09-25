@@ -24,3 +24,5 @@ test('auth pages share the restrained auth design without marketing superlatives
   for(const page of ['login.html','register.html','reset.html']) assert.match(await read(page),/assets\/css\/auth\.css/);
   for(const page of pages) assert.doesNotMatch(await read(page),/premium|stüdyo|altın standardı/i,`${page} contains marketing copy`);
 });
+
+test('dashboard uses a sticky responsive two-column workspace',async()=>{const css=await read('assets/css/dashboard.css');assert.match(css,/grid-template-columns:minmax\(0,1fr\) minmax\(320px,430px\)/);assert.match(css,/\.preview-column\{position:sticky/);assert.match(css,/@media\(max-width:900px\)/);assert.match(css,/min-width:320px/)});
