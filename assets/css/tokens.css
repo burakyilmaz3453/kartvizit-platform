@@ -1,0 +1,2 @@
+:root{--bg:#080808;--surface:#111;--surface-2:#181818;--text:#f5f0e7;--muted:#aaa39a;--line:rgba(255,255,255,.1);--accent:#c9a84c;--danger:#ff8080;--success:#7dd9a4;--radius:18px;--shadow:0 24px 80px rgba(0,0,0,.45);--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
+[data-theme="light"]{--bg:#eee9df;--surface:#fffdf8;--surface-2:#f5f0e8;--text:#1c1915;--muted:#6e675f;--line:rgba(29,24,18,.12);--shadow:0 24px 80px rgba(62,48,29,.14)}

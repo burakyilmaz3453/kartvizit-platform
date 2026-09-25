@@ -1035,6 +1035,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="/supabase.js"></script>
+  <script src="assets/js/card.js"></script>
 
   <script>
     document.getElementById('footer-year').textContent = new Date().getFullYear();
@@ -1083,8 +1084,8 @@
           bio:'Girişimci, teknoloji meraklısı.', social_order:'linkedin,instagram,twitter,facebook'
         };
       } else {
-        var result = await sb.from('profiles').select('*').eq('username', username).single();
-        data = result.data;
+        var result = await sb.rpc('get_public_profile', { p_username: username });
+        data = Array.isArray(result.data) ? result.data[0] : result.data;
       }
 
       document.getElementById('loading').classList.add('hidden');
@@ -1119,13 +1120,14 @@
       }
 
       if (data.avatar_url) {
-        document.getElementById('profile-container').innerHTML = '<img src="'+data.avatar_url+'" alt="'+name+'">';
-        document.getElementById('favicon').href = data.avatar_url;
+        NoshutdownCard.replaceWithImage(document.getElementById('profile-container'), data.avatar_url, name);
+        var avatarHref = NoshutdownCard.safeUrl(data.avatar_url);
+        if (avatarHref) document.getElementById('favicon').href = avatarHref;
       } else {
         document.getElementById('initials').textContent = name.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
       }
 
-      if (data.banner_url) document.getElementById('banner-container').innerHTML = '<img src="'+data.banner_url+'" alt="Banner">';
+      if (data.banner_url) NoshutdownCard.replaceWithImage(document.getElementById('banner-container'), data.banner_url, 'Profil kapağı');
 
       if (data.mobile) {
         document.getElementById('btn-call').href = 'tel:' + data.mobile;
@@ -1145,7 +1147,8 @@
         var cleanWeb = data.website.replace(/^https?:\/\//,'');
         var webEl = document.getElementById('p-web');
         webEl.textContent = cleanWeb;
-        webEl.href = data.website.startsWith('http') ? data.website : 'https://' + data.website;
+        var safeWebsite = NoshutdownCard.safeUrl(data.website.startsWith('http') ? data.website : 'https://' + data.website);
+        if (safeWebsite) webEl.href = safeWebsite; else document.getElementById('row-web').classList.add('hidden');
       } else { document.getElementById('row-web').classList.add('hidden'); }
 
       if (data.address) {
@@ -1164,7 +1167,9 @@
         if (data[p]) {
           var el = document.getElementById('btn-' + p);
           if (el) {
-            el.href = data[p].startsWith('http') ? data[p] : 'https://' + data[p];
+            var safeSocial = NoshutdownCard.safeUrl(data[p].startsWith('http') ? data[p] : 'https://' + data[p]);
+            if (!safeSocial) return;
+            el.href = safeSocial;
             el.classList.remove('hidden');
             el.onclick = function(e) { e.preventDefault(); trackClick(p, el.href); setTimeout(function(){ window.open(el.href,'_blank'); }, 100); };
             socialGrid.appendChild(el);
@@ -1187,20 +1192,13 @@
 
       // Görüntülenme sayacı (demo hariç)
       if (username !== 'demo') {
-        sb.from('profile_views').select('count').eq('username', username).single().then(function(res) {
-          var cur = (res.data && res.data.count) ? parseInt(res.data.count) : 0;
-          sb.from('profile_views')
-            .upsert({ username: username, count: cur + 1, updated_at: new Date().toISOString() }, { onConflict: 'username' })
-            .then(function(r) { if (r.error) console.error('view upsert error:', r.error); });
-        });
+        sb.rpc('record_profile_view', { p_username: username });
       }
     }
 
     function trackClick(type, href) {
       if (username && username !== 'demo') {
-        sb.from('link_clicks')
-          .insert({ username: username, link_type: type })
-          .then(function(r) { if (r.error) console.error('click insert error:', r.error); });
+        sb.rpc('record_link_click', { p_username: username, p_link_type: type });
       }
     }
 
@@ -1259,12 +1257,13 @@
 
 
     function generateVCF(d) {
-      var vcf = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + (d.full_name||d.username) +
-                '\nORG:' + (d.company||'') + '\nTITLE:' + (d.title||'') +
-                '\nTEL;TYPE=CELL:' + (d.mobile||'') + '\nTEL;TYPE=WORK:' + (d.work_phone||'') +
-                '\nEMAIL:' + (d.email||'') + '\nURL:' + (d.website||'') +
-                '\nADR;TYPE=WORK:;;' + (d.address||'') + ';;;;\n' +
-                'X-TAX-OFFICE:' + (d.tax_office||'') + '\nX-TAX-NUMBER:' + (d.tax_no||'') + '\nEND:VCARD';
+      var esc = NoshutdownCard.escapeVCard;
+      var vcf = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + esc(d.full_name||d.username) +
+                '\nORG:' + esc(d.company) + '\nTITLE:' + esc(d.title) +
+                '\nTEL;TYPE=CELL:' + esc(d.mobile) + '\nTEL;TYPE=WORK:' + esc(d.work_phone) +
+                '\nEMAIL:' + esc(d.email) + '\nURL:' + esc(d.website) +
+                '\nADR;TYPE=WORK:;;' + esc(d.address) + ';;;;\n' +
+                'X-TAX-OFFICE:' + esc(d.tax_office) + '\nX-TAX-NUMBER:' + esc(d.tax_no) + '\nEND:VCARD';
       var blob = new Blob([vcf], { type:'text/vcard' });
       document.getElementById('btn-vcf').href = URL.createObjectURL(blob);
       document.getElementById('btn-vcf').download = (d.full_name||d.username) + '.vcf';
