@@ -1,0 +1,7 @@
+(function(root){
+let active=null;
+function close(restore=true){if(!active)return;const{popover,trigger}=active;popover.remove();trigger.setAttribute('aria-expanded','false');if(restore)trigger.focus();active=null}
+function attach(trigger,{slot,value,onSelect}){trigger.setAttribute('aria-haspopup','dialog');trigger.setAttribute('aria-expanded','false');trigger.addEventListener('click',event=>{event.stopPropagation();if(active?.trigger===trigger){close();return}close(false);const popover=document.createElement('div');popover.className='icon-popover';popover.setAttribute('role','dialog');popover.setAttribute('aria-label',`${trigger.getAttribute('aria-label')} seçenekleri`);const grid=document.createElement('div');grid.className='icon-popover-grid';root.NoshutdownIcons.options[slot].forEach(id=>{const button=document.createElement('button');button.type='button';button.className='icon-option';button.setAttribute('aria-label',root.NoshutdownIcons.labels[id]);button.setAttribute('aria-pressed',String(id===value));button.append(root.NoshutdownIcons.createSvg(id));button.addEventListener('click',()=>{value=id;onSelect(id);close()});grid.append(button)});popover.append(grid);trigger.closest('.icon-editable')?.append(popover)||document.body.append(popover);trigger.setAttribute('aria-expanded','true');active={popover,trigger};});return{close}}
+document.addEventListener('click',()=>close(false));document.addEventListener('keydown',event=>{if(event.key==='Escape')close()});
+root.NoshutdownIconPicker={attach,close};
+})(window);
