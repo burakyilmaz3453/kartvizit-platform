@@ -47,6 +47,15 @@ test('final migration removes legacy public access and duplicate index', async (
   assert.match(sql, /drop policy if exists link_clicks_public_insert/i);
   assert.match(sql, /revoke all on table public\.profiles from anon/i);
   assert.match(sql, /revoke all on table public\.profile_views from anon/i);
-  assert.match(sql, /drop constraint if exists profile_views_username_key/i);
+  assert.doesNotMatch(sql, /drop constraint if exists profile_views_username_key/i);
   assert.match(sql, /revoke all on function public\.handle_new_user/i);
+});
+
+test('analytics repair restores the unique view counter key and extends valid actions', async () => {
+  const sql = await readFile(new URL('../../supabase/migrations/202609270001_fix_analytics.sql', import.meta.url), 'utf8');
+  assert.match(sql, /add constraint profile_views_username_key unique \(username\)/i);
+  assert.match(sql, /on conflict \(username\) do update/i);
+  assert.match(sql, /'qr'[\s\S]*'save'/i);
+  assert.match(sql, /grant execute on function public\.record_profile_view/i);
+  assert.match(sql, /grant execute on function public\.record_link_click/i);
 });

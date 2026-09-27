@@ -20,6 +20,8 @@ test('public card validates URLs and escapes vCard values', async () => {
   assert.doesNotMatch(js, /innerHTML\s*=/);
 });
 
+test('every primary card action records a valid analytics type',async()=>{const html=await read('card.html');assert.match(html,/trackClick\('mobile'/);assert.match(html,/trackClick\('email'/);assert.match(html,/trackClick\('whatsapp'/);assert.match(html,/trackClick\('qr'/);assert.match(html,/trackClick\('save'/);assert.doesNotMatch(html,/trackClick\('call'/)});
+
 test('card page loads the hardened helper layer', async () => {
   const html = await read('card.html');
   assert.match(html, /src=["']\/assets\/js\/card\.js["']/);
