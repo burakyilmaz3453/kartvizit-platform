@@ -4,3 +4,5 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 .editable-card{overflow-wrap:anywhere}
 .company-field,.title-field{width:min(620px,100%)}
+.icon-popover{max-height:min(360px,70vh);overflow:auto}
+.social-item-actions{display:flex;gap:4px;margin-left:auto}.social-item-actions button{width:30px;height:30px;border:1px solid var(--d-line);border-radius:8px;background:transparent;color:var(--d-muted);cursor:pointer}.social-direct-item{grid-template-columns:48px minmax(0,1fr) auto}.direct-field textarea{field-sizing:content;min-height:2.2em;resize:none}.name-field textarea{padding:6px;text-align:center;font:500 clamp(38px,6vw,62px)/1 'Cormorant Garamond'}.company-field textarea{padding:5px;text-align:center;color:var(--d-muted);font-size:12px;letter-spacing:.15em;text-transform:uppercase}.title-field textarea{padding:5px;text-align:center;color:var(--accent);font-size:15px}
