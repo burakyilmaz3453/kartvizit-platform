@@ -406,19 +406,13 @@
       color:var(--text-secondary);
       white-space:nowrap;
     }
-    .act-btn svg { width:18px; height:18px; }
-    .act-btn:not(.act-btn-gold) svg { color:var(--text-secondary); }
-    #btn-whatsapp svg { color:#25D366; }
-    #btn-linkedin svg { color:#0077b5; }
-    #btn-instagram svg { color:#d6249f; }
-    #btn-twitter svg { color:var(--text); }
-    #btn-facebook svg { color:#1877f2; }
+    .act-btn svg { width:18px; height:18px; color:var(--accent); }
 
     .act-btn-gold {
       background:rgba(201,168,76,0.08);
       border-color:var(--border);
     }
-    .act-btn-gold svg path, .act-btn-gold svg rect { fill:var(--gold); }
+    .act-btn-gold svg { color:var(--accent); }
     .act-btn-gold span { color:var(--gold); }
     .act-btn-gold:hover { background:rgba(201,168,76,0.14); }
 
@@ -575,6 +569,7 @@
       text-decoration:none;
       transition:opacity 0.2s, transform 0.2s;
       border:1px solid var(--border-subtle);
+      color:var(--accent);
     }
     .social-btn:hover { opacity:0.8; transform:scale(0.94); }
     .social-btn svg { width:24px; height:24px; }
