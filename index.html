@@ -1202,12 +1202,15 @@
 
   <!-- CARD PREVIEW -->
   <section class="card-preview-section">
-    <div class="mock-card">
+    <div class="real-card-preview">
+      <iframe id="landing-card-preview" src="card.html?preview=1" title="Gerçek dijital kartvizit örneği" loading="lazy"></iframe>
+    </div>
+    <div class="legacy-card-markup" hidden>
       <div class="mock-banner">
         <div class="mock-avatar">AK</div>
       </div>
       <div class="mock-body">
-        <div class="mock-name">Ahmet Yılmaz</div>
+        <div class="mock-name">A. Kaya</div>
         <div class="mock-title">Kurucu Ortak & CEO</div>
         <div class="mock-divider"></div>
         <div class="mock-bio">Teknoloji girişimcisi. Dijital dönüşüm ve ürün geliştirme üzerine çalışıyor.</div>
@@ -1430,6 +1433,7 @@
   </footer>
 
   <!-- SCROLL REVEAL -->
+  <script src="assets/js/landing-preview.js"></script>
   <script>
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(el => {
