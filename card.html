@@ -1049,6 +1049,7 @@
   <script src="/supabase.js"></script>
   <script src="/assets/js/card.js"></script>
   <script src="/assets/js/icon-catalog.js"></script>
+  <script src="/assets/js/phone-format.js"></script>
   <script src="/assets/js/card-view.js"></script>
 
   <script>
@@ -1236,12 +1237,13 @@
       if (data.banner_url) NoshutdownCard.replaceWithImage(document.getElementById('banner-container'), data.banner_url, 'Profil kapağı');
 
       if (data.mobile) {
-        document.getElementById('btn-call').href = 'tel:' + data.mobile;
-        document.getElementById('btn-whatsapp').href = 'https://wa.me/' + data.mobile.replace(/[^0-9]/g,'');
-        document.getElementById('p-mobile').textContent = data.mobile;
+        var mobileDialable = NoshutdownPhone.toDialable(data.mobile);
+        document.getElementById('btn-call').href = 'tel:' + mobileDialable;
+        document.getElementById('btn-whatsapp').href = 'https://wa.me/' + mobileDialable.replace(/[^0-9]/g,'');
+        document.getElementById('p-mobile').textContent = NoshutdownPhone.formatInternational(data.mobile);
       } else { document.getElementById('row-mobile').classList.add('hidden'); }
 
-      if (data.work_phone) document.getElementById('p-work').textContent = data.work_phone;
+      if (data.work_phone) document.getElementById('p-work').textContent = NoshutdownPhone.formatInternational(data.work_phone);
       else document.getElementById('row-work').classList.add('hidden');
 
       if (data.email) {
