@@ -30,3 +30,18 @@ test('mobile card keeps the full-size summary sticky while lower sections scroll
   assert.doesNotMatch(css,/body\.card-page\{[^}]*overflow:hidden/);
   assert.doesNotMatch(css,/@media\(max-width:780px\) and \(max-height:650px\)/);
 });
+
+test('public card exposes an icon-only persisted theme switch in the banner',async()=>{
+  const html=await read('card.html');
+  const css=await read('assets/css/redesign.css');
+  assert.match(html,/id="card-theme-toggle"[^>]*role="radiogroup"[^>]*aria-label="Kart teması"[^>]*onkeydown="handleCardThemeKey\(event\)"/);
+  assert.match(html,/aria-label="Koyu tema"[^>]*data-card-theme-value="dark"[^>]*tabindex="0"[\s\S]*?class="card-theme-icon card-theme-icon-moon"/);
+  assert.match(html,/aria-label="Açık tema"[^>]*data-card-theme-value="light"[^>]*tabindex="-1"[\s\S]*?class="card-theme-icon card-theme-icon-sun"/);
+  assert.match(css,/\.card-theme-toggle\{[^}]*position:absolute[^}]*top:12px[^}]*left:12px/);
+  assert.match(css,/\.card-theme-option\[aria-checked=true\]/);
+  assert.match(html,/localStorage\.getItem\('ns_card_theme'\)/);
+  assert.match(html,/localStorage\.setItem\('ns_card_theme',\s*theme\)/);
+  assert.match(html,/function syncCardThemeControl/);
+  assert.match(html,/function handleCardThemeKey\(event\)/);
+  assert.match(html,/\['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'\]/);
+});
