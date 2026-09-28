@@ -18,3 +18,14 @@ test('light card theme defines readable surfaces, text, icons and controls',asyn
   assert.match(css,/\[data-theme=light\] \.card-page :is\(\.act-btn svg,\.row-icon svg,\.social-btn\)\{[^}]*var\(--gold-dim\)/);
   assert.match(css,/\[data-theme=light\] \.card-page \.info-row:hover\{[^}]*rgba\(160,120,40/);
 });
+
+test('mobile card keeps the profile summary fixed while lower sections scroll',async()=>{
+  const css=await read('assets/css/redesign.css');
+  assert.match(css,/@media\(max-width:780px\)\{[^}]*body\.card-page\{[^}]*height:100dvh[^}]*min-height:100dvh[^}]*overflow:hidden/s);
+  assert.match(css,/\.card-page #card-content:not\(\.hidden\)\{[^}]*height:100dvh[^}]*display:flex[^}]*flex-direction:column[^}]*overflow:hidden/);
+  assert.match(css,/\.card-page #card-content:not\(\.hidden\)>:is\(\.card-header,\.identity,\.action-row\)\{[^}]*flex-shrink:0/);
+  assert.match(css,/\.card-page #card-content:not\(\.hidden\)>\.content\{[^}]*flex:1[^}]*min-height:0[^}]*overflow-y:auto[^}]*overscroll-behavior-y:contain[^}]*-webkit-overflow-scrolling:touch/);
+  assert.match(css,/padding-bottom:max\([^}]*env\(safe-area-inset-bottom\)/);
+  assert.match(css,/@media\(max-width:780px\) and \(max-height:650px\)\{[^}]*\.card-page \.banner-wrap\{[^}]*height:92px!important/s);
+  assert.match(css,/\.card-page \.identity-bio\{[^}]*-webkit-line-clamp:2[^}]*overflow:hidden/);
+});
